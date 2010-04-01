@@ -1,0 +1,16 @@
++--------------+--------------+------+-----+---------------------+----------------+
+| Field        | Type         | Null | Key | Default             | Extra          |
++--------------+--------------+------+-----+---------------------+----------------+
+| id           | int(11)      | NO   | PRI | NULL                | auto_increment |
+| channel_disc | varchar(128) | NO   | MUL | none                |                |
+| channel_id   | int(11)      | NO   |     | 0                   |                |
+| type         | varchar(8)   | NO   |     | GR                  |                |
+| channel      | varchar(10)  | NO   |     | 0                   |                |
+| title        | varchar(512) | NO   |     | none                |                |
+| description  | varchar(512) | NO   |     | none                |                |
+| category_id  | int(11)      | NO   |     | 0                   |                |
+| starttime    | datetime     | NO   | MUL | 1970-01-01 00:00:00 |                |
+| endtime      | datetime     | NO   |     | 1970-01-01 00:00:00 |                |
+| program_disc | varchar(128) | NO   |     | none                |                |
+| autorec      | tinyint(1)   | NO   |     | 1                   |                |
++--------------+--------------+------+-----+---------------------+----------------+
