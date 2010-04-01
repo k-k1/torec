@@ -3,7 +3,7 @@
 CHTYPE=$1
 CHANNEL=$2
 
-TMPTS=$(tempfile).ts
+TMPTS=$(tempfile --prefix=doepg).ts
 
 RECPT1=/usr/local/bin/recpt1
 DURATION=60
