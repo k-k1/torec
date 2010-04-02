@@ -1,0 +1,2150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tv SYSTEM "xmltv.dtd">
+
+<tv generator-info-name="tsEPG2xml" generator-info-url="http://localhost/">
+  <channel id="GR20">
+    <display-name lang="ja_JP">ＴＯＫＹＯ　ＭＸ１</display-name>
+  </channel>
+  <programme start="20100402150000 +0900" stop="20100402160000 +0900" channel="GR20">
+    <title lang="ja_JP">石原知事定例会見</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100402154500 +0900" stop="20100402160000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP">（知事会見早終了）  </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100402160000 +0900" stop="20100402163000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100402163000 +0900" stop="20100402170000 +0900" channel="GR20">
+    <title lang="ja_JP">ｙｅｓ！プリキュア５</title>
+    <desc lang="ja_JP">「希望のプリキュア誕生！」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100402170000 +0900" stop="20100402180000 +0900" channel="GR20">
+    <title lang="ja_JP">５時に夢中！</title>
+    <desc lang="ja_JP">本日のゲストは、参議院比例区支部長・佐藤ゆかりさん。政界の裏話が聞けるかも？さらに番組後半にはスペシャルゲストも登場の盛り沢山な金曜日！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100402180000 +0900" stop="20100402181500 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします！姉妹局ＮＹ１のニュースも毎日放送。ニューヨークの最新情報をお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100402181500 +0900" stop="20100402183000 +0900" channel="GR20">
+    <title lang="ja_JP">ＰＩＮＧＵ</title>
+    <desc lang="ja_JP">「ピングーと電気」「ピングーと花瓶」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100402183000 +0900" stop="20100402190000 +0900" channel="GR20">
+    <title lang="ja_JP">ハクション大魔王</title>
+    <desc lang="ja_JP">「ハクション一座の話」「ハクションガードマンの話」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100402190000 +0900" stop="20100402193000 +0900" channel="GR20">
+    <title lang="ja_JP">うる星やつら</title>
+    <desc lang="ja_JP">「せつぶん大戦争」「弁天軍団リターンマッチ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100402193000 +0900" stop="20100402200000 +0900" channel="GR20">
+    <title lang="ja_JP">元祖天才バカボン</title>
+    <desc lang="ja_JP">「恐怖のいそぎ人間なのだ」「元祖天才モデルなのだ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100402200000 +0900" stop="20100402203000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本のニュースをじっくりと。ニューヨークの旬の話題も伝えます。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100402203000 +0900" stop="20100402210000 +0900" channel="GR20">
+    <title lang="ja_JP">和の真髄を探る！日本名建築めぐり</title>
+    <desc lang="ja_JP">明治時代の豪商の邸宅・愛媛県「臥龍山荘」</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100402210000 +0900" stop="20100402220000 +0900" channel="GR20">
+    <title lang="ja_JP">ザ・ゴールデンアワー</title>
+    <desc lang="ja_JP">新年度で何が変わる？家庭の影響に迫る！▽元警察庁長官狙撃事件時効で異例の会見その真意は？▽脱・ゆとり！小学校教科書検定結果で日本の教育はどう変わる？▽世界の料理</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100402220000 +0900" stop="20100402223000 +0900" channel="GR20">
+    <title lang="ja_JP">ＦＣ東京ホットライン</title>
+    <desc lang="ja_JP">期待の新星１８歳重松！！原石の輝き放つＪデビュー弾！▽ナビスコ杯</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100402223000 +0900" stop="20100402224500 +0900" channel="GR20">
+    <title lang="ja_JP">フットサルキングダム</title>
+    <desc lang="ja_JP">日本フットサルリーグ（Ｆリーグ）のハイライト、現役Ｆリーガーが教えるフットサル講座、Ｆリーガーの素顔など、観て楽しく、プレイして楽しいフットサルの魅力に迫る。</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100402224500 +0900" stop="20100402230000 +0900" channel="GR20">
+    <title lang="ja_JP">読モＴＶ　Ｔｏｋｙｏ　Ｇｉｒｌｓ　Ｐｒｏｌｅｃｔ</title>
+    <desc lang="ja_JP">今、東京のファッションはストリートを中心に動いている。そのストリートで今最も輝いている存在、それが読モ＝読者モデルだ。</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100402230000 +0900" stop="20100402233000 +0900" channel="GR20">
+    <title lang="ja_JP">片岡鶴太郎のにっぽん蕎麦紀行〜窮められしそばの世界を求めて〜</title>
+    <desc lang="ja_JP">鶴太郎！『蕎麦打ちの神様』に挑戦！！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100402233000 +0900" stop="20100403003000 +0900" channel="GR20">
+    <title lang="ja_JP">松嶋×町山未公開映画を観るＴＶ</title>
+    <desc lang="ja_JP">ＧＯＯＤ　ＨＡＩＲ（前編）</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100403003000 +0900" stop="20100403010000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403010000 +0900" stop="20100403013000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403013000 +0900" stop="20100403020000 +0900" channel="GR20">
+    <title lang="ja_JP">いちばんうしろの大魔王</title>
+    <desc lang="ja_JP">「魔王が誕生しちゃった！」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403020000 +0900" stop="20100403023000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403023000 +0900" stop="20100403030000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403030000 +0900" stop="20100403035500 +0900" channel="GR20">
+    <title lang="ja_JP">鷹なり天国</title>
+    <desc lang="ja_JP">加藤鷹の司会による癒やし系トークバラエティー。カリスマ男優加藤鷹とセクシー女優たちが甘いささやきで視聴者を癒やします。</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100403035500 +0900" stop="20100403040000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100403040000 +0900" stop="20100403043000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP">さくら篇</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100403043000 +0900" stop="20100403050000 +0900" channel="GR20">
+    <title lang="ja_JP">うたなび！</title>
+    <desc lang="ja_JP">吉田山田</desc>
+    <category lang="ja_JP">音楽</category>
+    <category lang="en">music</category>
+  </programme>
+  <programme start="20100403050000 +0900" stop="20100403053000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403053000 +0900" stop="20100403060000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403060000 +0900" stop="20100403063000 +0900" channel="GR20">
+    <title lang="ja_JP">ＣＭ　ＩＮＤＥＸ</title>
+    <desc lang="ja_JP">ヒットＣＭ情報３０分！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403063000 +0900" stop="20100403070000 +0900" channel="GR20">
+    <title lang="ja_JP">タイムボカン</title>
+    <desc lang="ja_JP">「ジャックと豆の木大騒動だペッチャ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403070000 +0900" stop="20100403073000 +0900" channel="GR20">
+    <title lang="ja_JP">ディズニータイム　ハウス・オブ・マウス</title>
+    <desc lang="ja_JP">「ピートのサンタがやってきた」「ミッキーのくるみ割り人形（前編）（後編）」「ドナルドの雪だるませドカン！」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403073000 +0900" stop="20100403080000 +0900" channel="GR20">
+    <title lang="ja_JP">魔法のプリンセス　ミンキーモモ　−夢を抱きしめて−</title>
+    <desc lang="ja_JP">「買物へ行こう」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403080000 +0900" stop="20100403083000 +0900" channel="GR20">
+    <title lang="ja_JP">ハワイアンＬＩＶＥ　ｉｎ　ＢＩＲＤＬＡＮＤ</title>
+    <desc lang="ja_JP">日本、ハワイの一流ミュージシャンの歌・演奏・華麗なフラをお届けする日本で唯一のハワイアンＬＩＶＥの番組です。</desc>
+    <category lang="ja_JP">音楽</category>
+    <category lang="en">music</category>
+  </programme>
+  <programme start="20100403083000 +0900" stop="20100403083500 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403083500 +0900" stop="20100403084500 +0900" channel="GR20">
+    <title lang="ja_JP">旅の扉</title>
+    <desc lang="ja_JP">悠久の大河に生きて〜重慶市と世界遺産を訪ねる〜</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100403084500 +0900" stop="20100403090000 +0900" channel="GR20">
+    <title lang="ja_JP">比叡の光</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100403090000 +0900" stop="20100403093000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403093000 +0900" stop="20100403100000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403100000 +0900" stop="20100403103000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403103000 +0900" stop="20100403110000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403110000 +0900" stop="20100403113000 +0900" channel="GR20">
+    <title lang="ja_JP">西部邁ゼミナール　〜戦後タブーをけっとばせ〜</title>
+    <desc lang="ja_JP">紊乱の政局から見える政治の本質▽国会での議論の絶滅！▽政治家・官僚に失われつつある公心▽政治家の人格がはっきり見える面白い時代▼ゲスト　脇雅史参議院議員</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100403113000 +0900" stop="20100403115800 +0900" channel="GR20">
+    <title lang="ja_JP">牧野裕のＥｎｌｏｙ　Ｇｏｌｆ</title>
+    <desc lang="ja_JP">カート道路にボールが止まった場合のルール説明。ゲストのスイング解説とバンカーショットのアドバイス。エンジョイレッスンは、ティグランドの有効的な使い方。</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100403115800 +0900" stop="20100403120000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">週末の東京のニュースを中心にお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100403120000 +0900" stop="20100403123000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403123000 +0900" stop="20100403130000 +0900" channel="GR20">
+    <title lang="ja_JP">ニッキゴルフ</title>
+    <desc lang="ja_JP">シングルプレーヤーになりたい錦織一清と、スコア１００を切りたいパパイヤ鈴木の２人がお届けするエンターテイメントゴルフ番組！</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100403130000 +0900" stop="20100403133000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403133000 +0900" stop="20100403140000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403140000 +0900" stop="20100403145500 +0900" channel="GR20">
+    <title lang="ja_JP">Ｍｒ．ビーン</title>
+    <desc lang="ja_JP">Ｍｒ．ビーンの大騒動　＃１「カンニングはだめよ」「教会ではお静かに」／＃２「トイレは１人で」「まずい料理を出されたら」</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100403145500 +0900" stop="20100403150000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100403150000 +0900" stop="20100403153000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403153000 +0900" stop="20100403160000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403160000 +0900" stop="20100403163000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100403163000 +0900" stop="20100403170000 +0900" channel="GR20">
+    <title lang="ja_JP">名探偵ホームズ</title>
+    <desc lang="ja_JP">「彼がうわさの名探偵」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403170000 +0900" stop="20100403173000 +0900" channel="GR20">
+    <title lang="ja_JP">タイムボカンシリーズ　ヤッターマン</title>
+    <desc lang="ja_JP">「ドジソンの大発明だコロン」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403173000 +0900" stop="20100403180000 +0900" channel="GR20">
+    <title lang="ja_JP">昆虫物語みなしごハッチ</title>
+    <desc lang="ja_JP">「海を見たカゲロウ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403180000 +0900" stop="20100403181500 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">週末の東京のニュースを中心にお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100403181500 +0900" stop="20100403183000 +0900" channel="GR20">
+    <title lang="ja_JP">ＰＩＮＧＵ</title>
+    <desc lang="ja_JP">「ピングーとスクーター」「ピングーのしかえし」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403183000 +0900" stop="20100403190000 +0900" channel="GR20">
+    <title lang="ja_JP">マッハＧｏＧｏＧｏ</title>
+    <desc lang="ja_JP">「決死の風船脱出」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403190000 +0900" stop="20100403193000 +0900" channel="GR20">
+    <title lang="ja_JP">百年旅行〜明日へ紡ぐメッセージ</title>
+    <desc lang="ja_JP">「架け橋となってクラブをひとつに／浦和レッズ　内舘秀樹　ジェフユナイテッド千葉　立石智紀」</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100403193000 +0900" stop="20100403200000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＨＩＳ　ＷＥＥＫ　ｉｎ　ｔｈｅ　ＷＷＥ</title>
+    <desc lang="ja_JP">全米が熱狂！「Ｔｈｉｓ　Ｗｅｅｋ」では、ＷＷＥ「ロウ」「スマックダウン」「ＥＣＷ」３ブランドのストーリーを一挙公開！</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100403200000 +0900" stop="20100403205500 +0900" channel="GR20">
+    <title lang="ja_JP">東京の窓から</title>
+    <desc lang="ja_JP">改革と再生　−この国の希望と絶望−　慶應義塾大学教授　竹中平蔵</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100403205500 +0900" stop="20100403210000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100403210000 +0900" stop="20100403215500 +0900" channel="GR20">
+    <title lang="ja_JP">東京からはじめよう</title>
+    <desc lang="ja_JP">マグロとクジラ、日本の水産業の未来は？▽築地市場の老朽化▽ゲスト：小松正之（政策研究大学院大学教授）</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100403215500 +0900" stop="20100403220000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">国内外の出来事をいち早く！</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100403220000 +0900" stop="20100403223000 +0900" channel="GR20">
+    <title lang="ja_JP">Ａｎｉｍｅ−ＴＶ</title>
+    <desc lang="ja_JP">今、最も影響力のある「アニメ情報番組」！！</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100403223000 +0900" stop="20100403230000 +0900" channel="GR20">
+    <title lang="ja_JP">小島×狩野×エスパー　３Ｐ</title>
+    <desc lang="ja_JP">（スリーピース） 小島よしお、狩野英孝、そしてエスパー伊東。３人が体を張って無理難題に挑み、その類稀なる「生命力」を見せ付ける！</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100403230000 +0900" stop="20100403233000 +0900" channel="GR20">
+    <title lang="ja_JP">ＮＯ　ＭＡＴＴＥＲ　ＢＯＡＲＤ</title>
+    <desc lang="ja_JP">ＬＡＳＴ　ＲＩＤＩＮＧ</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100403233000 +0900" stop="20100404000000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴｏｋＹｏ，Ｂｏｙ</title>
+    <desc lang="ja_JP">東京マラソン２０１０　ノッチ応援ドキュメント！</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100404000000 +0900" stop="20100404003000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404003000 +0900" stop="20100404010000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404010000 +0900" stop="20100404013000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404013000 +0900" stop="20100404020000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404020000 +0900" stop="20100404023000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｉ　ｌｏｖｅ　ｆａｓｈｉｏｎ　ｔｖ！</title>
+    <desc lang="ja_JP">最新２０１０−１１年秋冬コレクションをお届け！エレガントでありながら遊び心のあるミラノファッションウィークの中からファッションＴＶ一押しのショーをお見逃しなく！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404023000 +0900" stop="20100404030000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｃ−ＰＯＰ　ｗｏｒｌｄ　恋する電視台</title>
+    <desc lang="ja_JP">Ｃ−ＰＯＰ　ＮＥＷＳ　ジョセフ、イーサン、リン・チーリンなどが所属する芸能事務所の年始式。ウーズン出演映画「錦衣衛」記者発表▽アラン・コー　インタビューほか</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404030000 +0900" stop="20100404033000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404033000 +0900" stop="20100404040000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404040000 +0900" stop="20100404043000 +0900" channel="GR20">
+    <title lang="ja_JP">トラベル・ナビゲータ　−ｆａｓｔ：ｔｒａｃｋ−</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100404043000 +0900" stop="20100404045500 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP">自然教育園篇</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100404045500 +0900" stop="20100404052500 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404052500 +0900" stop="20100404055500 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404055500 +0900" stop="20100404060000 +0900" channel="GR20">
+    <title lang="ja_JP">花のしおり</title>
+    <desc lang="ja_JP">ブルーデージー</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404060000 +0900" stop="20100404063000 +0900" channel="GR20">
+    <title lang="ja_JP">平成歌謡塾</title>
+    <desc lang="ja_JP">祝！放送９００回！レギュラー全員集合！！　ゲスト：冠二郎・真咲よう子</desc>
+    <category lang="ja_JP">音楽</category>
+    <category lang="en">music</category>
+  </programme>
+  <programme start="20100404063000 +0900" stop="20100404070000 +0900" channel="GR20">
+    <title lang="ja_JP">タイムボカン</title>
+    <desc lang="ja_JP">「枯れ木に花を咲かせるペッチャ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100404070000 +0900" stop="20100404073000 +0900" channel="GR20">
+    <title lang="ja_JP">ドリーマー</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404073000 +0900" stop="20100404080000 +0900" channel="GR20">
+    <title lang="ja_JP">西部邁ゼミナール　〜戦後タブーをけっとばせ〜</title>
+    <desc lang="ja_JP">紊乱の政局から見える政治の本質▽国会での議論の絶滅！▽政治家・官僚に失われつつある公心▽政治家の人格がはっきり見える面白い時代▼ゲスト　脇雅史参議院議員</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404080000 +0900" stop="20100404083000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404083000 +0900" stop="20100404084500 +0900" channel="GR20">
+    <title lang="ja_JP">水の惑星地球</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404084500 +0900" stop="20100404090000 +0900" channel="GR20">
+    <title lang="ja_JP">世界鉄道旅行</title>
+    <desc lang="ja_JP">パリ〜マドリッド</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404090000 +0900" stop="20100404093000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404093000 +0900" stop="20100404100000 +0900" channel="GR20">
+    <title lang="ja_JP">野草で健康再発見！妙高山麓・大自然の恵みを訪ねて</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404100000 +0900" stop="20100404103000 +0900" channel="GR20">
+    <title lang="ja_JP">ディズニータイムアンコール　ハウス・オブ・マウス</title>
+    <desc lang="ja_JP">「２人のバケーション」「ミッキーの８０日間世界一周（１）」「ミッキーの８０日間世界一周（２）」「ドナルドのフィッシングでドカン！」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100404103000 +0900" stop="20100404110000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404110000 +0900" stop="20100404113000 +0900" channel="GR20">
+    <title lang="ja_JP">韓流フォンデュ</title>
+    <desc lang="ja_JP">Ｙｕｍｉが感激！焼き肉とマッコリできれいになる？▽韓国トップ女優シン・ミナの美貌の秘密に迫る▽大人気！あのイケメングループ最新ＰＶ</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404113000 +0900" stop="20100404115500 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404115500 +0900" stop="20100404120000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">週末の東京のニュースを中心にお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100404120000 +0900" stop="20100404123000 +0900" channel="GR20">
+    <title lang="ja_JP">区広報番組</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404123000 +0900" stop="20100404130000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404130000 +0900" stop="20100404133000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404133000 +0900" stop="20100404140000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404140000 +0900" stop="20100404143000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404143000 +0900" stop="20100404150000 +0900" channel="GR20">
+    <title lang="ja_JP">みどりのビタミンＢＩＺ　東京スカイツリー　空に伸びる</title>
+    <desc lang="ja_JP">東京の元気な経済活動を松島みどりがご紹介</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404150000 +0900" stop="20100404153000 +0900" channel="GR20">
+    <title lang="ja_JP">新豆パワーで元気注入！！大地の力　なた豆の神秘</title>
+    <desc lang="ja_JP">【健康情報番組】</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404153000 +0900" stop="20100404160000 +0900" channel="GR20">
+    <title lang="ja_JP">〜ブルガリア、バラの谷から。〜　ソフィア物語</title>
+    <desc lang="ja_JP">【美容情報番組】</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404160000 +0900" stop="20100404163000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404163000 +0900" stop="20100404170000 +0900" channel="GR20">
+    <title lang="ja_JP">ガンバの冒険</title>
+    <desc lang="ja_JP">「冒険だ海へ出よう！」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100404170000 +0900" stop="20100404173000 +0900" channel="GR20">
+    <title lang="ja_JP">アルプスの少女ハイジ</title>
+    <desc lang="ja_JP">「アルムの山へ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100404173000 +0900" stop="20100404180000 +0900" channel="GR20">
+    <title lang="ja_JP">母をたずねて三千里</title>
+    <desc lang="ja_JP">「いかないでおかあさん」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100404180000 +0900" stop="20100404181500 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします！ロンドンＩＴＮのニュース「Ｌｏｎｄｏｎ　Ｔｏｎｉｇｈｔ」も放送します。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100404181500 +0900" stop="20100404183000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100404183000 +0900" stop="20100404190000 +0900" channel="GR20">
+    <title lang="ja_JP">円谷劇場</title>
+    <desc lang="ja_JP">「ウルトラマンＡ」 「冬の怪奇シリーズ　怪談！獅子太鼓」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100404190000 +0900" stop="20100404193000 +0900" channel="GR20">
+    <title lang="ja_JP">フランダースの犬</title>
+    <desc lang="ja_JP">「大きなカシの木」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100404193000 +0900" stop="20100404200000 +0900" channel="GR20">
+    <title lang="ja_JP">１×８いこうよ！</title>
+    <desc lang="ja_JP">演歌の花道シリーズ−２　年末ＳＰ重大発表後編</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100404200000 +0900" stop="20100404205500 +0900" channel="GR20">
+    <title lang="ja_JP">地上最強の美女たち！チャーリーズ　エンジェル</title>
+    <desc lang="ja_JP">「絞殺魔！華麗なるファッション」</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100404205500 +0900" stop="20100404210000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100404210000 +0900" stop="20100404213000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴｏｋＹｏ，Ｂｏｙ</title>
+    <desc lang="ja_JP">東京キニナル調査部〜只今改装中　ベールに包まれた浅草寺の全貌を調査せよ！〜</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100404213000 +0900" stop="20100404215600 +0900" channel="GR20">
+    <title lang="ja_JP">カーグラフィックＴＶ</title>
+    <desc lang="ja_JP">Ｆ４０対９５９</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404215600 +0900" stop="20100404220000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">国内外の出来事をいち早く！</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100404220000 +0900" stop="20100404223000 +0900" channel="GR20">
+    <title lang="ja_JP">激☆音ボケ</title>
+    <desc lang="ja_JP">新妻・藤本美貴登場！どうしても聞きたかったアノ話を聞いちゃおう！さらに！今夜の激☆音ボケはゴルフ場で大ハッスル！</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100404223000 +0900" stop="20100404230000 +0900" channel="GR20">
+    <title lang="ja_JP">ミスキャン．ＴＶ</title>
+    <desc lang="ja_JP">都内ミスキャンパス大集合で特技披露</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100404230000 +0900" stop="20100404233000 +0900" channel="GR20">
+    <title lang="ja_JP">ＷＯＲＫＩＮＧ！！</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100404233000 +0900" stop="20100405000000 +0900" channel="GR20">
+    <title lang="ja_JP">セキレイ</title>
+    <desc lang="ja_JP">「セキレイ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100405000000 +0900" stop="20100405003000 +0900" channel="GR20">
+    <title lang="ja_JP">「Ｒ．Ｏ．Ｄ−ＴＨＥ　ＴＶ−」Ｓｐｅｃｉａｌ　Ｓｅｌｅｃｔｉｏｎ</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100405003000 +0900" stop="20100405010000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405010000 +0900" stop="20100405013000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405013000 +0900" stop="20100405020000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405020000 +0900" stop="20100405020100 +0900" channel="GR20">
+    <title lang="ja_JP">ＪＯＭＸ</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405055800 +0900" stop="20100405060000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸＴＶ　オープニング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405060000 +0900" stop="20100405063000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405063000 +0900" stop="20100405070000 +0900" channel="GR20">
+    <title lang="ja_JP">タイムボカン</title>
+    <desc lang="ja_JP">「赤頭巾ちゃん気をつけてだペッチャ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100405070000 +0900" stop="20100405080000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｕ・ＬＡ・ＬＡ＠７</title>
+    <desc lang="ja_JP">レンジで簡単朝ごはんクッキング！８分間で「黒酢すぶた」を作ります！▽知って得する情報をお届けのベジフル「イチゴ」▽東京インフォメーション▽芸能ニュース▽占い</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405080000 +0900" stop="20100405083000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405083000 +0900" stop="20100405090000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405090000 +0900" stop="20100405093000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405093000 +0900" stop="20100405100000 +0900" channel="GR20">
+    <title lang="ja_JP">健やか元気人</title>
+    <desc lang="ja_JP">野村将希　叶和貴子　【健康情報番組】</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405100000 +0900" stop="20100405103000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405103000 +0900" stop="20100405110000 +0900" channel="GR20">
+    <title lang="ja_JP">デーブ＆克弥のおもしろくてゴメン！</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405110000 +0900" stop="20100405113000 +0900" channel="GR20">
+    <title lang="ja_JP">デイリー・キッチン</title>
+    <desc lang="ja_JP">家族でワイワイ！イベントメニュー</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405113000 +0900" stop="20100405114000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">内外の新鮮なニュースを▽株価情報▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405114000 +0900" stop="20100405115500 +0900" channel="GR20">
+    <title lang="ja_JP">香田晋のどんぶり丸</title>
+    <desc lang="ja_JP">名古屋名物どて丼とは！？</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405115500 +0900" stop="20100405120000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405120000 +0900" stop="20100405125500 +0900" channel="GR20">
+    <title lang="ja_JP">大江戸捜査網</title>
+    <desc lang="ja_JP">「獅子舞の逆襲」</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100405125500 +0900" stop="20100405130000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、各地の最新ニュース▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405130000 +0900" stop="20100405133000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405133000 +0900" stop="20100405140000 +0900" channel="GR20">
+    <title lang="ja_JP">生きる×２</title>
+    <desc lang="ja_JP">演じて　つないで　〜能楽師は元教師〜</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100405140000 +0900" stop="20100405143000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405143000 +0900" stop="20100405150000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405150000 +0900" stop="20100405153000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします。今日のニュース・天気情報・芸能ニュースなどをお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405153000 +0900" stop="20100405160000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405160000 +0900" stop="20100405163000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405163000 +0900" stop="20100405170000 +0900" channel="GR20">
+    <title lang="ja_JP">ｙｅｓ！プリキュア５</title>
+    <desc lang="ja_JP">「情熱全開キュアルージュ！」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100405170000 +0900" stop="20100405180000 +0900" channel="GR20">
+    <title lang="ja_JP">５時に夢中！</title>
+    <desc lang="ja_JP">東京の夕方は・・・女性のストレスを解消する“本音マル出し”ぶっちゃけワイドショー！！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405180000 +0900" stop="20100405182000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします！姉妹局ＮＹ１のニュースも毎日放送。ニューヨークの最新情報をお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405182000 +0900" stop="20100405183000 +0900" channel="GR20">
+    <title lang="ja_JP">誘惑！パスポート</title>
+    <desc lang="ja_JP">Ｔｈｅ　Ｐａｒａｄｉｓｅ！Ｍｙｆａｖｏｒｉｔｅ　ｒｅｓｏｒｔ</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100405183000 +0900" stop="20100405190000 +0900" channel="GR20">
+    <title lang="ja_JP">犬夜叉</title>
+    <desc lang="ja_JP">「解き放たれた妖馬炎蹄」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100405190000 +0900" stop="20100405193000 +0900" channel="GR20">
+    <title lang="ja_JP">うる星やつら</title>
+    <desc lang="ja_JP">「あゝ個人教授！」「戦りつの参観日」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100405193000 +0900" stop="20100405200000 +0900" channel="GR20">
+    <title lang="ja_JP">元祖天才バカボン</title>
+    <desc lang="ja_JP">「ゴの勝負のユーレイなのだ」「陸で魚を釣るのだ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100405200000 +0900" stop="20100405203000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本のニュースをじっくりと。ニューヨークの旬の話題も伝えます。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405203000 +0900" stop="20100405210000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｃａｍｐｕｓ　Ｎａｖｉ　ＴＶ</title>
+    <desc lang="ja_JP">全国の大学のミスキャンパスが出演！</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100405210000 +0900" stop="20100405220000 +0900" channel="GR20">
+    <title lang="ja_JP">ザ・ゴールデンアワー</title>
+    <desc lang="ja_JP">世界の「笑い」を検証！日本人の笑いは本当につまらないのか？▽世界の料理をスタジオ生試食＆レシピ公開！▽素人外国人がスタジオに登場！▽ニュース</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405220000 +0900" stop="20100405225500 +0900" channel="GR20">
+    <title lang="ja_JP">京城スキャンダル</title>
+    <desc lang="ja_JP">「教えてくれ　革命が何なのかを」</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100405225500 +0900" stop="20100405230000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100405230000 +0900" stop="20100405233000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＡＫＡＲＡＺＵＫＡ　〜Ｃａｆｅ　ｂｒｅａｋ〜</title>
+    <desc lang="ja_JP">ちょっとだけリニューアルしました▽ゲストは番組最後の出演・・・雪組　彩吹真央さん・・・</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100405233000 +0900" stop="20100406000000 +0900" channel="GR20">
+    <title lang="ja_JP">バカヂカラ</title>
+    <desc lang="ja_JP">アンジャッシュ、おぎやはぎ、ドランクドラゴン、北陽などの人気芸人達が書き下ろし新作コントに毎週挑戦！</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100406000000 +0900" stop="20100406003000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＵＳＩＣＡＬ３</title>
+    <desc lang="ja_JP">どどーんと紹介しちゃうぞスペシャル</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100406003000 +0900" stop="20100406010000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406010000 +0900" stop="20100406013000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406013000 +0900" stop="20100406020000 +0900" channel="GR20">
+    <title lang="ja_JP">トライガン</title>
+    <desc lang="ja_JP">ＬＩＴＴＬＥ　ＡＲＣＡＤＩＡ</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406020000 +0900" stop="20100406023000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406023000 +0900" stop="20100406030000 +0900" channel="GR20">
+    <title lang="ja_JP">聖痕のクエイサー</title>
+    <desc lang="ja_JP">「含鉄泉の夜」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406030000 +0900" stop="20100406033000 +0900" channel="GR20">
+    <title lang="ja_JP">大進撃放送ＢＯＮＺＯ！</title>
+    <desc lang="ja_JP">中学２５年生以上は必見！オタクでサブカルでオルタナティブな脱力系情報バラエティ番組。</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100406033000 +0900" stop="20100406040000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP">ＴＯＫＹＯ　ＣＯＬＯＲＳ</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406040000 +0900" stop="20100406043000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP">若葉篇</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406043000 +0900" stop="20100406050000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP">グリーン・グリーン篇</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406050000 +0900" stop="20100406053000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406053000 +0900" stop="20100406060000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406060000 +0900" stop="20100406063000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406063000 +0900" stop="20100406070000 +0900" channel="GR20">
+    <title lang="ja_JP">タイムボカン</title>
+    <desc lang="ja_JP">「夢みるシンデレラ姫だペッチャ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406070000 +0900" stop="20100406080000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｕ・ＬＡ・ＬＡ＠７</title>
+    <desc lang="ja_JP">ＳＨＥＬＬＹと現役女子大学生アナウンサーが東京で活躍する女性たちに贈る、朝のニュース情報番組！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406080000 +0900" stop="20100406083000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406083000 +0900" stop="20100406090000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406090000 +0900" stop="20100406093000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406093000 +0900" stop="20100406100000 +0900" channel="GR20">
+    <title lang="ja_JP">人生の切符</title>
+    <desc lang="ja_JP">財津一郎　【健康情報番組】</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406100000 +0900" stop="20100406103000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406103000 +0900" stop="20100406110000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406110000 +0900" stop="20100406113000 +0900" channel="GR20">
+    <title lang="ja_JP">デイリー・キッチン</title>
+    <desc lang="ja_JP">家族でワイワイ！イベントメニュー</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406113000 +0900" stop="20100406114000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">内外の新鮮なニュースを▽株価情報▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406114000 +0900" stop="20100406115500 +0900" channel="GR20">
+    <title lang="ja_JP">食爛漫！味づくし　感動の旅</title>
+    <desc lang="ja_JP">東京・下町の伝統料理　手打ちそば豆富のフルコース</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406115500 +0900" stop="20100406120000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406120000 +0900" stop="20100406125500 +0900" channel="GR20">
+    <title lang="ja_JP">大江戸捜査網</title>
+    <desc lang="ja_JP">「無礼討ち返上」</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100406125500 +0900" stop="20100406130000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、各地の最新ニュース▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406130000 +0900" stop="20100406133000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406133000 +0900" stop="20100406140000 +0900" channel="GR20">
+    <title lang="ja_JP">とちぎ発！旅好き！</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100406140000 +0900" stop="20100406143000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406143000 +0900" stop="20100406150000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406150000 +0900" stop="20100406153000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします。今日のニュース・天気情報・芸能ニュースなどをお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406153000 +0900" stop="20100406160000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406160000 +0900" stop="20100406163000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406163000 +0900" stop="20100406170000 +0900" channel="GR20">
+    <title lang="ja_JP">ｙｅｓ！プリキュア５</title>
+    <desc lang="ja_JP">「はじけるプリキュアは誰？」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406170000 +0900" stop="20100406180000 +0900" channel="GR20">
+    <title lang="ja_JP">５時に夢中！</title>
+    <desc lang="ja_JP">東京の夕方は・・・女性のストレスを解消する“本音マル出し”ぶっちゃけワイドショー！！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406180000 +0900" stop="20100406182000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします！姉妹局ＮＹ１のニュースも毎日放送。ニューヨークの最新情報をお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406182000 +0900" stop="20100406183000 +0900" channel="GR20">
+    <title lang="ja_JP">誘惑！パスポート</title>
+    <desc lang="ja_JP">ブラ！フィジーでウェディング＆ハネムーン</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100406183000 +0900" stop="20100406190000 +0900" channel="GR20">
+    <title lang="ja_JP">キテレツ大百科</title>
+    <desc lang="ja_JP">「あと５分！そんなときこそ時間逆転機」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406190000 +0900" stop="20100406193000 +0900" channel="GR20">
+    <title lang="ja_JP">うる星やつら</title>
+    <desc lang="ja_JP">「四次元カメラ」「魔のランニング」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406193000 +0900" stop="20100406200000 +0900" channel="GR20">
+    <title lang="ja_JP">元祖天才バカボン</title>
+    <desc lang="ja_JP">「やせたやせた夏やせなのだ」「殺人会議を開くのだ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406200000 +0900" stop="20100406203000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本のニュースをじっくりと。ニューヨークの旬の話題も伝えます。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406203000 +0900" stop="20100406210000 +0900" channel="GR20">
+    <title lang="ja_JP">音楽のある風景</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100406210000 +0900" stop="20100406220000 +0900" channel="GR20">
+    <title lang="ja_JP">ザ・ゴールデンアワー</title>
+    <desc lang="ja_JP">東京の“ナイス”ミドルに贈る、世界基準の“ナイス”ワイドショー！！</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100406220000 +0900" stop="20100406230000 +0900" channel="GR20">
+    <title lang="ja_JP">アニメの神様</title>
+    <desc lang="ja_JP">ドラゴンボールＺ「＃１８４　１６号無惨！！動き出す怒りの超悟飯」▽機動戦士ガンダムＳＥＥＤ　ＤＥＳＴＩＮＹ　ＰＨＡＳＥ−１６「インド洋の死闘」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406230000 +0900" stop="20100406233000 +0900" channel="GR20">
+    <title lang="ja_JP">迷い猫オーバーラン！</title>
+    <desc lang="ja_JP">「迷い猫、駆けた」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100406233000 +0900" stop="20100407000000 +0900" channel="GR20">
+    <title lang="ja_JP">バナナ炎</title>
+    <desc lang="ja_JP">高校デビューに失敗してもこれをやったら挽回できるベスト３</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100407000000 +0900" stop="20100407003000 +0900" channel="GR20">
+    <title lang="ja_JP">倉本美津留とタナカカツキとバカリズムの『番組名未定』</title>
+    <desc lang="ja_JP">（仮） 日本初、もしかしたら世界初、Ｕｓｔｒｅａｍ誘導テレビプログラム。</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100407003000 +0900" stop="20100407010000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407010000 +0900" stop="20100407013000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407013000 +0900" stop="20100407020000 +0900" channel="GR20">
+    <title lang="ja_JP">ダンスインザヴァンパイアバンド</title>
+    <desc lang="ja_JP">「ダンス　イン　ザ　ヴァンパイアバンド」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100407020000 +0900" stop="20100407023000 +0900" channel="GR20">
+    <title lang="ja_JP">薄桜鬼−新撰組奇譚−</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100407023000 +0900" stop="20100407030000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407030000 +0900" stop="20100407033000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407033000 +0900" stop="20100407040000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407040000 +0900" stop="20100407043000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407043000 +0900" stop="20100407050000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407050000 +0900" stop="20100407053000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407053000 +0900" stop="20100407060000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407060000 +0900" stop="20100407063000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407063000 +0900" stop="20100407070000 +0900" channel="GR20">
+    <title lang="ja_JP">タイムボカン</title>
+    <desc lang="ja_JP">「未来の像さんを守ろうペッチャ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100407070000 +0900" stop="20100407080000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｕ・ＬＡ・ＬＡ＠７</title>
+    <desc lang="ja_JP">ＳＨＥＬＬＹと現役女子大学生アナウンサーが東京で活躍する女性たちに贈る、朝のニュース情報番組！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407080000 +0900" stop="20100407083000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407083000 +0900" stop="20100407090000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407090000 +0900" stop="20100407093000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407093000 +0900" stop="20100407100000 +0900" channel="GR20">
+    <title lang="ja_JP">人生の切符</title>
+    <desc lang="ja_JP">ガラス工房　【健康情報番組】</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407100000 +0900" stop="20100407103000 +0900" channel="GR20">
+    <title lang="ja_JP">〜ブルガリア、バラの谷から。〜　ソフィア物語</title>
+    <desc lang="ja_JP">【美容情報番組】</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407103000 +0900" stop="20100407110000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407110000 +0900" stop="20100407113000 +0900" channel="GR20">
+    <title lang="ja_JP">どさんこクッキング</title>
+    <desc lang="ja_JP">北海道の食材が満載です！食べ応え充分で風味のよいユニーク料理</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407113000 +0900" stop="20100407114000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">内外の新鮮なニュースを▽株価情報▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407114000 +0900" stop="20100407115500 +0900" channel="GR20">
+    <title lang="ja_JP">どーよ・この味！グルメに挑戦</title>
+    <desc lang="ja_JP">富津の絶品グルメ　中国家庭料理</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407115500 +0900" stop="20100407120000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407120000 +0900" stop="20100407125500 +0900" channel="GR20">
+    <title lang="ja_JP">新・上海グランド</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100407125500 +0900" stop="20100407130000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、各地の最新ニュース▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407130000 +0900" stop="20100407133000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407133000 +0900" stop="20100407140000 +0900" channel="GR20">
+    <title lang="ja_JP">京のいっぴん物語</title>
+    <desc lang="ja_JP">京の街には、町衆の知恵と工夫が創り上げた「いっぴん（逸品・一品もの）」が満ちあふれています。</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100407140000 +0900" stop="20100407143000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407143000 +0900" stop="20100407150000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407150000 +0900" stop="20100407153000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします。今日のニュース・天気情報・芸能ニュースなどをお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407153000 +0900" stop="20100407160000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407160000 +0900" stop="20100407163000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407163000 +0900" stop="20100407170000 +0900" channel="GR20">
+    <title lang="ja_JP">ｙｅｓ！プリキュア５</title>
+    <desc lang="ja_JP">「やすらぎのキュアミント」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100407170000 +0900" stop="20100407180000 +0900" channel="GR20">
+    <title lang="ja_JP">５時に夢中！</title>
+    <desc lang="ja_JP">東京の夕方は・・・女性のストレスを解消する“本音マル出し”ぶっちゃけワイドショー！！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100407180000 +0900" stop="20100407182000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします！姉妹局ＮＹ１のニュースも毎日放送。ニューヨークの最新情報をお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407182000 +0900" stop="20100407182500 +0900" channel="GR20">
+    <title lang="ja_JP">Ｆｏｒｚａ！！Ｍａｒｅｅｚｅ</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100407182500 +0900" stop="20100407183000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407183000 +0900" stop="20100407190000 +0900" channel="GR20">
+    <title lang="ja_JP">おぼっちゃまくん</title>
+    <desc lang="ja_JP">「このミルクもの！」「ああ無情！貧保家崩壊」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100407190000 +0900" stop="20100407193000 +0900" channel="GR20">
+    <title lang="ja_JP">うる星やつら</title>
+    <desc lang="ja_JP">「ひな祭り！ランちゃん登場」「ランちゃんの御招待」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100407193000 +0900" stop="20100407200000 +0900" channel="GR20">
+    <title lang="ja_JP">元祖天才バカボン</title>
+    <desc lang="ja_JP">「バカボンの宿題なのだ」「ピストル撃てないおまわりさん」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100407200000 +0900" stop="20100407203000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本のニュースをじっくりと。ニューヨークの旬の話題も伝えます。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407203000 +0900" stop="20100407210000 +0900" channel="GR20">
+    <title lang="ja_JP">ヘリに挑戦！大人の休日　ＰＡＲＴ１〜ヘリコプターオーナーの楽しみ方〜</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100407210000 +0900" stop="20100407220000 +0900" channel="GR20">
+    <title lang="ja_JP">ザ・ゴールデンアワー</title>
+    <desc lang="ja_JP">東京の“ナイス”ミドルに贈る、世界基準の“ナイス”ワイドショー！！</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100407220000 +0900" stop="20100407225500 +0900" channel="GR20">
+    <title lang="ja_JP">美味関係〜おいしい関係〜</title>
+    <desc lang="ja_JP">「新しいリトルベア」</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100407225500 +0900" stop="20100407230000 +0900" channel="GR20">
+    <title lang="ja_JP">中国世界遺産ものがたり　−悠久の旅人たち−</title>
+    <desc lang="ja_JP">「武夷山」</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100407230000 +0900" stop="20100407233000 +0900" channel="GR20">
+    <title lang="ja_JP">水曜どうでしょう　Ｃｌａｓｓｉｃ</title>
+    <desc lang="ja_JP">レンタカーで行く　ヨーロッパ２１カ国完全走破の旅</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100407233000 +0900" stop="20100408000000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｈｏｗ　ｔｏ　モンキーベイビー！</title>
+    <desc lang="ja_JP">Ｈｏｗ　ｔｏ　ベースボール（始球式）</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100408000000 +0900" stop="20100408003000 +0900" channel="GR20">
+    <title lang="ja_JP">「かみちゅ！」Ｓｐｅｃｉａｌ　Ｓｅｌｅｃｔｉｏｎ</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100408003000 +0900" stop="20100408010000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408010000 +0900" stop="20100408013000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408013000 +0900" stop="20100408020000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408020000 +0900" stop="20100408023000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408023000 +0900" stop="20100408030000 +0900" channel="GR20">
+    <title lang="ja_JP">江戸嬢</title>
+    <desc lang="ja_JP">『キャスト』（キャバ嬢）にスポットを当て、キャストの、キャストによる、キャストのための・・・全国初！キャストバラエティー番組。</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100408030000 +0900" stop="20100408033000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＵＳＩＣ　Ｂ．Ｂ．</title>
+    <desc lang="ja_JP">ブレイク前のアーティストの魅力に迫り、音楽ファンが求める新しいアーティスト情報を提供していくニューカマー音楽情報番組</desc>
+    <category lang="ja_JP">音楽</category>
+    <category lang="en">music</category>
+  </programme>
+  <programme start="20100408033000 +0900" stop="20100408040000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408040000 +0900" stop="20100408043000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408043000 +0900" stop="20100408050000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408050000 +0900" stop="20100408053000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408053000 +0900" stop="20100408060000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408060000 +0900" stop="20100408063000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408063000 +0900" stop="20100408070000 +0900" channel="GR20">
+    <title lang="ja_JP">タイムボカン</title>
+    <desc lang="ja_JP">「ビックリ！天女は宇宙人だペッチャ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100408070000 +0900" stop="20100408080000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｕ・ＬＡ・ＬＡ＠７</title>
+    <desc lang="ja_JP">ＳＨＥＬＬＹと現役女子大学生アナウンサーが東京で活躍する女性たちに贈る、朝のニュース情報番組！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408080000 +0900" stop="20100408083000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408083000 +0900" stop="20100408090000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408090000 +0900" stop="20100408093000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408093000 +0900" stop="20100408100000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408100000 +0900" stop="20100408103000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408103000 +0900" stop="20100408110000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408110000 +0900" stop="20100408113000 +0900" channel="GR20">
+    <title lang="ja_JP">シェフからの招待状</title>
+    <desc lang="ja_JP">ある恋から生まれた料理たち</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408113000 +0900" stop="20100408114000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">内外の新鮮なニュースを▽株価情報▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408114000 +0900" stop="20100408115500 +0900" channel="GR20">
+    <title lang="ja_JP">酒の肴つくってみ〜よ</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408115500 +0900" stop="20100408120000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408120000 +0900" stop="20100408125500 +0900" channel="GR20">
+    <title lang="ja_JP">新・上海グランド</title>
+    <desc lang="ja_JP">舞台は１９３０年代の上海。外国の侵略に、心ある青年達は救国の志を燃え上がらせていた。物語は、その中の一人の青年・許文強が、上海駅に降り立つところから始まる。</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100408125500 +0900" stop="20100408130000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、各地の最新ニュース▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408130000 +0900" stop="20100408133000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408133000 +0900" stop="20100408140000 +0900" channel="GR20">
+    <title lang="ja_JP">続ゴルフ上達Ｑ＆Ａ</title>
+    <desc lang="ja_JP">ゴルフをもっと楽しく、一歩進んだプレーを…！ちょっとした悩みの解消から、ワンランク上のテクニックまで、２人のプロが分かりやすく指導。</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100408140000 +0900" stop="20100408143000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408143000 +0900" stop="20100408150000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408150000 +0900" stop="20100408153000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします。今日のニュース・天気情報・芸能ニュースなどをお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408153000 +0900" stop="20100408160000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408160000 +0900" stop="20100408163000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408163000 +0900" stop="20100408170000 +0900" channel="GR20">
+    <title lang="ja_JP">ｙｅｓ！プリキュア５</title>
+    <desc lang="ja_JP">「プリキュアの資格」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100408170000 +0900" stop="20100408180000 +0900" channel="GR20">
+    <title lang="ja_JP">５時に夢中！</title>
+    <desc lang="ja_JP">東京の夕方は・・・女性のストレスを解消する“本音マル出し”ぶっちゃけワイドショー！！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408180000 +0900" stop="20100408182000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします！姉妹局ＮＹ１のニュースも毎日放送。ニューヨークの最新情報をお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408182000 +0900" stop="20100408183000 +0900" channel="GR20">
+    <title lang="ja_JP">誘惑！パスポート</title>
+    <desc lang="ja_JP">南太平洋随一の都会</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100408183000 +0900" stop="20100408190000 +0900" channel="GR20">
+    <title lang="ja_JP">じゃりン子チエ</title>
+    <desc lang="ja_JP">「テツの家出？」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100408190000 +0900" stop="20100408193000 +0900" channel="GR20">
+    <title lang="ja_JP">うる星やつら</title>
+    <desc lang="ja_JP">「涙のあした日記」「この子はだあれ？」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100408193000 +0900" stop="20100408200000 +0900" channel="GR20">
+    <title lang="ja_JP">元祖天才バカボン</title>
+    <desc lang="ja_JP">「骨をとるのはホネなのだ」「元祖日本世界昔ばなし」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100408200000 +0900" stop="20100408203000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本のニュースをじっくりと。ニューヨークの旬の話題も伝えます。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408203000 +0900" stop="20100408210000 +0900" channel="GR20">
+    <title lang="ja_JP">音楽のある風景</title>
+    <desc lang="ja_JP">「ビューティフルな一日」</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100408210000 +0900" stop="20100408220000 +0900" channel="GR20">
+    <title lang="ja_JP">ザ・ゴールデンアワー</title>
+    <desc lang="ja_JP">東京の“ナイス”ミドルに贈る、世界基準の“ナイス”ワイドショー！！</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408220000 +0900" stop="20100408225500 +0900" channel="GR20">
+    <title lang="ja_JP">ＣＳＩ：科学捜査班　シーズン１</title>
+    <desc lang="ja_JP">全米視聴率Ｎｏ．１ドラマ「ＣＳＩ：科学捜査班」のシーズン１。</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100408225500 +0900" stop="20100408230000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100408230000 +0900" stop="20100408233000 +0900" channel="GR20">
+    <title lang="ja_JP">勝手に観光協会</title>
+    <desc lang="ja_JP">埼玉（後編）</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100408233000 +0900" stop="20100409000000 +0900" channel="GR20">
+    <title lang="ja_JP">内村さまぁ〜ず</title>
+    <desc lang="ja_JP">内村光良＆さまぁ〜ずが、ゲスト芸人仕切りのあらゆる企画に対してほどよく頑張る！３人ならではの独特な世界観によって笑いを生み出していく番組です。</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100409000000 +0900" stop="20100409003000 +0900" channel="GR20">
+    <title lang="ja_JP">かんなぎ</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100409003000 +0900" stop="20100409010000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409010000 +0900" stop="20100409013000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409013000 +0900" stop="20100409020000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｂ型Ｈ系</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100409020000 +0900" stop="20100409023000 +0900" channel="GR20">
+    <title lang="ja_JP">真・恋姫無双〜乙女大乱〜</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100409023000 +0900" stop="20100409030000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409030000 +0900" stop="20100409033000 +0900" channel="GR20">
+    <title lang="ja_JP">フィッシング倶楽部</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100409033000 +0900" stop="20100409040000 +0900" channel="GR20">
+    <title lang="ja_JP">ｍｅｒｏ．ｌｐミュージックＣｈａｎｎｅｌ</title>
+    <desc lang="ja_JP">最新の音楽情報が満載の音楽情報番組。</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100409040000 +0900" stop="20100409043000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409043000 +0900" stop="20100409050000 +0900" channel="GR20">
+    <title lang="ja_JP">ヒーリングタイム＆ヘッドラインニュース</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409050000 +0900" stop="20100409053000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409053000 +0900" stop="20100409060000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409060000 +0900" stop="20100409063000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409063000 +0900" stop="20100409070000 +0900" channel="GR20">
+    <title lang="ja_JP">タイムボカン</title>
+    <desc lang="ja_JP">「突撃！ヤマタノオロチだペッチャ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100409070000 +0900" stop="20100409080000 +0900" channel="GR20">
+    <title lang="ja_JP">Ｕ・ＬＡ・ＬＡ＠７</title>
+    <desc lang="ja_JP">ＳＨＥＬＬＹと現役女子大学生アナウンサーが東京で活躍する女性たちに贈る、朝のニュース情報番組！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409080000 +0900" stop="20100409083000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409083000 +0900" stop="20100409090000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409090000 +0900" stop="20100409093000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409093000 +0900" stop="20100409100000 +0900" channel="GR20">
+    <title lang="ja_JP">人生の切符</title>
+    <desc lang="ja_JP">浅草トンカツ　【健康情報番組】</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409100000 +0900" stop="20100409103000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409103000 +0900" stop="20100409110000 +0900" channel="GR20">
+    <title lang="ja_JP">ＭＸショッピング</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409110000 +0900" stop="20100409113000 +0900" channel="GR20">
+    <title lang="ja_JP">ザ・超人シェフ</title>
+    <desc lang="ja_JP">決勝テーマ　豆乳を使ったヘルシー料理</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409113000 +0900" stop="20100409114000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">内外の新鮮なニュースを▽株価情報▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409114000 +0900" stop="20100409115500 +0900" channel="GR20">
+    <title lang="ja_JP">秋山莉奈の素敵にトラベり〜な！</title>
+    <desc lang="ja_JP">東伊豆の癒しを贈り〜な！</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100409115500 +0900" stop="20100409120000 +0900" channel="GR20">
+    <title lang="ja_JP">天気情報</title>
+    <desc lang="ja_JP">各地の天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409120000 +0900" stop="20100409125500 +0900" channel="GR20">
+    <title lang="ja_JP">新・上海グランド</title>
+    <desc lang="ja_JP">「落日の挽歌」</desc>
+    <category lang="ja_JP">ドラマ</category>
+    <category lang="en">drama</category>
+  </programme>
+  <programme start="20100409125500 +0900" stop="20100409130000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、各地の最新ニュース▽交通情報▽天気</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409130000 +0900" stop="20100409133000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409133000 +0900" stop="20100409134500 +0900" channel="GR20">
+    <title lang="ja_JP">栃木のきらめき</title>
+    <desc lang="ja_JP">木と向き合い技を伝える〜宮大工小川三太〜</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100409134500 +0900" stop="20100409140000 +0900" channel="GR20">
+    <title lang="ja_JP">音楽世界旅〜スペイン編〜</title>
+    <desc lang="ja_JP">世界各国の民族音楽を探るこの番組。今回の国は情熱の国・スペイン。音楽にまるわる文化や歴史。楽器や演奏家など、深く掘り下げて紹介します。</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100409140000 +0900" stop="20100409143000 +0900" channel="GR20">
+    <title lang="ja_JP">〜ブルガリア、バラの谷から。〜　ソフィア物語</title>
+    <desc lang="ja_JP">【美容情報番組】</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409143000 +0900" stop="20100409150000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409150000 +0900" stop="20100409160000 +0900" channel="GR20">
+    <title lang="ja_JP">石原知事定例会見</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409160000 +0900" stop="20100409163000 +0900" channel="GR20">
+    <title lang="ja_JP">お買い物情報</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409163000 +0900" stop="20100409170000 +0900" channel="GR20">
+    <title lang="ja_JP">ｙｅｓ！プリキュア５</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100409170000 +0900" stop="20100409180000 +0900" channel="GR20">
+    <title lang="ja_JP">５時に夢中！</title>
+    <desc lang="ja_JP">東京の夕方は・・・女性のストレスを解消する“本音マル出し”ぶっちゃけワイドショー！！</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409180000 +0900" stop="20100409182000 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本の、世界のニュースをいち早くお届けします！姉妹局ＮＹ１のニュースも毎日放送。ニューヨークの最新情報をお伝えします。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409182000 +0900" stop="20100409183000 +0900" channel="GR20">
+    <title lang="ja_JP">誘惑！パスポート</title>
+    <desc lang="ja_JP">Ｔｈｉｓ　ｉｓ　Ｐｌａｃｅ．Ｄｅｎａｒａｕ　Ｉｓｌａｎｄ，ＦＩＪＩ</desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100409183000 +0900" stop="20100409190000 +0900" channel="GR20">
+    <title lang="ja_JP">ハクション大魔王</title>
+    <desc lang="ja_JP">「ワンワンコンテストの話」「月征服かなわんよの話」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100409190000 +0900" stop="20100409193000 +0900" channel="GR20">
+    <title lang="ja_JP">うる星やつら</title>
+    <desc lang="ja_JP">「春うらら居眠り教室」「桃の花歌合戦」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100409193000 +0900" stop="20100409200000 +0900" channel="GR20">
+    <title lang="ja_JP">元祖天才バカボン</title>
+    <desc lang="ja_JP">「スケジュールの天才なのだ」「恐怖の特急バスなのだ」</desc>
+    <category lang="ja_JP">アニメ・特撮</category>
+    <category lang="en">anime</category>
+  </programme>
+  <programme start="20100409200000 +0900" stop="20100409204500 +0900" channel="GR20">
+    <title lang="ja_JP">ＴＯＫＹＯ　ＭＸ　ＮＥＷＳ</title>
+    <desc lang="ja_JP">東京の、日本のニュースをじっくりと。ニューヨークの旬の話題も伝えます。</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409204500 +0900" stop="20100409210000 +0900" channel="GR20">
+    <title lang="ja_JP">いきいき動物ビデオ</title>
+    <desc lang="ja_JP"> </desc>
+    <category lang="ja_JP">その他</category>
+    <category lang="en">etc</category>
+  </programme>
+  <programme start="20100409210000 +0900" stop="20100409220000 +0900" channel="GR20">
+    <title lang="ja_JP">ザ・ゴールデンアワー</title>
+    <desc lang="ja_JP">東京の“ナイス”ミドルに贈る、世界基準の“ナイス”ワイドショー！！</desc>
+    <category lang="ja_JP">ニュース・報道</category>
+    <category lang="en">news</category>
+  </programme>
+  <programme start="20100409220000 +0900" stop="20100409223000 +0900" channel="GR20">
+    <title lang="ja_JP">ＦＣ東京ホットライン</title>
+    <desc lang="ja_JP">青赤ファン必見！ＦＣ東京応援番組！</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100409223000 +0900" stop="20100409224500 +0900" channel="GR20">
+    <title lang="ja_JP">フットサルキングダム</title>
+    <desc lang="ja_JP">日本フットサルリーグ（Ｆリーグ）のハイライト、現役Ｆリーガーが教えるフットサル講座、Ｆリーガーの素顔など、観て楽しく、プレイして楽しいフットサルの魅力に迫る。</desc>
+    <category lang="ja_JP">スポーツ</category>
+    <category lang="en">sports</category>
+  </programme>
+  <programme start="20100409224500 +0900" stop="20100409230000 +0900" channel="GR20">
+    <title lang="ja_JP">読モＴＶ　Ｔｏｋｙｏ　Ｇｉｒｌｓ　Ｐｒｏｌｅｃｔ</title>
+    <desc lang="ja_JP">今、東京のファッションはストリートを中心に動いている。そのストリートで今最も輝いている存在、それが読モ＝読者モデルだ。</desc>
+    <category lang="ja_JP">情報</category>
+    <category lang="en">information</category>
+  </programme>
+  <programme start="20100409230000 +0900" stop="20100409233000 +0900" channel="GR20">
+    <title lang="ja_JP">ＩＪＰ　イジュウインパーク</title>
+    <desc lang="ja_JP">話題の新企画番組第１回目は、伊集院光が若手ポンコツ芸人＆若手女性タレントに過酷な企画をぶつける！果たしてその企画内容は？デジタルとど根性で乗り切れるのか！？</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+  <programme start="20100409233000 +0900" stop="20100410003000 +0900" channel="GR20">
+    <title lang="ja_JP">松嶋×町山未公開映画を観るＴＶ</title>
+    <desc lang="ja_JP">ＧＯＯＤ　ＨＡＩＲ（後編）</desc>
+    <category lang="ja_JP">バラエティ</category>
+    <category lang="en">variety</category>
+  </programme>
+</tv>
