@@ -11,8 +11,8 @@ char		*subtitle_cnv_str[] = {
 	" 第",
 	"　「",
 	"　＃",
-	"（",
 	"「",
+	"（",
 	NULL
 };
 static void timecmp(int *,int *,int *,
