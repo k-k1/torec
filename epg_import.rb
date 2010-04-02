@@ -18,8 +18,8 @@ def create_table()
   if !DB.table_exists?(:channel_types)
     DB.create_table :channel_types do
       primary_key :id
-      varchar :type, :size => 20, :null => false
-      varchar :name, :size => 128, :null => false
+      string :type, :size => 20, :null => false, :unique => true
+      string :name, :size => 128, :null => false
     end
     ct = DB[:channel_types]
     ct << {:type => "GR", :name => "地上波"}
@@ -29,24 +29,26 @@ def create_table()
   if !DB.table_exists?(:channels)
     DB.create_table :channels do
       primary_key :id
-      varchar :type, :size => 20, :null => false
-      varchar :name, :size => 128, :null => false
+      string :type, :size => 20, :null => false
+      string :channel, :size => 10, :null => false
+      string :name, :size => 128
+      #unique :type, :channel
     end
   end
   if !DB.table_exists?(:categories)
     DB.create_table :categories do
       primary_key :id
-      varchar :type, :size => 20, :null => false
-      varchar :name, :size => 128, :null => false
+      string :type, :size => 20, :null => false
+      string :name, :size => 128, :null => false
     end
   end
   if !DB.table_exists?(:programs)
     DB.create_table :programs do
       primary_key :id
-      varchar :channel_id, :size => 20, :null => false
-      varchar :category_id, :size => 20, :null => false
-      varchar :title, :size => 512
-      varchar :description, :size => 512
+      string :channel_id, :size => 20, :null => false
+      string :category_id, :size => 20, :null => false
+      string :title, :size => 512
+      string :description, :size => 512
       datetime :start, :null => false
       datetime :end, :null => false
     end
