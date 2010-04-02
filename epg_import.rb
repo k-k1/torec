@@ -34,6 +34,7 @@ def create_table()
       string :name, :size => 128
       #unique :type, :channel
     end
+    init_channels()
   end
   if !DB.table_exists?(:categories)
     DB.create_table :categories do
@@ -53,6 +54,33 @@ def create_table()
       datetime :end, :null => false
     end
   end
+end
+
+def init_channels()
+  channels = DB[:channels]
+  channels << { :type => 'GR', :channel => '27', :name => 'ＮＨＫ総合１・東京' }
+  channels << { :type => 'GR', :channel => '26', :name => 'ＮＨＫ教育１・東京' }
+  channels << { :type => 'GR', :channel => '25', :name => '日テレ１' }
+  channels << { :type => 'GR', :channel => '22', :name => 'ＴＢＳ１' }
+  channels << { :type => 'GR', :channel => '21', :name => 'フジテレビ' }
+  channels << { :type => 'GR', :channel => '24', :name => 'テレビ朝日' }
+  channels << { :type => 'GR', :channel => '23', :name => 'テレビ東京１' }
+  channels << { :type => 'GR', :channel => '20', :name => 'ＴＯＫＹＯ　ＭＸ１' }
+  channels << { :type => 'GR', :channel => '28', :name => '放送大学１' }
+  
+  channels << { :type => 'BS', :channel => '101', :name => 'NHK BS1' }
+  channels << { :type => 'BS', :channel => '102', :name => 'NHK BS2' }
+  channels << { :type => 'BS', :channel => '103', :name => 'NHK BSh' }
+  channels << { :type => 'BS', :channel => '141', :name => 'BS日テレ' }
+  channels << { :type => 'BS', :channel => '151', :name => 'BS朝日' }
+  channels << { :type => 'BS', :channel => '161', :name => 'BS-i' }
+  channels << { :type => 'BS', :channel => '171', :name => 'BSジャパン' }
+  channels << { :type => 'BS', :channel => '181', :name => 'BSフジ' }
+  channels << { :type => 'BS', :channel => '191', :name => 'WOWOW' }
+  channels << { :type => 'BS', :channel => '192', :name => 'WOWOW2' }
+  channels << { :type => 'BS', :channel => '193', :name => 'WOWOW3' }
+  channels << { :type => 'BS', :channel => '211', :name => 'BS11' }
+  channels << { :type => 'BS', :channel => '222', :name => 'TwellV' }
 end
 
 def parseDateTime(str)
