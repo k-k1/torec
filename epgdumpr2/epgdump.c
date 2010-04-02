@@ -143,6 +143,7 @@ char	title[1024];
 char	subtitle[1024];
 char	Category[1024];
 char	ServiceName[1024];
+char	ChannelPrefix[3];
 iconv_t	cd ;
 
 void	xmlspecialchars(char *str)
@@ -253,8 +254,13 @@ void	GetEIT(FILE *infile, FILE *outfile, STATION *psta, SECcache *secs, int coun
 		strftime(cendtime, (sizeof(cendtime) - 1), "%Y%m%d%H%M%S", endtl);
 		strftime(cstarttime, (sizeof(cstarttime) - 1), "%Y%m%d%H%M%S", &tl);
 #if 1
-		fprintf(outfile, "  <programme start=\"%s +0900\" stop=\"%s +0900\" channel=\"%s\">\n",	
-				cstarttime, cendtime, psta->ontv);
+		fprintf(outfile, "  <programme start=\"%s +0900\" stop=\"%s +0900\" ",	
+				cstarttime, cendtime);
+		if( ChannelPrefix[0] == 'G' )
+			fprintf(outfile, "channel=\"%s%s\">\n",	ChannelPrefix, psta->ontv);
+		else
+			fprintf(outfile, "channel=\"%s%d\">\n",	ChannelPrefix, psta->svId);
+
 		fprintf(outfile, "    <title lang=\"ja_JP\">%s</title>\n", title);
 		fprintf(outfile, "    <desc lang=\"ja_JP\">%s</desc>\n", subtitle);
 		fprintf(outfile, "    <category lang=\"ja_JP\">%s</category>\n", Category);
@@ -333,22 +339,25 @@ int main(int argc, char *argv[])
 		}
 	}else{
 		fprintf(stdout, "Usage : %s /BS <tsFile> <outfile>\n", argv[0]);
-		fprintf(stdout, "Usage : %s <ontvcode> <tsFile> <outfile>\n", argv[0]);
-		fprintf(stdout, "ontvcode チャンネル識別子。****.ontvjapan.com など\n");
-		fprintf(stdout, "/BS      BSモード。一つのTSからBS全局のデータを読み込みます。\n");
-		fprintf(stdout, "/CS      CSモード。一つのTSから複数局のデータを読み込みます。\n");
+		fprintf(stdout, "Usage : %s <channelno> <tsFile> <outfile>\n", argv[0]);
+		//fprintf(stdout, "ontvcode チャンネル識別子。****.ontvjapan.com など\n");
+		//fprintf(stdout, "/BS      BSモード。一つのTSからBS全局のデータを読み込みます。\n");
+		//fprintf(stdout, "/CS      CSモード。一つのTSから複数局のデータを読み込みます。\n");
 		return 0;
 	}
 
 	if(strcmp(arg_onTV, "/BS") == 0){
+		ChannelPrefix[0]='B';ChannelPrefix[1]='S';ChannelPrefix[2]=0;
 		pStas = bsSta;
 		staCount = bsStaCount;
 		act = 0 ;
 	}else if(strcmp(arg_onTV, "/CS") == 0){
+		ChannelPrefix[0]='C';ChannelPrefix[1]='S';ChannelPrefix[2]=0;
 		pStas = csSta;
 		staCount = csStaCount;
 		act = 0 ;
 	}else{
+		ChannelPrefix[0]='G';ChannelPrefix[1]='R';ChannelPrefix[2]=0;
 		act = 1 ;
 		svttop = calloc(1, sizeof(SVT_CONTROL));
 		GetSDT(infile, svttop, secs, SECCOUNT);
@@ -381,7 +390,10 @@ int main(int argc, char *argv[])
 		iconv(cd, &inptr, &ilen, &outptr, &olen);
 		xmlspecialchars(ServiceName);
 
-		fprintf(outfile, "  <channel id=\"%s\">\n", pStas[lp].ontv);
+		if( ChannelPrefix[0] == 'G' )
+			fprintf(outfile, "  <channel id=\"%s%s\">\n", ChannelPrefix, pStas[lp].ontv);
+		else
+			fprintf(outfile, "  <channel id=\"%s%d\">\n", ChannelPrefix, pStas[lp].svId);
 		fprintf(outfile, "    <display-name lang=\"ja_JP\">%s</display-name>\n", ServiceName);
 		fprintf(outfile, "  </channel>\n");
 	}
