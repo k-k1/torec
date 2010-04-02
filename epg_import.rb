@@ -95,9 +95,9 @@ def import(filename)
     p e.attributes[:id]
     #p e.find_first('display-name').content
 #    DB[:channels] << {
-#      :category_id => e.find_first('category[@lang="en"]').content.to_han,
-#      :title => e.find_first('title[@lang="ja_JP"]').content.to_han,
-#      :description => e.find_first('desc[@lang="ja_JP"]').content.to_han,
+#      :category_id => e.find_first('category[@lang="en"]').content,
+#      :title => e.find_first('title[@lang="ja_JP"]').content,
+#      :description => e.find_first('desc[@lang="ja_JP"]').content,
 #      :start => parseDateTime(e.attributes[:start]),
 #      :end => parseDateTime(e.attributes[:stop])
 #    }
@@ -106,9 +106,9 @@ def import(filename)
   doc.root.find('//tv/programme').each do |e|
     DB[:programs] << {
       :channel_id => e.attributes[:channel],
-      :category_id => e.find_first('category[@lang="en"]').content.to_han,
-      :title => e.find_first('title[@lang="ja_JP"]').content.to_han,
-      :description => e.find_first('desc[@lang="ja_JP"]').content.to_han,
+      :category_id => e.find_first('category[@lang="en"]').content,
+      :title => e.find_first('title[@lang="ja_JP"]').content,
+      :description => e.find_first('desc[@lang="ja_JP"]').content,
       :start => parseDateTime(e.attributes[:start]),
       :end => parseDateTime(e.attributes[:stop])
     }
