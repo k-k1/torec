@@ -344,7 +344,7 @@ int main(int argc, char *argv[])
 		pStas = bsSta;
 		staCount = bsStaCount;
 		act = 0 ;
-	}else if(strcmp(arg_onTV, "/BS") == 0){
+	}else if(strcmp(arg_onTV, "/CS") == 0){
 		pStas = csSta;
 		staCount = csStaCount;
 		act = 0 ;
