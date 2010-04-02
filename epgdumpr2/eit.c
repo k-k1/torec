@@ -6,6 +6,9 @@
 
 char		*subtitle_cnv_str[] = {
 	"　第",
+	"ー第",
+	"-第",
+	" 第",
 	"　「",
 	"　＃",
 	"（",
@@ -39,7 +42,8 @@ int parseEIThead(unsigned char *data, EIThead *h) {
 	return 14;
 }
 
-int parseEITbody(unsigned char *data, EITbody *b) {
+int parseEITbody(unsigned char *data, EITbody *b)
+{
 	int boff = 0;
 	int tnum;
 	char buf[4];
@@ -78,20 +82,29 @@ int parseEITbody(unsigned char *data, EITbody *b) {
 
 	b->yy += 1900;
   
+	memset(buf, '\0', sizeof(buf));
 	sprintf(buf, "%x", b->start_time[2]);
 	b->hh = atoi(buf);
+	memset(buf, '\0', sizeof(buf));
 	sprintf(buf, "%x", b->start_time[3]);
 	b->hm = atoi(buf);
+	memset(buf, '\0', sizeof(buf));
 	sprintf(buf, "%x", b->start_time[4]);
 	b->ss = atoi(buf);
 
+	if((b->duration[0] == 0xFF) && (b->duration[1] == 0xFF) && (b->duration[2] == 0xFF)){
+		b->dhh = b->dhm = b->dss = 0;
+	}else{
+		memset(buf, '\0', sizeof(buf));
 	sprintf(buf, "%x", b->duration[0]);
 	b->dhh = atoi(buf);
+		memset(buf, '\0', sizeof(buf));
 	sprintf(buf, "%x", b->duration[1]);
 	b->dhm = atoi(buf);
+		memset(buf, '\0', sizeof(buf));
 	sprintf(buf, "%x", b->duration[2]);
 	b->dss = atoi(buf);
-  
+	}
 	return 12;
 }
 
@@ -267,6 +280,10 @@ void	conv_title_subtitle(EIT_CONTROL *eitptr)
 	for(lp = 0 ; subtitle_cnv_str[lp] != NULL ; lp++){
 		ptr = strstr(eitptr->title, subtitle_cnv_str[lp]);
 		if(ptr == NULL){
+			continue ;
+		}
+		// タイトルがなくならないように
+		if(ptr == eitptr->title){
 			continue ;
 		}
 		newsubtitle = calloc(1, ((strlen(ptr) + 1) + (strlen(eitptr->subtitle) + 1)));

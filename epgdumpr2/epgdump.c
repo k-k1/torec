@@ -177,7 +177,7 @@ void	GetEIT(FILE *infile, FILE *outfile, STATION *psta, SECcache *secs, int coun
 	char	*inptr ;
 	size_t	ilen;
 	size_t	olen;
-	time_t	time ;
+	time_t	l_time ;
 	time_t	end_time ;
 	struct	tm	tl ;
 	struct	tm	*endtl ;
@@ -239,9 +239,15 @@ void	GetEIT(FILE *infile, FILE *outfile, STATION *psta, SECcache *secs, int coun
 		tl.tm_wday = 0;
 		tl.tm_isdst = 0;
 		tl.tm_yday = 0;
-		time = mktime(&tl);
-		end_time = time + eitcur->ehh * 3600 + eitcur->emm * 60 + eitcur->ess;
+		l_time = mktime(&tl);
+		if((eitcur->ehh == 0) && (eitcur->emm == 0) && (eitcur->ess == 0)){
+			(void)time(&l_time);
+			end_time = l_time + (60 * 5);		// ５分後に設定
 		endtl = localtime(&end_time);
+		}else{
+			end_time = l_time + eitcur->ehh * 3600 + eitcur->emm * 60 + eitcur->ess;
+			endtl = localtime(&end_time);
+		}
 		memset(cendtime, '\0', sizeof(cendtime));
 		memset(cstarttime, '\0', sizeof(cstarttime));
 		strftime(cendtime, (sizeof(cendtime) - 1), "%Y%m%d%H%M%S", endtl);
