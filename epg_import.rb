@@ -11,7 +11,6 @@ class String
   end
 end
 
-
 DB = Sequel.connect("sqlite://test.db")
 
 def create_table()
@@ -46,8 +45,8 @@ def create_table()
   if !DB.table_exists?(:programs)
     DB.create_table :programs do
       primary_key :id
-      string :channel_id, :size => 20, :null => false
-      string :category_id, :size => 20, :null => false
+      integer :channel_id, :null => false
+      integer :category_id, :size => 20, :null => false
       string :title, :size => 512
       string :description, :size => 512
       datetime :start, :null => false
@@ -104,14 +103,39 @@ def import(filename)
   end
 
   doc.root.find('//tv/programme').each do |e|
-    DB[:programs] << {
-      :channel_id => e.attributes[:channel],
-      :category_id => e.find_first('category[@lang="en"]').content,
-      :title => e.find_first('title[@lang="ja_JP"]').content,
-      :description => e.find_first('desc[@lang="ja_JP"]').content,
-      :start => parseDateTime(e.attributes[:start]),
-      :end => parseDateTime(e.attributes[:stop])
-    }
+    channel = DB[:channels].filter('type || channel = ?', e.attributes[:channel])
+    next if !channel.exists
+    
+    category_type = e.find_first('category[@lang="en"]').content
+    category = DB[:categories].filter(:type => category_type)
+    if category.first == nil
+      DB[:categories] << {
+        :type => category_type,
+        :name => e.find_first('category[@lang="ja_JP"]').content
+      }
+    end
+    
+    startdate = parseDateTime(e.attributes[:start])
+    enddate = parseDateTime(e.attributes[:stop])
+    dupPrograms = DB[:programs].where((:channel_id == channel.first[:id]) & (:start <= startdate) & (:end >= enddate))
+    if dupPrograms.count == 1 && dupPrograms.first[:start] == startdate
+      p 'updated.'
+      DB[:programs].filter(:id => dupPrograms.first[:id]).update(:start => startdate, title => e.find_first('title[@lang="ja_JP"]').content)
+    else
+      p 'remove ' + dupPrograms.count.to_s + ' program(s).'
+      dupPrograms.all do |r|
+        # remove duplicate programs
+        DB[:programs].filter(:id => r[:id]).delete
+      end
+      DB[:programs] << {
+        :channel_id => channel.first[:id],
+        :category_id => category.first[:id],
+        :title => e.find_first('title[@lang="ja_JP"]').content,
+        :description => e.find_first('desc[@lang="ja_JP"]').content,
+        :start => startdate,
+        :end => enddate
+      }
+    end
   end
 
 end
@@ -119,7 +143,9 @@ end
 if __FILE__ == $0
   # TODO Generated stub
   create_table()
-  import("tmp/epgdump_output_sample.xml")
+  import("tmp/epgdump_GR20_1_sample.xml")
+  import("tmp/epgdump_GR20_2_sample.xml")
+  import("tmp/epgdump_BS101_1_sample.xml")
   
   
 end
