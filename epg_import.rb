@@ -164,7 +164,6 @@ class Record < Sequel::Model(:records)
     integer :reservation_id, :null => true
     string :filename, :unique => true, :null => true
     enum :state, :elements => ['reserve', 'scheduled', 'recording', 'done', 'removed']
-    #string :state, :size => 20, :null => true
   end
 end
 
@@ -182,6 +181,12 @@ def create_table()
   end
   if !Program.table_exists?
     Program.create_table
+  end
+  if !Reservation.table_exists?
+    Reservation.create_table
+  end
+  if !Record.table_exists?
+    Record.create_table
   end
 end
 
