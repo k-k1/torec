@@ -171,7 +171,10 @@ def import(filename)
   
   doc = XML::Document.file(filename)
 
-  doc.root.find('//tv/programme').each do |e|
+  pgElems = doc.root.find('//tv/programme')
+  maxprog = pgElems.length
+  progress = 1
+  pgElems.each do |e|
     pg = Program.populate(e)
     next if pg.unknown_channel?
     
@@ -192,8 +195,13 @@ def import(filename)
       pg.set_element(e)
       pg.save
     end
+    if progress % 20 == 0
+      p 'import ' + progress.to_s + '/' + maxprog.to_s
+    end
+    progress = progress + 1
   end
-
+  
+  p 'import ' + maxprog.to_s + ' program(s) done.'
 end
 
 if __FILE__ == $0
