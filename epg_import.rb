@@ -93,12 +93,10 @@ class Program < Sequel::Model(:programs)
     string :description, :size => 512
   end
   
-  def self.populate(e)
-    pg = Program.new
-    
+  def set_element(e)
     ch = Channel.find(e.attributes[:channel])
     if ch != nil
-      pg[:channel_id] = ch[:id]
+      self[:channel_id] = ch[:id]
     end
     
     cate = Category.find(e.find_first('category[@lang="en"]').content)
@@ -109,13 +107,18 @@ class Program < Sequel::Model(:programs)
       }
       cate = Category.find(e.find_first('category[@lang="en"]').content)
     end
-    pg[:category_id] = cate[:id]
+    self[:category_id] = cate[:id]
     
-    pg[:title] = e.find_first('title[@lang="ja_JP"]').content
-    pg[:description] = e.find_first('desc[@lang="ja_JP"]').content
-    pg[:start]= parseDateTime(e.attributes[:start])
-    pg[:end] = parseDateTime(e.attributes[:stop])
-    pg
+    self[:title] = e.find_first('title[@lang="ja_JP"]').content
+    self[:description] = e.find_first('desc[@lang="ja_JP"]').content
+    self[:start]= parseDateTime(e.attributes[:start])
+    self[:end] = parseDateTime(e.attributes[:stop])
+    self
+  end
+  
+  def self.populate(e)
+    pg = Program.new
+    pg.set_element(e)
   end
   
   def create_hash
@@ -133,7 +136,11 @@ class Program < Sequel::Model(:programs)
   end
   
   def find_duplicate()
-    Program.filter((:channel_id == self[:channel_id]) & (:start <= self[:start]) & (:end >= self[:end]))
+    Program.filter((:channel_id == self[:channel_id]) & (:start < self[:start]) & (:end > self[:end]))
+  end
+  
+  def find
+    Program.filter(:hash => self.create_hash).first
   end
 end
 
@@ -166,16 +173,21 @@ def import(filename)
     pg = Program.populate(e)
     next if pg.unknown_channel?
     
-    dupPrograms = pg.find_duplicate
-    if dupPrograms.count == 1 && dupPrograms.first[:start] == startdate
-      p 'updated.'
-      DB[:programs].filter(:id => dupPrograms.first[:id]).update(:start => startdate, title => e.find_first('title[@lang="ja_JP"]').content)
-    else
-      p 'remove ' + dupPrograms.count.to_s + ' program(s).'
-      dupPrograms.all do |r|
+    if pg.find == nil
+      dupPrograms = pg.find_duplicate
+      if dupPrograms.count > 0
         # remove duplicate programs
-        r.delete
+        p 'remove ' + dupPrograms.count.to_s + ' program(s).'
+        dupPrograms.all do |r|
+          r.delete
+        end
       end
+      pg.save
+    else
+      # update program
+      #p 'update ' + pg.create_hash
+      pg = pg.find
+      pg.set_element(e)
       pg.save
     end
   end
