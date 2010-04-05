@@ -33,6 +33,7 @@ class Category < Sequel::Model(:categories)
     primary_key :id
     string :type, :size => 20, :null => false
     string :name, :size => 128, :null => false
+    index :type
   end
   
   def self.find(type)
@@ -46,7 +47,7 @@ class Channel < Sequel::Model(:channels)
     string :type, :size => 20, :null => false
     string :channel, :size => 10, :null => false
     string :name, :size => 128
-    #unique :type, :channel
+    unique [:type, :channel]
   end
   
   def self.create_init_data()
@@ -88,9 +89,10 @@ class Program < Sequel::Model(:programs)
     integer :category_id, :size => 20, :null => false
     datetime :start, :null => false
     datetime :end, :null => false
-    string :hash, :size => 32 ,:null => false
+    string :hash, :size => 32, :fixed => true, :unique => true, :null => false
     string :title, :size => 512
     string :description, :size => 512
+    index [:channel_id, :start, :end]
   end
   
   def set_element(e)
