@@ -2,6 +2,7 @@ require 'rubygems'
 require 'xml/libxml'
 require 'sequel'
 require 'date'
+require 'digest/md5'
 
 class String
   def to_han()
@@ -85,10 +86,11 @@ class Program < Sequel::Model(:programs)
     primary_key :id
     integer :channel_id, :null => false
     integer :category_id, :size => 20, :null => false
-    string :title, :size => 512
-    string :description, :size => 512
     datetime :start, :null => false
     datetime :end, :null => false
+    string :hash, :size => 32 ,:null => false
+    string :title, :size => 512
+    string :description, :size => 512
   end
   
   def self.populate(e)
@@ -114,6 +116,16 @@ class Program < Sequel::Model(:programs)
     pg[:start]= parseDateTime(e.attributes[:start])
     pg[:end] = parseDateTime(e.attributes[:stop])
     pg
+  end
+  
+  def create_hash
+    str = self[:channel_id].to_s + self[:start].to_s + self[:end].to_s
+    Digest::MD5.hexdigest(str)
+  end
+  
+  def save
+    self[:hash] = self.create_hash
+    super
   end
   
   def unknown_channel?
