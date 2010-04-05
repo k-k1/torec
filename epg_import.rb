@@ -86,7 +86,7 @@ class Program < Sequel::Model(:programs)
   set_schema do
     primary_key :id
     integer :channel_id, :null => false
-    integer :category_id, :size => 20, :null => false
+    integer :category_id, :null => false
     datetime :start, :null => false
     datetime :end, :null => false
     string :hash, :size => 32, :fixed => true, :unique => true, :null => false
