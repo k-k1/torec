@@ -2,7 +2,6 @@ require 'rubygems'
 require 'xml/libxml'
 require 'sequel'
 require 'date'
-require 'jcode'
 
 class String
   def to_han()
