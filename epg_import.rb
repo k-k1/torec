@@ -13,19 +13,52 @@ end
 
 DB = Sequel.connect("sqlite://test.db")
 
+Sequel::Model.plugin(:schema)
+
+class ChannelType < Sequel::Model(:channel_types)
+  set_schema do
+    primary_key :id
+    string :type, :size => 20, :null => false, :unique => true
+    string :name, :size => 128, :null => false
+  end
+end
+
 class Category < Sequel::Model(:categories)
+  set_schema do
+    primary_key :id
+    string :type, :size => 20, :null => false
+    string :name, :size => 128, :null => false
+  end
+  
   def self.find(type)
     self.filter(:type => type).first
   end
 end
 
 class Channel < Sequel::Model(:channels)
+  set_schema do
+    primary_key :id
+    string :type, :size => 20, :null => false
+    string :channel, :size => 10, :null => false
+    string :name, :size => 128
+    #unique :type, :channel
+  end
   def self.find(chname)
     self.filter('type || channel = ?', chname).first
   end
 end
 
 class Program < Sequel::Model(:programs)
+  set_schema do
+    primary_key :id
+    integer :channel_id, :null => false
+    integer :category_id, :size => 20, :null => false
+    string :title, :size => 512
+    string :description, :size => 512
+    datetime :start, :null => false
+    datetime :end, :null => false
+  end
+  
   def self.populate(e)
     pg = Program.new
     
@@ -61,44 +94,21 @@ class Program < Sequel::Model(:programs)
 end
 
 def create_table()
-  if !DB.table_exists?(:channel_types)
-    DB.create_table :channel_types do
-      primary_key :id
-      string :type, :size => 20, :null => false, :unique => true
-      string :name, :size => 128, :null => false
-    end
-    ct = DB[:channel_types]
-    ct << {:type => "GR", :name => "地上波"}
-    ct << {:type => "BS", :name => "BS"}
-    ct << {:type => "CS", :name => "CS"}
+  if !ChannelType.table_exists?
+    ChannelType.create_table
+    ChannelType << {:type => "GR", :name => "地上波"}
+    ChannelType << {:type => "BS", :name => "BS"}
+    ChannelType << {:type => "CS", :name => "CS"}
   end
-  if !DB.table_exists?(:channels)
-    DB.create_table :channels do
-      primary_key :id
-      string :type, :size => 20, :null => false
-      string :channel, :size => 10, :null => false
-      string :name, :size => 128
-      #unique :type, :channel
-    end
+  if !Channel.table_exists?
+    Channel.create_table
     init_channels()
   end
-  if !DB.table_exists?(:categories)
-    DB.create_table :categories do
-      primary_key :id
-      string :type, :size => 20, :null => false
-      string :name, :size => 128, :null => false
-    end
+  if !Category.table_exists?
+    Category.create_table
   end
-  if !DB.table_exists?(:programs)
-    DB.create_table :programs do
-      primary_key :id
-      integer :channel_id, :null => false
-      integer :category_id, :size => 20, :null => false
-      string :title, :size => 512
-      string :description, :size => 512
-      datetime :start, :null => false
-      datetime :end, :null => false
-    end
+  if !Program.table_exists?
+    Program.create_table
   end
 end
 
