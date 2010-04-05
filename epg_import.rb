@@ -149,18 +149,6 @@ end
 def import(filename)
   
   doc = XML::Document.file(filename)
-  
-  doc.root.find('//tv/channel').each do |e|
-    p e.attributes[:id]
-    #p e.find_first('display-name').content
-#    DB[:channels] << {
-#      :category_id => e.find_first('category[@lang="en"]').content,
-#      :title => e.find_first('title[@lang="ja_JP"]').content,
-#      :description => e.find_first('desc[@lang="ja_JP"]').content,
-#      :start => parseDateTime(e.attributes[:start]),
-#      :end => parseDateTime(e.attributes[:stop])
-#    }
-  end
 
   doc.root.find('//tv/programme').each do |e|
     pg = Program.populate(e)
