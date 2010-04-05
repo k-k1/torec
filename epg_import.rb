@@ -142,7 +142,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def find
-    Program.filter(:hash => self.create_hash).first
+    Program.filter(:hash => self.create_hash)
   end
 end
 
@@ -175,7 +175,7 @@ def import(filename)
     pg = Program.populate(e)
     next if pg.unknown_channel?
     
-    if pg.find == nil
+    if pg.find.count == 0
       dupPrograms = pg.find_duplicate
       if dupPrograms.count > 0
         # remove duplicate programs
@@ -188,7 +188,7 @@ def import(filename)
     else
       # update program
       #p 'update ' + pg.create_hash
-      pg = pg.find
+      pg = pg.find.first
       pg.set_element(e)
       pg.save
     end
