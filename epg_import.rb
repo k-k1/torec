@@ -163,7 +163,8 @@ class Record < Sequel::Model(:records)
     integer :program_id, :unique => true, :null => true
     integer :reservation_id, :null => true
     string :filename, :unique => true, :null => true
-    enum :state, :elements => ['reserve', 'scheduled', 'recording', 'done', 'removed']
+    #enum :state, :elements => ['reserve', 'scheduled', 'recording', 'done', 'removed']
+    string :state, :size => 20, :null => true
   end
 end
 
