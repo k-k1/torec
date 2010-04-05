@@ -182,6 +182,12 @@ def create_table()
   if !Program.table_exists?
     Program.create_table
   end
+  if !Reservation.table_exists?
+    Reservation.create_table
+  end
+  if !Record.table_exists?
+    Record.create_table
+  end
 end
 
 def parseDateTime(str)
