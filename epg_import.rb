@@ -21,7 +21,7 @@ class ChannelType < Sequel::Model(:channel_types)
     string :type, :size => 20, :null => false, :unique => true
     string :name, :size => 128, :null => false
   end
-  def self.init_channel_types()
+  def self.create_init_data()
     ChannelType << {:type => "GR", :name => "地上波"}
     ChannelType << {:type => "BS", :name => "BS"}
     ChannelType << {:type => "CS", :name => "CS"}
@@ -49,7 +49,7 @@ class Channel < Sequel::Model(:channels)
     #unique :type, :channel
   end
   
-  def self.init_channels()
+  def self.create_init_data()
     #GR
     Channel << { :type => 'GR', :channel => '27', :name => 'ＮＨＫ総合１・東京' }
     Channel << { :type => 'GR', :channel => '26', :name => 'ＮＨＫ教育１・東京' }
@@ -147,11 +147,11 @@ end
 def create_table()
   if !ChannelType.table_exists?
     ChannelType.create_table
-    ChannelType.init_channel_types()
+    ChannelType.create_init_data()
   end
   if !Channel.table_exists?
     Channel.create_table
-    Channel.init_channels()
+    Channel.create_init_data()
   end
   if !Category.table_exists?
     Category.create_table
