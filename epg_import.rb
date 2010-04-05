@@ -146,6 +146,28 @@ class Program < Sequel::Model(:programs)
   end
 end
 
+class Reservation < Sequel::Model(:reservations)
+  set_schema do
+    primary_key :id
+    integer :channel_id
+    integer :category_id
+    string :keyword, :size => 512
+    string :hash, :size => 32, :fixed => true
+    string :folder, :size => 128
+  end
+end
+
+class Record < Sequel::Model(:records)
+  set_schema do
+    primary_key :id
+    integer :program_id, :unique => true, :null => true
+    integer :reservation_id, :null => true
+    string :filename, :unique => true, :null => true
+    enum :state, :elements => ['reserve', 'scheduled', 'recording', 'done', 'removed']
+    #string :state, :size => 20, :null => true
+  end
+end
+
 def create_table()
   if !ChannelType.table_exists?
     ChannelType.create_table
