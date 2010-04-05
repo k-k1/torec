@@ -21,6 +21,11 @@ class ChannelType < Sequel::Model(:channel_types)
     string :type, :size => 20, :null => false, :unique => true
     string :name, :size => 128, :null => false
   end
+  def self.init_channel_types()
+    ChannelType << {:type => "GR", :name => "地上波"}
+    ChannelType << {:type => "BS", :name => "BS"}
+    ChannelType << {:type => "CS", :name => "CS"}
+  end
 end
 
 class Category < Sequel::Model(:categories)
@@ -43,6 +48,34 @@ class Channel < Sequel::Model(:channels)
     string :name, :size => 128
     #unique :type, :channel
   end
+  
+  def self.init_channels()
+    #GR
+    Channel << { :type => 'GR', :channel => '27', :name => 'ＮＨＫ総合１・東京' }
+    Channel << { :type => 'GR', :channel => '26', :name => 'ＮＨＫ教育１・東京' }
+    Channel << { :type => 'GR', :channel => '25', :name => '日テレ１' }
+    Channel << { :type => 'GR', :channel => '22', :name => 'ＴＢＳ１' }
+    Channel << { :type => 'GR', :channel => '21', :name => 'フジテレビ' }
+    Channel << { :type => 'GR', :channel => '24', :name => 'テレビ朝日' }
+    Channel << { :type => 'GR', :channel => '23', :name => 'テレビ東京１' }
+    Channel << { :type => 'GR', :channel => '20', :name => 'ＴＯＫＹＯ　ＭＸ１' }
+    Channel << { :type => 'GR', :channel => '28', :name => '放送大学１' }
+    #BS
+    Channel << { :type => 'BS', :channel => '101', :name => 'NHK BS1' }
+    Channel << { :type => 'BS', :channel => '102', :name => 'NHK BS2' }
+    Channel << { :type => 'BS', :channel => '103', :name => 'NHK BSh' }
+    Channel << { :type => 'BS', :channel => '141', :name => 'BS日テレ' }
+    Channel << { :type => 'BS', :channel => '151', :name => 'BS朝日' }
+    Channel << { :type => 'BS', :channel => '161', :name => 'BS-i' }
+    Channel << { :type => 'BS', :channel => '171', :name => 'BSジャパン' }
+    Channel << { :type => 'BS', :channel => '181', :name => 'BSフジ' }
+    Channel << { :type => 'BS', :channel => '191', :name => 'WOWOW' }
+    Channel << { :type => 'BS', :channel => '192', :name => 'WOWOW2' }
+    Channel << { :type => 'BS', :channel => '193', :name => 'WOWOW3' }
+    Channel << { :type => 'BS', :channel => '211', :name => 'BS11' }
+    Channel << { :type => 'BS', :channel => '222', :name => 'TwellV' }
+  end
+  
   def self.find(chname)
     self.filter('type || channel = ?', chname).first
   end
@@ -96,13 +129,11 @@ end
 def create_table()
   if !ChannelType.table_exists?
     ChannelType.create_table
-    ChannelType << {:type => "GR", :name => "地上波"}
-    ChannelType << {:type => "BS", :name => "BS"}
-    ChannelType << {:type => "CS", :name => "CS"}
+    ChannelType.init_channel_types()
   end
   if !Channel.table_exists?
     Channel.create_table
-    init_channels()
+    Channel.init_channels()
   end
   if !Category.table_exists?
     Category.create_table
@@ -110,33 +141,6 @@ def create_table()
   if !Program.table_exists?
     Program.create_table
   end
-end
-
-def init_channels()
-  channels = DB[:channels]
-  channels << { :type => 'GR', :channel => '27', :name => 'ＮＨＫ総合１・東京' }
-  channels << { :type => 'GR', :channel => '26', :name => 'ＮＨＫ教育１・東京' }
-  channels << { :type => 'GR', :channel => '25', :name => '日テレ１' }
-  channels << { :type => 'GR', :channel => '22', :name => 'ＴＢＳ１' }
-  channels << { :type => 'GR', :channel => '21', :name => 'フジテレビ' }
-  channels << { :type => 'GR', :channel => '24', :name => 'テレビ朝日' }
-  channels << { :type => 'GR', :channel => '23', :name => 'テレビ東京１' }
-  channels << { :type => 'GR', :channel => '20', :name => 'ＴＯＫＹＯ　ＭＸ１' }
-  channels << { :type => 'GR', :channel => '28', :name => '放送大学１' }
-  
-  channels << { :type => 'BS', :channel => '101', :name => 'NHK BS1' }
-  channels << { :type => 'BS', :channel => '102', :name => 'NHK BS2' }
-  channels << { :type => 'BS', :channel => '103', :name => 'NHK BSh' }
-  channels << { :type => 'BS', :channel => '141', :name => 'BS日テレ' }
-  channels << { :type => 'BS', :channel => '151', :name => 'BS朝日' }
-  channels << { :type => 'BS', :channel => '161', :name => 'BS-i' }
-  channels << { :type => 'BS', :channel => '171', :name => 'BSジャパン' }
-  channels << { :type => 'BS', :channel => '181', :name => 'BSフジ' }
-  channels << { :type => 'BS', :channel => '191', :name => 'WOWOW' }
-  channels << { :type => 'BS', :channel => '192', :name => 'WOWOW2' }
-  channels << { :type => 'BS', :channel => '193', :name => 'WOWOW3' }
-  channels << { :type => 'BS', :channel => '211', :name => 'BS11' }
-  channels << { :type => 'BS', :channel => '222', :name => 'TwellV' }
 end
 
 def parseDateTime(str)
