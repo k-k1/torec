@@ -13,6 +13,53 @@ end
 
 DB = Sequel.connect("sqlite://test.db")
 
+class Category < Sequel::Model(:categories)
+  def self.find(type)
+    self.filter(:type => type).first
+  end
+end
+
+class Channel < Sequel::Model(:channels)
+  def self.find(chname)
+    self.filter('type || channel = ?', chname).first
+  end
+end
+
+class Program < Sequel::Model(:programs)
+  def self.populate(e)
+    pg = Program.new
+    
+    ch = Channel.find(e.attributes[:channel])
+    if ch != nil
+      pg[:channel_id] = ch[:id]
+    end
+    
+    cate = Category.find(e.find_first('category[@lang="en"]').content)
+    if cate == nil
+      Category << {
+        :type => e.find_first('category[@lang="en"]').content,
+        :name => e.find_first('category[@lang="ja_JP"]').content
+      }
+      cate = Category.find(e.find_first('category[@lang="en"]').content)
+    end
+    pg[:category_id] = cate[:id]
+    
+    pg[:title] = e.find_first('title[@lang="ja_JP"]').content
+    pg[:description] = e.find_first('desc[@lang="ja_JP"]').content
+    pg[:start]= parseDateTime(e.attributes[:start])
+    pg[:end] = parseDateTime(e.attributes[:stop])
+    pg
+  end
+  
+  def unknown_channel?
+    self[:channel_id] == nil
+  end
+  
+  def find_duplicate()
+    Program.filter((:channel_id == self[:channel_id]) & (:start <= self[:start]) & (:end >= self[:end]))
+  end
+end
+
 def create_table()
   if !DB.table_exists?(:channel_types)
     DB.create_table :channel_types do
@@ -103,21 +150,10 @@ def import(filename)
   end
 
   doc.root.find('//tv/programme').each do |e|
-    channel = DB[:channels].filter('type || channel = ?', e.attributes[:channel])
-    next if !channel.exists
+    pg = Program.populate(e)
+    next if pg.unknown_channel?
     
-    category_type = e.find_first('category[@lang="en"]').content
-    category = DB[:categories].filter(:type => category_type)
-    if category.first == nil
-      DB[:categories] << {
-        :type => category_type,
-        :name => e.find_first('category[@lang="ja_JP"]').content
-      }
-    end
-    
-    startdate = parseDateTime(e.attributes[:start])
-    enddate = parseDateTime(e.attributes[:stop])
-    dupPrograms = DB[:programs].where((:channel_id == channel.first[:id]) & (:start <= startdate) & (:end >= enddate))
+    dupPrograms = pg.find_duplicate
     if dupPrograms.count == 1 && dupPrograms.first[:start] == startdate
       p 'updated.'
       DB[:programs].filter(:id => dupPrograms.first[:id]).update(:start => startdate, title => e.find_first('title[@lang="ja_JP"]').content)
@@ -125,16 +161,9 @@ def import(filename)
       p 'remove ' + dupPrograms.count.to_s + ' program(s).'
       dupPrograms.all do |r|
         # remove duplicate programs
-        DB[:programs].filter(:id => r[:id]).delete
+        r.delete
       end
-      DB[:programs] << {
-        :channel_id => channel.first[:id],
-        :category_id => category.first[:id],
-        :title => e.find_first('title[@lang="ja_JP"]').content,
-        :description => e.find_first('desc[@lang="ja_JP"]').content,
-        :start => startdate,
-        :end => enddate
-      }
+      pg.save
     end
   end
 
