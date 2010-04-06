@@ -90,12 +90,12 @@ class Program < Sequel::Model(:programs)
     primary_key :id
     integer :channel_id, :null => false
     integer :category_id, :null => false
-    datetime :start, :null => false
-    datetime :end, :null => false
+    datetime :start_time, :null => false
+    datetime :end_time, :null => false
     string :hash, :size => 32, :fixed => true, :unique => true, :null => false
     string :title, :size => 512
     string :description, :size => 512
-    index [:channel_id, :start, :end]
+    index [:channel_id, :start_time, :end_time]
   end
   many_to_one :channel
   many_to_one :category
@@ -119,8 +119,8 @@ class Program < Sequel::Model(:programs)
     
     self[:title] = e.find_first('title[@lang="ja_JP"]').content
     self[:description] = e.find_first('desc[@lang="ja_JP"]').content
-    self[:start]= parseDateTime(e.attributes[:start])
-    self[:end] = parseDateTime(e.attributes[:stop])
+    self[:start_time]= parseDateTime(e.attributes[:start])
+    self[:end_time] = parseDateTime(e.attributes[:stop])
     self
   end
   
@@ -130,7 +130,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def create_hash
-    str = self[:channel_id].to_s + self[:start].to_s + self[:end].to_s
+    str = self[:channel_id].to_s + self[:start_time].to_s + self[:end_time].to_s
     Digest::MD5.hexdigest(str)
   end
   
@@ -143,7 +143,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def find_duplicate()
-    Program.filter((:channel_id == self[:channel_id]) & (:start < self[:start]) & (:end > self[:end]))
+    Program.filter((:channel_id == self[:channel_id]) & (:start < self[:start_time]) & (:end > self[:end_time]))
   end
   
   def find
