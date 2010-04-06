@@ -50,6 +50,8 @@ class Channel < Sequel::Model(:channels)
     string :name, :size => 128
     unique [:type, :channel]
   end
+  #fixme
+  #many_to_one :channel_type, :key => 'type', :primary_key => 'type'
   
   def self.create_init_data()
     #GR
@@ -95,6 +97,9 @@ class Program < Sequel::Model(:programs)
     string :description, :size => 512
     index [:channel_id, :start, :end]
   end
+  many_to_one :channel
+  many_to_one :category
+  one_to_many :records, :one_to_one => :record
   
   def set_element(e)
     ch = Channel.find(e.attributes[:channel])
@@ -155,6 +160,9 @@ class Reservation < Sequel::Model(:reservations)
     string :hash, :size => 32, :fixed => true
     string :folder, :size => 128
   end
+  one_to_many :records
+  many_to_one :channel
+  many_to_one :category
 end
 
 class Record < Sequel::Model(:records)
@@ -166,6 +174,8 @@ class Record < Sequel::Model(:records)
     #enum :state, :elements => ['reserve', 'scheduled', 'recording', 'done', 'removed']
     string :state, :size => 20, :null => true
   end
+  many_to_one :program
+  many_to_one :reservation
 end
 
 def create_table()
@@ -198,7 +208,7 @@ end
 def import(filename)
   
   doc = XML::Document.file(filename)
-
+  
   pgElems = doc.root.find('//tv/programme')
   maxprog = pgElems.length
   progress = 1
