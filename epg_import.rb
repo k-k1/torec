@@ -3,11 +3,11 @@ require 'xml/libxml'
 require 'sequel'
 require 'date'
 require 'digest/md5'
+require 'nkf'
 
 class String
   def to_han()
-    s = tr('０-９','0-9').tr('ａ-ｚＡ-Ｚ','a-zA-Z')
-    s.tr('　',' ')
+    NKF.nkf('-Z1wW', self).tr('　', ' ')
   end
 end
 
