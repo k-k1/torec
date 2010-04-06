@@ -14,6 +14,7 @@ end
 DB = Sequel.connect("sqlite://test.db")
 
 Sequel::Model.plugin(:schema)
+Sequel::Model.plugin(:hook_class_methods )
 
 class ChannelType < Sequel::Model(:channel_types)
   set_schema do
@@ -128,9 +129,8 @@ class Program < Sequel::Model(:programs)
     Digest::MD5.hexdigest(str)
   end
   
-  def save
+  before_save do
     self[:hash] = self.create_hash
-    super
   end
   
   def unknown_channel?
