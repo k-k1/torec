@@ -149,6 +149,18 @@ class Program < Sequel::Model(:programs)
   def find
     Program.filter(:hash => self.create_hash)
   end
+  
+  def delete_reservation_record
+    return if record == null 
+    if record.reserve?
+      record.delete
+    end
+    if record.waiting?
+      #TODO remove at
+      record.delete
+    end
+    
+  end
 end
 
 class Reservation < Sequel::Model(:reservations)
@@ -166,16 +178,29 @@ class Reservation < Sequel::Model(:reservations)
 end
 
 class Record < Sequel::Model(:records)
+  RESERVE = 'reserve'
+  WAITING = 'waiting'
+  RECORDING = 'recording'
+  DONE = 'done'
+  CANCEL = 'cancel'
+  
   set_schema do
     primary_key :id
     integer :program_id, :unique => true, :null => true
     integer :reservation_id, :null => true
     string :filename, :unique => true, :null => true
-    #enum :state, :elements => ['reserve', 'scheduled', 'recording', 'done', 'removed']
-    string :state, :size => 20, :null => true
+    #enum :state, :elements => ['reserve', 'waiting', 'recording', 'done', 'cancel']
+    string :state, :size => 20, :null => true, :default => RESERVE
   end
   many_to_one :program
   many_to_one :reservation
+  
+  def reserve?
+    state == RESERVE
+  end
+  def waiting?
+    state == WAITING
+  end
 end
 
 def create_table()
@@ -222,6 +247,7 @@ def import(filename)
         # remove duplicate programs
         p 'remove ' + dupPrograms.count.to_s + ' program(s).'
         dupPrograms.all do |r|
+          r.delete_reservation_record
           r.delete
         end
       end
