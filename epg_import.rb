@@ -220,7 +220,7 @@ class Reservation < Sequel::Model(:reservations)
   
   def keywords
     return [] if self[:keyword] == nil
-    self[:keyword].split(' ').collect{|s| s.trim}.select{|s| s != ''}
+    self[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
   end
   
   def search_program_dataset
