@@ -218,6 +218,11 @@ class Reservation < Sequel::Model(:reservations)
   many_to_one :channel
   many_to_one :category
   
+  def keywords
+    return [] if self[:keyword] == nil
+    self[:keyword].split(' ').collect{|s| s.trim}.select{|s| s != ''}
+  end
+  
   def search_program_dataset
     ds = Program.dataset
     if self[:channel_id] != nil
@@ -227,7 +232,10 @@ class Reservation < Sequel::Model(:reservations)
       ds = ds.filter(:category_id => :category_id)
     end
     if self[:keyword] != nil
-      #TODO
+      keywords.each do |s|
+        sl = '%' + s + '%'
+        ds = ds.filter((:title.like(sl)) | (:description.like(sl)) )
+      end
     end
     ds
   end
