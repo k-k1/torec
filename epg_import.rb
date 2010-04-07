@@ -167,6 +167,9 @@ class Program < Sequel::Model(:programs)
       oldpg = find.first
       oldpg.overwrite(self)
       oldpg.save
+      oldpg
+    else
+      self
     end
   end
   
@@ -256,10 +259,15 @@ def import(filename)
   
   pgElems = doc.root.find('//tv/programme')
   maxprog = pgElems.length
-  progress = 1
+  progress = {
+    :all => pgElems.length, :unknown_channel => 0, :insert => 0, :modify => 0, :not_modified => 0
+  }
   pgElems.each do |e|
     pg = Program.populate(e)
-    next if pg.unknown_channel?
+    if pg.unknown_channel?
+      progress[:unknown_channel] = progress[:unknown_channel] + 1 
+      next
+    end
     
     if pg.find.count == 0
       dupPrograms = pg.find_duplicate
@@ -272,18 +280,20 @@ def import(filename)
         end
       end
       pg.save
+      progress[:insert] = progress[:insert] + 1 
     else
       # update program
       #p 'update ' + pg.create_hash
-      pg.update
+      if pg.update != pg
+        progress[:modify] = progress[:modify] + 1 
+      else
+        progress[:not_modified] = progress[:not_modified] + 1 
+      end
     end
-    if progress % 20 == 0
-      p 'import ' + progress.to_s + '/' + maxprog.to_s
-    end
-    progress = progress + 1
   end
   
-  p 'import ' + maxprog.to_s + ' program(s) done.'
+  p 'import ' + filename + ' done.'
+  p progress.to_a.inject(nil){|r,v| (r==nil ? '' : r + ', ') + v[0].to_s + ':' + v[1].to_s}
 end
 
 if __FILE__ == $0
