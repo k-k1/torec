@@ -101,6 +101,13 @@ class Program < Sequel::Model(:programs)
   many_to_one :category
   one_to_many :records, :one_to_one => :record
   
+  def parse_date_time(str)
+    DateTime.strptime(str, "%Y%m%d%H%M%S")
+  end
+  def format_date_time(dt)
+    dt.strftime("%Y%m%d%H%M%S")
+  end
+  
   def set_element(e)
     ch = Channel.find(e.attributes[:channel])
     if ch != nil
@@ -119,8 +126,8 @@ class Program < Sequel::Model(:programs)
     
     self[:title] = e.find_first('title[@lang="ja_JP"]').content
     self[:description] = e.find_first('desc[@lang="ja_JP"]').content
-    self[:start_time]= parseDateTime(e.attributes[:start])
-    self[:end_time] = parseDateTime(e.attributes[:stop])
+    self[:start_time]= parse_date_time(e.attributes[:start])
+    self[:end_time] = parse_date_time(e.attributes[:stop])
     self
   end
   
@@ -247,10 +254,6 @@ def create_table()
   if !Record.table_exists?
     Record.create_table
   end
-end
-
-def parseDateTime(str)
-  DateTime.strptime(str, "%Y%m%d%H%M%S")
 end
 
 def import(filename)
