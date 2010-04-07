@@ -92,7 +92,7 @@ class Program < Sequel::Model(:programs)
     integer :category_id, :null => false
     datetime :start_time, :null => false
     datetime :end_time, :null => false
-    string :hash, :size => 32, :fixed => true, :unique => true, :null => false
+    string :hash, :size => 32, :fixed => true, :null => false
     string :title, :size => 512
     string :description, :size => 512
     index [:channel_id, :start_time, :end_time]
@@ -124,13 +124,19 @@ class Program < Sequel::Model(:programs)
     self
   end
   
+  def overwrite(pg)
+    [:channel_id, :title, :description, :start_time, :end_time].each do |s|
+      self[s] = pg[s]
+    end
+  end
+  
   def self.populate(e)
     pg = Program.new
     pg.set_element(e)
   end
   
   def create_hash
-    str = self[:channel_id].to_s + self[:start_time].to_s + self[:end_time].to_s
+    str = self[:category_id].to_s + self[:title] + self[:description]
     Digest::MD5.hexdigest(str)
   end
   
@@ -143,11 +149,25 @@ class Program < Sequel::Model(:programs)
   end
   
   def find_duplicate()
-    Program.filter((:channel_id == self[:channel_id]) & (:start < self[:start_time]) & (:end > self[:end_time]))
+    Program.filter((:channel_id == self[:channel_id]) & (:start_time < self[:start_time]) & (:end_time > self[:end_time]))
   end
   
   def find
-    Program.filter(:hash => self.create_hash)
+    Program.filter(:channel_id => self[:channel_id], :start_time => self[:start_time], :end_time => self[:end_time])
+  end
+  
+  def detail_modified?
+    oldpg = find.first
+    raise "update program not found." if oldpg == nil
+    create_hash != oldpg[:hash]
+  end
+  
+  def update
+    if detail_modified?
+      oldpg = find.first
+      oldpg.overwrite(self)
+      oldpg.save
+    end
   end
   
   def delete_reservation_record
@@ -255,9 +275,7 @@ def import(filename)
     else
       # update program
       #p 'update ' + pg.create_hash
-      pg = pg.find.first
-      pg.set_element(e)
-      pg.save
+      pg.update
     end
     if progress % 20 == 0
       p 'import ' + progress.to_s + '/' + maxprog.to_s
