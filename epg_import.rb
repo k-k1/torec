@@ -212,12 +212,25 @@ class Reservation < Sequel::Model(:reservations)
     integer :channel_id
     integer :category_id
     string :keyword, :size => 512
-    string :hash, :size => 32, :fixed => true
     string :folder, :size => 128
   end
   one_to_many :records
   many_to_one :channel
   many_to_one :category
+  
+  def search_program_dataset
+    ds = Program.dataset
+    if self[:channel_id] != nil
+      ds = ds.filter(:channel_id => :channel_id)
+    end
+    if self[:category_id] != nil
+      ds = ds.filter(:category_id => :category_id)
+    end
+    if self[:keyword] != nil
+      #TODO
+    end
+    ds
+  end
 end
 
 class Record < Sequel::Model(:records)
