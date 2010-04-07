@@ -181,15 +181,28 @@ class Program < Sequel::Model(:programs)
   end
   
   def delete_reservation_record
-    return if record == null 
-    if record.reserve?
+    cancel_reserve
+  end
+  
+  def create_filename
+    format_date_time(self[:start_time]) + '_' + channel[:type] + channel[:channel] + '.ts'
+  end
+  
+  def reserve
+    if record == nil
+      Record << {
+        :program_id => pk,
+        :filename => create_filename
+      }
+    end
+  end
+  
+  def cancel_reserve
+    return if record == nil
+    if record.reserve? or record.waiting?
+      #TODO remove at job
       record.delete
     end
-    if record.waiting?
-      #TODO remove at
-      record.delete
-    end
-    
   end
 end
 
@@ -217,10 +230,11 @@ class Record < Sequel::Model(:records)
   set_schema do
     primary_key :id
     integer :program_id, :unique => true, :null => true
-    integer :reservation_id, :null => true
+    integer :reservation_id
     string :filename, :unique => true, :null => true
     #enum :state, :elements => ['reserve', 'waiting', 'recording', 'done', 'cancel']
     string :state, :size => 20, :null => true, :default => RESERVE
+    integer :job
   end
   many_to_one :program
   many_to_one :reservation
