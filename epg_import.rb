@@ -388,8 +388,8 @@ if __FILE__ == $0
       opts.program_name = $0 + ' search'
       opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
-      opts.on("-v", "--vervose"){|s| opt[:vervose] = true }
-      opts.on("-r", "--reserve"){|s| opt[:reserve] = true }
+      opts.on("-v", "--vervose", "display program description"){|s| opt[:vervose] = true }
+      opts.on("-r", "--reserve", "add auto-recording reserve"){|s| opt[:reserve] = true }
       opts.permute!(ARGV)
       opt[:keyword] = ARGV.join(' ')
       rsv = Reservation.create(opt)
