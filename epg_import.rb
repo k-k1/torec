@@ -10,6 +10,18 @@ class String
   def to_han()
     NKF.nkf('-Z1wW', self).tr('　', ' ')
   end
+  def parse_date_time
+    DateTime.strptime(self, "%Y%m%d%H%M%S")
+  end
+end
+
+class Time
+  def format
+    self.strftime("%Y%m%d%H%M%S")
+  end
+  def format_display
+    self.strftime("%Y/%m/%d %H:%M:%S")
+  end
 end
 
 DB = Sequel.connect("sqlite://test.db")
@@ -102,13 +114,6 @@ class Program < Sequel::Model(:programs)
   many_to_one :category
   one_to_many :records, :one_to_one => :record
   
-  def parse_date_time(str)
-    DateTime.strptime(str, "%Y%m%d%H%M%S")
-  end
-  def format_date_time(dt)
-    dt.strftime("%Y%m%d%H%M%S")
-  end
-  
   def set_element(e)
     ch = Channel.find(e.attributes[:channel])
     if ch != nil
@@ -127,8 +132,8 @@ class Program < Sequel::Model(:programs)
     
     self[:title] = e.find_first('title[@lang="ja_JP"]').content
     self[:description] = e.find_first('desc[@lang="ja_JP"]').content
-    self[:start_time]= parse_date_time(e.attributes[:start])
-    self[:end_time] = parse_date_time(e.attributes[:stop])
+    self[:start_time]= e.attributes[:start].parse_date_time
+    self[:end_time] = e.attributes[:stop].parse_date_time
     self
   end
   
@@ -186,7 +191,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def create_filename
-    format_date_time(self[:start_time]) + '_' + channel[:type] + channel[:channel] + '.ts'
+    self[:start_time].format + '_' + channel[:type] + channel[:channel] + '.ts'
   end
   
   def reserve
