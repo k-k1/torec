@@ -299,7 +299,8 @@ class Torec
     pgElems = doc.root.find('//tv/programme')
     maxprog = pgElems.length
     progress = {
-      :all => pgElems.length, :unknown_channel => 0, :insert => 0, :modify => 0, :not_modified => 0
+      :file => filename, :all => pgElems.length,
+      :unknown_channel => 0, :insert => 0, :modify => 0, :not_modified => 0
     }
     pgElems.each do |e|
       pg = Program.populate(e)
@@ -331,17 +332,16 @@ class Torec
       end
     end
     
-    p 'import ' + filename + ' done.'
-    p progress.to_a.inject(nil){|r,v| (r==nil ? '' : r + ', ') + v[0].to_s + ':' + v[1].to_s}
+    progress
   end
 end
 
 if __FILE__ == $0
   # TODO Generated stub
   Torec.create_table()
-  Torec.import("tmp/epgdump_GR20_1_sample.xml")
-  Torec.import("tmp/epgdump_GR20_2_sample.xml")
-  Torec.import("tmp/epgdump_BS101_1_sample.xml")
+  p Torec.import("tmp/epgdump_GR20_1_sample.xml")
+  p Torec.import("tmp/epgdump_GR20_2_sample.xml")
+  p Torec.import("tmp/epgdump_BS101_1_sample.xml")
   
   
 end
