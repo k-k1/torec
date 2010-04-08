@@ -268,78 +268,80 @@ class Record < Sequel::Model(:records)
   end
 end
 
-def create_table()
-  if !ChannelType.table_exists?
-    ChannelType.create_table
-    ChannelType.create_init_data()
-  end
-  if !Channel.table_exists?
-    Channel.create_table
-    Channel.create_init_data()
-  end
-  if !Category.table_exists?
-    Category.create_table
-  end
-  if !Program.table_exists?
-    Program.create_table
-  end
-  if !Reservation.table_exists?
-    Reservation.create_table
-  end
-  if !Record.table_exists?
-    Record.create_table
-  end
-end
-
-def import(filename)
-  
-  doc = XML::Document.file(filename)
-  
-  pgElems = doc.root.find('//tv/programme')
-  maxprog = pgElems.length
-  progress = {
-    :all => pgElems.length, :unknown_channel => 0, :insert => 0, :modify => 0, :not_modified => 0
-  }
-  pgElems.each do |e|
-    pg = Program.populate(e)
-    if pg.unknown_channel?
-      progress[:unknown_channel] = progress[:unknown_channel] + 1 
-      next
+class Torec
+  def self.create_table()
+    if !ChannelType.table_exists?
+      ChannelType.create_table
+      ChannelType.create_init_data()
     end
+    if !Channel.table_exists?
+      Channel.create_table
+      Channel.create_init_data()
+    end
+    if !Category.table_exists?
+      Category.create_table
+    end
+    if !Program.table_exists?
+      Program.create_table
+    end
+    if !Reservation.table_exists?
+      Reservation.create_table
+    end
+    if !Record.table_exists?
+      Record.create_table
+    end
+  end
+  
+  def self.import(filename)
     
-    if pg.find.count == 0
-      dupPrograms = pg.find_duplicate
-      if dupPrograms.count > 0
-        # remove duplicate programs
-        p 'remove ' + dupPrograms.count.to_s + ' program(s).'
-        dupPrograms.all do |r|
-          r.delete_reservation_record
-          r.delete
+    doc = XML::Document.file(filename)
+    
+    pgElems = doc.root.find('//tv/programme')
+    maxprog = pgElems.length
+    progress = {
+      :all => pgElems.length, :unknown_channel => 0, :insert => 0, :modify => 0, :not_modified => 0
+    }
+    pgElems.each do |e|
+      pg = Program.populate(e)
+      if pg.unknown_channel?
+        progress[:unknown_channel] = progress[:unknown_channel] + 1 
+        next
+      end
+      
+      if pg.find.count == 0
+        dupPrograms = pg.find_duplicate
+        if dupPrograms.count > 0
+          # remove duplicate programs
+          p 'remove ' + dupPrograms.count.to_s + ' program(s).'
+          dupPrograms.all do |r|
+            r.delete_reservation_record
+            r.delete
+          end
+        end
+        pg.save
+        progress[:insert] = progress[:insert] + 1 
+      else
+        # update program
+        #p 'update ' + pg.create_hash
+        if pg.update != pg
+          progress[:modify] = progress[:modify] + 1 
+        else
+          progress[:not_modified] = progress[:not_modified] + 1 
         end
       end
-      pg.save
-      progress[:insert] = progress[:insert] + 1 
-    else
-      # update program
-      #p 'update ' + pg.create_hash
-      if pg.update != pg
-        progress[:modify] = progress[:modify] + 1 
-      else
-        progress[:not_modified] = progress[:not_modified] + 1 
-      end
     end
+    
+    p 'import ' + filename + ' done.'
+    p progress.to_a.inject(nil){|r,v| (r==nil ? '' : r + ', ') + v[0].to_s + ':' + v[1].to_s}
   end
-  
-  p 'import ' + filename + ' done.'
-  p progress.to_a.inject(nil){|r,v| (r==nil ? '' : r + ', ') + v[0].to_s + ':' + v[1].to_s}
 end
 
 if __FILE__ == $0
   # TODO Generated stub
-  create_table()
-  import("tmp/epgdump_GR20_1_sample.xml")
-  import("tmp/epgdump_GR20_2_sample.xml")
-  import("tmp/epgdump_BS101_1_sample.xml")
+  Torec.create_table()
+  Torec.import("tmp/epgdump_GR20_1_sample.xml")
+  Torec.import("tmp/epgdump_GR20_2_sample.xml")
+  Torec.import("tmp/epgdump_BS101_1_sample.xml")
   
   
 end
