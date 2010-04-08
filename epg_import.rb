@@ -424,6 +424,18 @@ if __FILE__ == $0
         cate = r.category
         puts "   #{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
+    when 'program'
+      opt = {:program_id => nil}
+      opts.program_name = $0 + ' program'
+      opts.on("--add PROGRAM_ID", Integer, "simple recording"){|pid| opt[:program_id] = pid }
+      opts.permute!(ARGV)
+      if opt[:program_id] != nil
+        pg = Program[opt[:program_id]]
+        raise "program not found." if pg == nil
+        pg.reserve
+        exit
+      end
+      puts opts.help
   else
     puts opts.help
   end
