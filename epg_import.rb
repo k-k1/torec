@@ -406,11 +406,12 @@ if __FILE__ == $0
         exit
       end
       if opt[:reserve]
-        p rsv.save
+        rsv = Reservation.new(rsv.values)
+        rsv.save
       else
         result = rsv.search_program_dataset.order(:start_time).all
         result.each do |r|
-          puts "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} #{r[:title]}"
+          puts "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} #{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} #{r[:title]}"
           puts '      ' + r[:description] if opt[:vervose]
         end
       end
