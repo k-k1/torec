@@ -424,7 +424,7 @@ if __FILE__ == $0
         cate = r.category
         puts "   #{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
-    when 'program'
+    when 'record'
       opt = {:program_id => nil}
       opts.program_name = $0 + ' program'
       opts.on("--add PROGRAM_ID", Integer, "simple recording"){|pid| opt[:program_id] = pid }
@@ -441,7 +441,7 @@ if __FILE__ == $0
     puts "  import     "
     puts "  search     "
     puts "  reserve    "
-    puts "  program    "
+    puts "  record     "
   end
   
 end
