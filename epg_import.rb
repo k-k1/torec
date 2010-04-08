@@ -438,6 +438,10 @@ if __FILE__ == $0
       puts opts.help
   else
     puts opts.help
+    puts "  import     "
+    puts "  search     "
+    puts "  reserve    "
+    puts "  program    "
   end
   
 end
