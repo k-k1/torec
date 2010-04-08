@@ -24,7 +24,7 @@ class Time
   end
 end
 
-DB = Sequel.connect("sqlite://test.db")
+DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})
 
 Sequel::Model.plugin(:schema)
 Sequel::Model.plugin(:hook_class_methods )
