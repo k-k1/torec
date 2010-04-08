@@ -4,6 +4,7 @@ require 'sequel'
 require 'date'
 require 'digest/md5'
 require 'nkf'
+require 'optparse'
 
 class String
   def to_han()
@@ -339,9 +340,18 @@ end
 if __FILE__ == $0
   # TODO Generated stub
   Torec.create_table()
-  p Torec.import("tmp/epgdump_GR20_1_sample.xml")
-  p Torec.import("tmp/epgdump_GR20_2_sample.xml")
-  p Torec.import("tmp/epgdump_BS101_1_sample.xml")
   
+  opts = OptionParser.new
+  if ARGV.length < 1
+    puts "TODO help message"
+    exit
+  end
+  case ARGV.shift
+    when 'import'
+      opts.on("-f", "--file XMLFILE"){|f| p Torec.import(f) }
+      opts.parse!(ARGV)
+  else
+    
+  end
   
 end
