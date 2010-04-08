@@ -53,6 +53,10 @@ class Category < Sequel::Model(:categories)
   def self.find(type)
     self.filter(:type => type).first
   end
+  
+  def self.types_hash
+    Hash[*Category.all.collect{|r| [r[:type], r[:id] ]}.flatten]
+  end
 end
 
 class Channel < Sequel::Model(:channels)
@@ -95,6 +99,14 @@ class Channel < Sequel::Model(:channels)
   
   def self.find(chname)
     self.filter('type || channel = ?', chname).first
+  end
+
+  def self.channel_hash
+    Hash[*Channel.all.collect{|r| [r.channel_key, r[:id] ]}.flatten]
+  end
+  
+  def channel_key
+    self[:type]+self[:channel]
   end
 end
 
@@ -210,6 +222,17 @@ class Program < Sequel::Model(:programs)
       record.delete
     end
   end
+  
+  def duration_second
+    (self[:end_time] - self[:start_time])
+  end
+  
+  def duration
+    h = (duration_second / 3600).to_i
+    m = ((duration_second % 3600) / 60).to_i
+    s = ((duration_second % 3600) % 60).to_i
+    (h==0?'':h.to_s+'h') + (m==0?'':m.to_s+'m') + (s==0?'':s.to_s+'s')
+  end
 end
 
 class Reservation < Sequel::Model(:reservations)
@@ -232,10 +255,10 @@ class Reservation < Sequel::Model(:reservations)
   def search_program_dataset
     ds = Program.dataset
     if self[:channel_id] != nil
-      ds = ds.filter(:channel_id => :channel_id)
+      ds = ds.filter(:channel_id => self[:channel_id])
     end
     if self[:category_id] != nil
-      ds = ds.filter(:category_id => :category_id)
+      ds = ds.filter(:category_id => self[:category_id])
     end
     if self[:keyword] != nil
       keywords.each do |s|
@@ -244,6 +267,14 @@ class Reservation < Sequel::Model(:reservations)
       end
     end
     ds
+  end
+  
+  def condition?
+    search_program_dataset != Program.dataset
+  end
+  
+  def self.create(opt)
+    self.new({:channel_id => opt[:channel_id], :category_id => opt[:category_id], :keyword => opt[:keyword]}, true)
   end
 end
 
@@ -347,16 +378,50 @@ if __FILE__ == $0
   Torec.create_table()
   
   opts = OptionParser.new
-  if ARGV.length < 1
-    puts "TODO help message"
-    exit
-  end
   case ARGV.shift
     when 'import'
+      opts.program_name = $0 + ' import'
       opts.on("-f", "--file XMLFILE"){|f| p Torec.import(f) }
       opts.parse!(ARGV)
+    when 'search'
+      opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :vervose => false, :reserve => false}
+      opts.program_name = $0 + ' search'
+      opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
+      opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
+      opts.on("-v", "--vervose"){|s| opt[:vervose] = true }
+      opts.on("-r", "--reserve"){|s| opt[:reserve] = true }
+      opts.permute!(ARGV)
+      opt[:keyword] = ARGV.join(' ')
+      rsv = Reservation.create(opt)
+      if !rsv.condition?
+        puts opts.help
+        puts "Channels;"
+        Channel.order(:type,:channel).each do |r|
+          puts "   #{r.channel_key.ljust(15)} #{r[:name]}"
+        end
+        puts "Categories;"
+        Category.order(:type).each do |r|
+          puts "   #{r[:type].ljust(15)} #{r[:name]}"
+        end
+        exit
+      end
+      if opt[:reserve]
+        p rsv.save
+      else
+        result = rsv.search_program_dataset.order(:start_time).all
+        result.each do |r|
+          puts "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} #{r[:title]}"
+          puts '      ' + r[:description] if opt[:vervose]
+        end
+      end
+    when 'reserve'
+      Reservation.order(:id).each do |r|
+        ch = r.channel
+        cate = r.category
+        puts "   #{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(6)} #{r.keyword}"
+      end
   else
-    
+    puts opts.help
   end
   
 end
