@@ -353,13 +353,13 @@ class Torec
   def self.import_from_file(filename)
     doc = XML::Document.file(filename)
     progress = import(doc)
-    progress[:filename] = filename
+    progress[:file] = filename
     progress
   end
   def self.import_from_io(io)
     doc = XML::Document.io(io)
     progress = import(doc)
-    progress[:filename] = 'io'
+    progress[:file] = 'io'
     progress
   end
 
@@ -404,6 +404,8 @@ class Torec
   end
 end
 
+EPGDUMP = File.join(File.dirname($0), 'do-epgget.sh')
+
 if __FILE__ == $0
   # TODO Generated stub
   Torec.create_table()
@@ -411,11 +413,18 @@ if __FILE__ == $0
   opts = OptionParser.new
   case ARGV.shift
     when 'epgupdate'
-        Channel.filter(:type => 'GR').order(:channel).each do |r|
-          IO.popen("./do-epgget.sh #{r[:type]} #{r[:channel]} 60") do |io|
-            p Torec.import_from_io(io)
-          end
+      if Channel.filter(:type => 'BS').count != 0
+        puts "BS"
+        IO.popen("#{EPGDUMP} BS 211 180 2>/dev/null") do |io|
+          p Torec.import_from_io(io)
         end
+      end
+      Channel.filter(:type => 'GR').order(:channel).all.each do |r|
+        puts "#{r[:type]}#{r[:channel]}"
+        IO.popen("#{EPGDUMP} #{r[:type]} #{r[:channel]} 60 2>/dev/null") do |io|
+          p Torec.import_from_io(io)
+        end
+      end
       Reservation.update_reserve
     when 'import'
       opts.program_name = $0 + ' import'
