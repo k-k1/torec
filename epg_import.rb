@@ -440,6 +440,16 @@ if __FILE__ == $0
         end
       end
     when 'reserve'
+      opt = {:reserve_id => nil}
+      opts.program_name = $0 + ' reserve'
+      opts.on("--delete RESERVE_ID", Integer, "simple recording"){|rid| opt[:reserve_id] = rid }
+      opts.permute!(ARGV)
+      if opt[:reserve_id] != nil
+        rs = Reservation[opt[:reserve_id]]
+        raise "reservation not found." if rs == nil
+        rs.delete
+        exit
+      end
       Reservation.order(:id).each do |r|
         ch = r.channel
         cate = r.category
