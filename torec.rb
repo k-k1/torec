@@ -410,6 +410,13 @@ if __FILE__ == $0
   
   opts = OptionParser.new
   case ARGV.shift
+    when 'epgupdate'
+        Channel.filter(:type => 'GR').order(:channel).each do |r|
+          IO.popen("./do-epgget.sh #{r[:type]} #{r[:channel]} 60") do |io|
+            p Torec.import_from_io(io)
+          end
+        end
+      Reservation.update_reserve
     when 'import'
       opts.program_name = $0 + ' import'
       opts.on("-f", "--file XMLFILE"){|f| p Torec.import_from_file(f) }
