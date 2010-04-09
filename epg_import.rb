@@ -435,7 +435,14 @@ if __FILE__ == $0
         pg.reserve
         exit
       end
-      puts opts.help
+      Record.order(:id).each do |rc|
+        r = rc.program
+        print "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} "
+        print "#{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} "
+        print "#{r[:title]}\n"
+        rid = rc[:reservation_id]
+        puts " + #{(rid==nil)?' ':'A'} #{rc[:state].upcase.ljust(6)} #{rc[:filename]}"
+      end
   else
     puts opts.help
     puts "  import     "
