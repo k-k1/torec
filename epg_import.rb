@@ -422,7 +422,7 @@ if __FILE__ == $0
       Reservation.order(:id).each do |r|
         ch = r.channel
         cate = r.category
-        puts "   #{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
+        puts "#{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
     when 'record'
       opt = {:program_id => nil}
@@ -444,6 +444,7 @@ if __FILE__ == $0
         puts " + #{(rid==nil)?' ':'A'} #{rc[:state].upcase.ljust(6)} #{rc[:filename]}"
       end
   else
+    opts.program_name = $0 + ' COMMAND'
     puts opts.help
     puts "  import     "
     puts "  search     "
