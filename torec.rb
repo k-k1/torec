@@ -350,14 +350,24 @@ class Torec
     end
   end
   
-  def self.import(filename)
-    
+  def self.import_from_file(filename)
     doc = XML::Document.file(filename)
-    
+    progress = import(doc)
+    progress[:filename] = filename
+    progress
+  end
+  def self.import_from_io(io)
+    doc = XML::Document.io(io)
+    progress = import(doc)
+    progress[:filename] = 'io'
+    progress
+  end
+
+  def self.import(doc)
     pgElems = doc.root.find('//tv/programme')
     maxprog = pgElems.length
     progress = {
-      :file => filename, :all => pgElems.length,
+      :file => nil, :all => pgElems.length,
       :unknown_channel => 0, :insert => 0, :modify => 0, :not_modified => 0
     }
     pgElems.each do |e|
@@ -402,7 +412,7 @@ if __FILE__ == $0
   case ARGV.shift
     when 'import'
       opts.program_name = $0 + ' import'
-      opts.on("-f", "--file XMLFILE"){|f| p Torec.import(f) }
+      opts.on("-f", "--file XMLFILE"){|f| p Torec.import_from_file(f) }
       opts.parse!(ARGV)
       Reservation.update_reserve
     when 'search'
