@@ -214,7 +214,16 @@ class Program < Sequel::Model(:programs)
       }
     end
   end
-  
+  def reserve(reservation_id)
+    if record == nil
+      Record << {
+        :program_id => pk,
+        :reservation_id => reservation_id,
+        :filename => create_filename
+      }
+    end
+  end
+
   def cancel_reserve
     return if record == nil
     if record.reserve? or record.waiting?
@@ -275,6 +284,16 @@ class Reservation < Sequel::Model(:reservations)
   
   def self.create(opt)
     self.new({:channel_id => opt[:channel_id], :category_id => opt[:category_id], :keyword => opt[:keyword]}, true)
+  end
+  
+  def self.update_reserve
+    self.all.each do |rs|
+      rs.search_program_dataset.all.each do |pg|
+        next if pg.record != nil
+        #p 'update record reserve. pg:'+ pg.pk.to_s + ' rs' + rs.pk.to_s
+        pg.reserve(rs.pk)
+      end
+    end
   end
 end
 
@@ -383,6 +402,7 @@ if __FILE__ == $0
       opts.program_name = $0 + ' import'
       opts.on("-f", "--file XMLFILE"){|f| p Torec.import(f) }
       opts.parse!(ARGV)
+      Reservation.update_reserve
     when 'search'
       opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :vervose => false, :reserve => false}
       opts.program_name = $0 + ' search'
@@ -408,6 +428,7 @@ if __FILE__ == $0
       if opt[:reserve]
         rsv = Reservation.new(rsv.values)
         rsv.save
+        Reservation.update_reserve
       else
         result = rsv.search_program_dataset.order(:start_time).all
         result.each do |r|
