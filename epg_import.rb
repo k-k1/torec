@@ -126,7 +126,7 @@ class Program < Sequel::Model(:programs)
   end
   many_to_one :channel
   many_to_one :category
-  one_to_many :records, :one_to_one => :record
+  one_to_one :record
   
   def set_element(e)
     ch = Channel.find(e.attributes[:channel])
