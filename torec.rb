@@ -250,7 +250,10 @@ class Program < Sequel::Model(:programs)
     print "#{self[:id].to_s.rjust(6)} #{channel.channel_key.ljust(5)} "
     print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+duration+')').ljust(7)} "
     print "#{self[:title]}\n"
-    puts '      ' + r[:description] if verbose
+    if verbose
+      puts "#{'-'.rjust(30)} #{self[:end_time].format_display}"
+      puts '      ' + self[:description]
+    end
   end
   
   def self.now_onair
@@ -453,9 +456,9 @@ if __FILE__ == $0
       opts.program_name = $0 + ' search'
       opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
-      opts.on("-v", "--verbose", "display program description"){|s| opt[:verbose] = true }
-      opts.on("-r", "--reserve", "add auto-recording reserve"){|s| opt[:reserve] = true }
-      opts.on("-n", "--now", "output now on-air programs"){|s| opt[:now] = true }
+      opts.on("-n", "--now", "display now on-air programs"){opt[:now] = true }
+      opts.on("-v", "--verbose", "display program description"){opt[:verbose] = true }
+      opts.on("-r", "--reserve", "add auto-recording reserve"){opt[:reserve] = true }
       opts.permute!(ARGV)
       if opt[:now]
         Program.now_onair.each do |r|
