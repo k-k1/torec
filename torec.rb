@@ -371,6 +371,25 @@ class Record < Sequel::Model(:records)
   def waiting?
     state == WAITING
   end
+  
+  def self.search(opts)
+    #{:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil}
+    ds = Record.dataset
+    ds = ds.eager_graph(:program)
+    if opts[:tunner_type] != nil
+      ds = ds.eager_graph(:tunner).filter(:tunner__type => opts[:tunner_type])
+    end
+    if opts[:channel_id] != nil
+      ds = ds.filter(:program__channel_id => opts[:channel_id])
+    end
+    if opts[:category_id] != nil
+      ds = ds.filter(:program__category_id => opts[:category_id])
+    end
+    if !opts[:all]
+      ds = ds.filter(:program__end_time > Time.now)
+    end
+    ds.order(:program__start_time)
+  end
 end
 
 class Torec
@@ -538,8 +557,12 @@ if __FILE__ == $0
         puts "#{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
     when 'record'
-      opt = {:program_id => nil}
+      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false}
       opts.program_name = $0 + ' program'
+      opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
+      opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
+      opts.on("--tunner TUNNER_TYPE", "simple recording"){|type| opt[:tunner_type] = type }
+      opts.on("--all", "display all records."){opt[:all] = true }
       opts.on("--add PROGRAM_ID", Integer, "simple recording"){|pid| opt[:program_id] = pid }
       opts.permute!(ARGV)
       if opt[:program_id] != nil
@@ -548,7 +571,7 @@ if __FILE__ == $0
         pg.reserve
         exit
       end
-      Record.order(:id).each do |rc|
+      Record.search(opt).all.each do |rc|
         r = rc.program
         print "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} "
         print "#{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} "
