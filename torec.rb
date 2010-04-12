@@ -208,15 +208,7 @@ class Program < Sequel::Model(:programs)
     self[:start_time].format + '_' + channel[:type] + channel[:channel] + '.ts'
   end
   
-  def reserve
-    if record == nil
-      Record << {
-        :program_id => pk,
-        :filename => create_filename
-      }
-    end
-  end
-  def reserve(reservation_id)
+  def reserve(reservation_id=nil)
     if record == nil
       Record << {
         :program_id => pk,
