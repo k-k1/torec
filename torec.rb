@@ -295,6 +295,28 @@ class Program < Sequel::Model(:programs)
     now = Time.now
     Program.filter((:start_time <= now) & (:end_time >= now)).order(:channel_id).all
   end
+
+  def self.search(opt)
+    ds = Program.dataset
+    if opt[:channel_id] != nil
+      ds = ds.filter(:channel_id => opt[:channel_id])
+    end
+    if opt[:category_id] != nil
+      ds = ds.filter(:category_id => opt[:category_id])
+    end
+    if opt[:keyword] != nil
+      kw = opt[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
+      kw.each do |s|
+        sl = '%' + s + '%'
+        ds = ds.filter((:title.like(sl)) | (:description.like(sl)) )
+      end
+    end
+    if !opt[:all]
+      ds = ds.filter(:end_time > Time.now)
+    end
+    ds
+  end
+
 end
 
 class Reservation < Sequel::Model(:reservations)
@@ -314,25 +336,12 @@ class Reservation < Sequel::Model(:reservations)
     self[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
   end
   
-  def search_program_dataset
-    ds = Program.dataset
-    if self[:channel_id] != nil
-      ds = ds.filter(:channel_id => self[:channel_id])
-    end
-    if self[:category_id] != nil
-      ds = ds.filter(:category_id => self[:category_id])
-    end
-    if self[:keyword] != nil
-      keywords.each do |s|
-        sl = '%' + s + '%'
-        ds = ds.filter((:title.like(sl)) | (:description.like(sl)) )
-      end
-    end
-    ds
+  def search
+    Program.search(values)
   end
   
   def condition?
-    search_program_dataset != Program.dataset
+    !(self[:channel_id] == nil and self[:category_id] == nil and keywords.length == 0)
   end
   
   def self.create(opt)
@@ -513,10 +522,11 @@ if __FILE__ == $0
       opts.parse!(ARGV)
       Reservation.update_reserve
     when 'search'
-      opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :verbose => false, :reserve => false, :now => false}
+      opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :verbose => false, :reserve => false, :now => false, :all => false}
       opts.program_name = $0 + ' search'
       opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
+      opts.on("--all", "display all records."){opt[:all] = true }
       opts.on("-n", "--now", "display now on-air programs"){opt[:now] = true }
       opts.on("-v", "--verbose", "display program description"){opt[:verbose] = true }
       opts.on("-r", "--reserve", "add auto-recording reserve"){opt[:reserve] = true }
@@ -546,7 +556,7 @@ if __FILE__ == $0
         rsv.save
         Reservation.update_reserve
       else
-        result = rsv.search_program_dataset.order(:start_time).all
+        result = Program.search(opt).order(:start_time).all
         result.each do |r|
           r.print_line(opt[:verbose])
         end
