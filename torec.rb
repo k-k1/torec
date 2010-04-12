@@ -498,15 +498,18 @@ class Torec
     bs =  Channel.filter(:type => 'BS')
     if bs.count != 0
       puts "BS"
-      IO.popen("#{EPGDUMP} BS 211 180 2>/dev/null") do |io|
-        p import_from_io(io)
-      end
-      bs.all.each do |r|
-        r.update_program
+      if bs.first.find_empty_tunner(Time.now, Time.now + 190) != nil
+        IO.popen("#{EPGDUMP} BS 211 180 2>/dev/null") do |io|
+          p import_from_io(io)
+        end
+        bs.all.each do |r|
+          r.update_program
+        end
       end
     end
     Channel.filter(:type => 'GR').order(:channel).all.each do |r|
-      puts "#{r[:type]}#{r[:channel]}"
+      puts r.channel_key
+      next if r.find_empty_tunner(Time.now, Time.now + 70) == nil
       IO.popen("#{EPGDUMP} #{r[:type]} #{r[:channel]} 60") do |io|
         p import_from_io(io)
       end
