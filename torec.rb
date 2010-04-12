@@ -31,16 +31,37 @@ DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})
 Sequel::Model.plugin(:schema)
 Sequel::Model.plugin(:hook_class_methods )
 
+class Tunner < Sequel::Model(:tunners)
+  set_schema do
+    primary_key :id
+    string :name, :size => 128, :null => false, :unique => true
+    string :type, :size => 20, :null => false
+    string :device_name, :size => 20, :null => false
+  end
+  def self.create_init_data()
+    Tunner << {:name => "GR0", :type => "GR", :device_name => "PT2"}
+    Tunner << {:name => "GR1", :type => "GR", :device_name => "PT2"}
+    Tunner << {:name => "BS0", :type => "BS/CS", :device_name => "PT2"}
+    Tunner << {:name => "BS1", :type => "BS/CS", :device_name => "PT2"}
+  end
+end
+
 class ChannelType < Sequel::Model(:channel_types)
   set_schema do
     primary_key :id
     string :type, :size => 20, :null => false, :unique => true
     string :name, :size => 128, :null => false
+    string :tunner_type, :null => false
   end
+  #one_to_many
+  def tunners
+    Tunner.filter(:type => self[:tunner_type]).order(:id).all
+  end
+  
   def self.create_init_data()
-    ChannelType << {:type => "GR", :name => "地上波"}
-    ChannelType << {:type => "BS", :name => "BS"}
-    ChannelType << {:type => "CS", :name => "CS"}
+    ChannelType << {:type => "GR", :name => "地上波", :tunner_type => "GR"}
+    ChannelType << {:type => "BS", :name => "BS", :tunner_type => "BS/CS"}
+    ChannelType << {:type => "CS", :name => "CS", :tunner_type => "BS/CS"}
   end
 end
 
@@ -69,8 +90,10 @@ class Channel < Sequel::Model(:channels)
     string :name, :size => 128
     unique [:type, :channel]
   end
-  #fixme
-  #many_to_one :channel_type, :key => 'type', :primary_key => 'type'
+  #many_to_one
+  def channel_type
+    ChannelType.filter(:type => self[:type]).first
+  end
   
   def self.create_init_data()
     #GR
