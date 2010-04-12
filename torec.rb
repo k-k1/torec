@@ -139,6 +139,16 @@ class Channel < Sequel::Model(:channels)
     self[:update_time] = Time.now
     save
   end
+  
+  def find_empty_tunner(start_time, end_time)
+    channel_type.tunners.each do |t|
+      r = Record.exclude(:program_id => nil).
+        eager_graph(:tunner).filter(:tunner__id => t.id).
+        eager_graph(:program).filter((:program__start_time < start_time) & (:program__end_time > end_time))
+      return t if r.count == 0
+    end
+    nil
+  end
 end
 
 class Program < Sequel::Model(:programs)
@@ -238,13 +248,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def find_empty_tunner
-    channel.channel_type.tunners.each do |t|
-      r = Record.exclude(:program_id => nil).
-        eager_graph(:tunner).filter(:tunner__id => t.id).
-        eager_graph(:program).filter((:program__start_time < self[:end_time]) & (:program__end_time > self[:start_time]))
-      return t if r.count == 0
-    end
-    nil
+    channel.find_empty_tunner(self[:end_time], self[:start_time])
   end
   
   def reserve(reservation_id=nil)
