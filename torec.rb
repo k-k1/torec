@@ -421,7 +421,7 @@ if __FILE__ == $0
       end
       Channel.filter(:type => 'GR').order(:channel).all.each do |r|
         puts "#{r[:type]}#{r[:channel]}"
-        IO.popen("#{EPGDUMP} #{r[:type]} #{r[:channel]} 60 2>/dev/null") do |io|
+        IO.popen("#{EPGDUMP} #{r[:type]} #{r[:channel]} 60") do |io|
           p Torec.import_from_io(io)
         end
       end

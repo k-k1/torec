@@ -10,7 +10,7 @@ RECPT1=/usr/local/bin/recpt1
 
 EPGDUMP=/usr/local/bin/torec_epgdump
 
-$RECPT1 --b25 --strip $CHANNEL $DURATION $TMPTS
+$RECPT1 --b25 --strip $CHANNEL $DURATION $TMPTS 2>/dev/null
 if [ $CHTYPE = 'BS' ]; then
   CHANNEL='/BS'
 fi
