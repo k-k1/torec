@@ -413,6 +413,10 @@ end
 
 class Torec
   def self.create_table()
+    if !Tunner.table_exists?
+      Tunner.create_table
+      Tunner.create_init_data()
+    end
     if !ChannelType.table_exists?
       ChannelType.create_table
       ChannelType.create_init_data()
