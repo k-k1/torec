@@ -436,11 +436,11 @@ if __FILE__ == $0
       opts.parse!(ARGV)
       Reservation.update_reserve
     when 'search'
-      opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :vervose => false, :reserve => false}
+      opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :verbose => false, :reserve => false}
       opts.program_name = $0 + ' search'
       opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
-      opts.on("-v", "--vervose", "display program description"){|s| opt[:vervose] = true }
+      opts.on("-v", "--verbose", "display program description"){|s| opt[:verbose] = true }
       opts.on("-r", "--reserve", "add auto-recording reserve"){|s| opt[:reserve] = true }
       opts.permute!(ARGV)
       opt[:keyword] = ARGV.join(' ')
@@ -468,7 +468,7 @@ if __FILE__ == $0
           print "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} "
           print "#{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} "
           print "#{r[:title]}\n"
-          puts '      ' + r[:description] if opt[:vervose]
+          puts '      ' + r[:description] if opt[:verbose]
         end
       end
     when 'reserve'
