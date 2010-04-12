@@ -339,11 +339,12 @@ class Record < Sequel::Model(:records)
   
   set_schema do
     primary_key :id
-    integer :program_id, :unique => true, :null => true
+    integer :program_id, :unique => true, :null => false
     integer :reservation_id
-    string :filename, :unique => true, :null => true
+    integer :tunner_id, :null => false
+    string :filename, :unique => true, :null => false
     #enum :state, :elements => ['reserve', 'waiting', 'recording', 'done', 'cancel']
-    string :state, :size => 20, :null => true, :default => RESERVE
+    string :state, :size => 20, :null => false, :default => RESERVE
     integer :job
   end
   many_to_one :program
