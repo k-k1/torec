@@ -74,15 +74,15 @@ class Channel < Sequel::Model(:channels)
   
   def self.create_init_data()
     #GR
-    Channel << { :type => 'GR', :channel => '27', :name => 'ＮＨＫ総合１・東京' }
-    Channel << { :type => 'GR', :channel => '26', :name => 'ＮＨＫ教育１・東京' }
-    Channel << { :type => 'GR', :channel => '25', :name => '日テレ１' }
-    Channel << { :type => 'GR', :channel => '22', :name => 'ＴＢＳ１' }
+    Channel << { :type => 'GR', :channel => '27', :name => 'NHK総合・東京' }
+    Channel << { :type => 'GR', :channel => '26', :name => 'NHK教育・東京' }
+    Channel << { :type => 'GR', :channel => '25', :name => '日テレ' }
+    Channel << { :type => 'GR', :channel => '22', :name => 'TBS' }
     Channel << { :type => 'GR', :channel => '21', :name => 'フジテレビ' }
     Channel << { :type => 'GR', :channel => '24', :name => 'テレビ朝日' }
-    Channel << { :type => 'GR', :channel => '23', :name => 'テレビ東京１' }
-    Channel << { :type => 'GR', :channel => '20', :name => 'ＴＯＫＹＯ　ＭＸ１' }
-    Channel << { :type => 'GR', :channel => '28', :name => '放送大学１' }
+    Channel << { :type => 'GR', :channel => '23', :name => 'テレビ東京' }
+    Channel << { :type => 'GR', :channel => '20', :name => 'TOKYO MX' }
+    Channel << { :type => 'GR', :channel => '28', :name => '放送大学' }
     #BS
     Channel << { :type => 'BS', :channel => '101', :name => 'NHK BS1' }
     Channel << { :type => 'BS', :channel => '102', :name => 'NHK BS2' }
