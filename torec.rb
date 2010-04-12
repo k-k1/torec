@@ -231,11 +231,25 @@ class Program < Sequel::Model(:programs)
     self[:start_time].format + '_' + channel[:type] + channel[:channel] + '.ts'
   end
   
+  def find_empty_tunner
+    channel.channel_type.tunners.each do |t|
+      r = Record.exclude(:program_id => nil).
+        eager_graph(:tunner).filter(:tunner__id => t.id).
+        eager_graph(:program).filter((:program__start_time < self[:end_time]) & (:program__end_time > self[:start_time]))
+      return t if r.count == 0
+    end
+    nil
+  end
+  
   def reserve(reservation_id=nil)
+    raise "already reserved." if record != nil
+    t = find_empty_tunner
+    raise "no empty #{channel.channel_type[:type]} tunner." if t == nil
     if record == nil
       Record << {
         :program_id => pk,
         :reservation_id => reservation_id,
+        :tunner_id => t.id,
         :filename => create_filename
       }
     end
