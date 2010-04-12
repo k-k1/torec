@@ -248,7 +248,7 @@ class Program < Sequel::Model(:programs)
   def print_line(verbose=false)
     print "#{(record==nil)?'  ':'* '}"
     print "#{self[:id].to_s.rjust(6)} #{channel.channel_key.ljust(5)} "
-    print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+duration+')').ljust(7)} "
+    print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+duration+')').ljust(8)} "
     print "#{self[:title]}\n"
     if verbose
       puts "#{'-'.rjust(30)} #{self[:end_time].format_display}"
