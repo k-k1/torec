@@ -244,6 +244,19 @@ class Program < Sequel::Model(:programs)
     s = ((duration_second % 3600) % 60).to_i
     (h==0?'':h.to_s+'h') + (m==0?'':m.to_s+'m') + (s==0?'':s.to_s+'s')
   end
+  
+  def print_line(verbose=false)
+    print "#{(record==nil)?'  ':'* '}"
+    print "#{self[:id].to_s.rjust(6)} #{channel.channel_key.ljust(5)} "
+    print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+duration+')').ljust(7)} "
+    print "#{self[:title]}\n"
+    puts '      ' + r[:description] if verbose
+  end
+  
+  def self.now_onair
+    now = Time.now
+    Program.filter((:start_time <= now) & (:end_time >= now)).order(:channel_id).all
+  end
 end
 
 class Reservation < Sequel::Model(:reservations)
@@ -436,13 +449,20 @@ if __FILE__ == $0
       opts.parse!(ARGV)
       Reservation.update_reserve
     when 'search'
-      opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :verbose => false, :reserve => false}
+      opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :verbose => false, :reserve => false, :now => false}
       opts.program_name = $0 + ' search'
       opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
       opts.on("-v", "--verbose", "display program description"){|s| opt[:verbose] = true }
       opts.on("-r", "--reserve", "add auto-recording reserve"){|s| opt[:reserve] = true }
+      opts.on("-n", "--now", "output now on-air programs"){|s| opt[:now] = true }
       opts.permute!(ARGV)
+      if opt[:now]
+        Program.now_onair.each do |r|
+          r.print_line(opt[:verbose])
+        end
+        exit
+      end
       opt[:keyword] = ARGV.join(' ')
       rsv = Reservation.create(opt)
       if !rsv.condition?
@@ -464,11 +484,7 @@ if __FILE__ == $0
       else
         result = rsv.search_program_dataset.order(:start_time).all
         result.each do |r|
-          print "#{(r.record==nil)?'  ':'* '}"
-          print "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} "
-          print "#{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} "
-          print "#{r[:title]}\n"
-          puts '      ' + r[:description] if opt[:verbose]
+          r.print_line(opt[:verbose])
         end
       end
     when 'reserve'
