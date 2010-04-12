@@ -88,6 +88,7 @@ class Channel < Sequel::Model(:channels)
     string :type, :size => 20, :null => false
     string :channel, :size => 10, :null => false
     string :name, :size => 128
+    datetime :update_time
     unique [:type, :channel]
   end
   #many_to_one
@@ -132,6 +133,11 @@ class Channel < Sequel::Model(:channels)
   
   def channel_key
     self[:type]+self[:channel]
+  end
+  
+  def update_program
+    self[:update_time] = Time.now
+    save
   end
 end
 
@@ -472,10 +478,14 @@ class Torec
   EPGDUMP = File.join(File.dirname($0), 'do-epgget.sh')
   
   def self.update_epg
-    if Channel.filter(:type => 'BS').count != 0
+    bs =  Channel.filter(:type => 'BS')
+    if bs.count != 0
       puts "BS"
       IO.popen("#{EPGDUMP} BS 211 180 2>/dev/null") do |io|
         p import_from_io(io)
+      end
+      bs.all.each do |r|
+        r.update_program
       end
     end
     Channel.filter(:type => 'GR').order(:channel).all.each do |r|
@@ -483,6 +493,7 @@ class Torec
       IO.popen("#{EPGDUMP} #{r[:type]} #{r[:channel]} 60") do |io|
         p import_from_io(io)
       end
+      r.update_program
     end
     Reservation.update_reserve
   end
