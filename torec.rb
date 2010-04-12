@@ -349,6 +349,7 @@ class Record < Sequel::Model(:records)
   end
   many_to_one :program
   many_to_one :reservation
+  many_to_one :tunner
   
   def reserve?
     state == RESERVE
