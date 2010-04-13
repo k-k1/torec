@@ -406,7 +406,11 @@ class Record < Sequel::Model(:records)
   PREVENIENT_TIME = 15
 
   def schedule
-    return if not reserve?
+    return if not reserve? and not waiting?
+    if waiting? and self[:job] != nil
+      # remove job
+      system("atrm #{self[:job]}")
+    end
     
     at_start = (program[:start_time] - PREVENIENT_TIME)
     duration = program[:end_time] - program[:start_time] - 5
@@ -428,7 +432,7 @@ class Record < Sequel::Model(:records)
       io << "/bin/date\n"
       io << File.join(SETTINGS[:application_path],'torec.rb') << " state --start " << program.pk << "\n"
       io << "/bin/date\n"
-      io << SETTINGS[:recorder_program_path] << "--b25 --strip -sid hd $CHANNEL $DURATION $OUTPUT \n"
+      io << SETTINGS[:recorder_program_path] << " --b25 --strip -sid hd $CHANNEL $DURATION $OUTPUT \n"
       io << "/bin/date\n"
       io << File.join(SETTINGS[:application_path],'torec.rb') << " state --done " << program.pk << "\n"
       #kick post process... thumbnail/ffmpeg
