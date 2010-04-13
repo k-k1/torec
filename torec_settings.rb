@@ -36,7 +36,10 @@ SETTINGS = {
     { :type => 'BS', :channel => '193', :name => 'WOWOW3' },
     { :type => 'BS', :channel => '211', :name => 'BS11' },
     { :type => 'BS', :channel => '222', :name => 'TwellV' },
-  ]
+  ],
+  :application_path => '/home/k1/torec',
+  :output_path => '/data/record/',
+  :recorder_program_path => '/usr/local/bin/recpt1',
 }
 
 DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})

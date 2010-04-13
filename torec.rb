@@ -351,7 +351,9 @@ class Record < Sequel::Model(:records)
     string :filename, :unique => true, :null => false
     #enum :state, :elements => ['reserve', 'waiting', 'recording', 'done', 'cancel']
     string :state, :size => 20, :null => false, :default => RESERVE
-    integer :job
+    string :job, :size => 30
+    datetime :start_time
+    datetime :done_time
   end
   many_to_one :program
   many_to_one :reservation
@@ -362,6 +364,12 @@ class Record < Sequel::Model(:records)
   end
   def waiting?
     state == WAITING
+  end
+  def recording?
+    state == RECORDING
+  end
+  def done?
+    state == DONE
   end
   
   def self.search(opts)
@@ -382,6 +390,65 @@ class Record < Sequel::Model(:records)
     end
     ds.order(:program__start_time)
   end
+
+  # 15秒前から録画開始
+  PREVENIENT_TIME = 15
+
+  def schedule
+    return if reserve?
+    
+    at_start = (program[:start_time] - PREVENIENT_TIME)
+    duration = program[:end_time] - program[:start_time] - 5
+    
+    output_dir = SETTINGS[:output_path]
+    output_dir = File.join(output_dir, reservation[:folder]) if reservation != nil and reservation[:folder] != nil
+    output_file = File.join(output_dir, program.filename)
+    
+    jobid = nil
+    IO.popen("at #{at_start..strftime('%H:%M %m/%d/%Y')} 2>&1", 'r+') do |io|
+      io << 'TYPE=' <<  program.channel[:type] << "\n"
+      io << 'CHANNEL=' <<  program.channel[:channel] << "\n"
+      io << 'DURATION=' << duration << "\n"
+      io << 'OUTPUT=' << output_file << "\n"
+      
+      io << 'mkdir -p ' << output_dir << "\n"
+      io << "/bin/date\n"
+      io << "/bin/sleep " << at_start.sec << "\n"
+      io << "/bin/date\n"
+      io << File.join(SETTINGS[:application_path],'torec.rb') << " state --start " << program.pk << "\n"
+      io << "/bin/date\n"
+      io << SETTINGS[:recorder_program_path] << "--b25 --strip -sid hd $CHANNEL $DURATION $OUTPUT \n"
+      io << "/bin/date\n"
+      io << File.join(SETTINGS[:application_path],'torec.rb') << " state --done " << program.pk << "\n"
+      #kick post process... thumbnail/ffmpeg
+      
+      io.close_write
+      io.each do |l|
+        next if l.match(/^warning:/)
+        jobid = l.split(' ')[1]
+        break
+      end
+    end
+    
+    self[:filename] = output_file
+    self[:job] = jobid
+    self[:state] = WAITING
+    save
+  end
+
+  def start
+    return if waiting?
+    self[:start_time] = Time.now
+    self[:state] = RECORDING
+    save
+  end
+  def done
+    return if recording?
+    self[:done_time] = Time.now
+    self[:state] = DONE
+    save
+  end
+
 end
 
 class Torec
@@ -465,7 +532,7 @@ class Torec
     progress
   end
   
-  EPGDUMP = File.join(File.dirname($0), 'do-epgget.sh')
+  EPGDUMP = File.join(SETTINGS[:application_path], 'do-epgget.sh')
   
   def self.update_epg_bs
     result = nil
@@ -591,7 +658,7 @@ if __FILE__ == $0
       end
     when 'record'
       opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false}
-      opts.program_name = $0 + ' program'
+      opts.program_name = $0 + ' record'
       opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
       opts.on("--tunner TUNNER_TYPE", "simple recording"){|type| opt[:tunner_type] = type }
@@ -611,6 +678,25 @@ if __FILE__ == $0
         print "#{r[:title]}\n"
         rid = rc[:reservation_id]
         puts " + #{(rid==nil)?' ':'A'} #{rc[:state].upcase.ljust(6)} #{rc[:filename]}"
+      end
+    when 'state'
+      opt = {:schedule => false, :start => false, :done => false}
+      opts.program_name = $0 + ' state'
+      opts.on("--schedule"){opt[:schedule] = true }
+      opts.on("--start"){opt[:start] = true }
+      opts.on("--done"){opt[:done] = true }
+      opts.permute!(ARGV)
+      ARGV.each do |pid|
+        pg = Program[pid]
+        raise "program not found." if pg == nil
+        if opt[:schedule]
+          pg.record.schedule
+        elsif opt[:start]
+          pg.record.start
+        elsif opt[:done]
+          pg.record.done
+        end
+        exit
       end
   else
     opts.program_name = $0 + ' COMMAND'
