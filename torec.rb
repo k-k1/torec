@@ -15,7 +15,7 @@ class String
     NKF.nkf('-Z1wW', self).tr('　', ' ')
   end
   def parse_date_time
-    DateTime.strptime(self, "%Y%m%d%H%M%S")
+    DateTime.strptime(self, "%Y%m%d%H%M%S %z")
   end
 end
 
