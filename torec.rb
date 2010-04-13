@@ -416,7 +416,7 @@ class Record < Sequel::Model(:records)
     end
     
     at_start = (program[:start_time] - PREVENIENT_TIME)
-    duration = program[:end_time] - program[:start_time] - 5
+    duration = program.duration - 5
     
     output_dir = SETTINGS[:output_path]
     output_dir = File.join(output_dir, reservation[:folder]) if reservation != nil and reservation[:folder] != nil
