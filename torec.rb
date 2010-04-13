@@ -28,6 +28,7 @@ end
 
 DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})
 
+Sequel.default_timezone = :local
 Sequel::Model.plugin(:schema)
 Sequel::Model.plugin(:hook_class_methods )
 
