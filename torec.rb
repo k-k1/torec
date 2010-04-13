@@ -267,8 +267,8 @@ class Program < Sequel::Model(:programs)
     print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+duration+')').ljust(8)} "
     print "#{self[:title]}\n"
     if verbose
-      puts "#{'-'.rjust(30)} #{self[:end_time].format_display}"
-      puts '      ' + self[:description]
+      puts "#{' '.rjust(9)}#{channel[:name].ljust(20)} - #{self[:end_time].format_display}"
+      puts '         ' + self[:description]
     end
   end
   
@@ -299,6 +299,7 @@ class Program < Sequel::Model(:programs)
     if !opt[:all]
       ds = ds.filter(:end_time > Time.now)
     end
+    p ds.sql if $DEBUG
     ds
   end
 
@@ -396,7 +397,9 @@ class Record < Sequel::Model(:records)
     if !opts[:all]
       ds = ds.filter(:program__end_time > Time.now)
     end
-    ds.order(:program__start_time)
+    ds = ds.order(:program__start_time)
+    p ds.sql if $DEBUG
+    ds
   end
 
   # 15秒前から録画開始
