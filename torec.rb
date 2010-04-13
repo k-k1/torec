@@ -468,6 +468,7 @@ class Torec
   EPGDUMP = File.join(File.dirname($0), 'do-epgget.sh')
   
   def self.update_epg
+    #TODO rescue
     bs =  Channel.filter(:type => 'BS')
     if bs.count != 0
       puts "BS"
@@ -498,7 +499,7 @@ if __FILE__ == $0
   
   opts = OptionParser.new
   case ARGV.shift
-    when 'epgupdate'
+    when 'update'
       Torec.update_epg
     when 'import'
       opts.program_name = $0 + ' import'
