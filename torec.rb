@@ -251,20 +251,20 @@ class Program < Sequel::Model(:programs)
   end
   
   def duration
-    (self[:end_time] - self[:start_time])
+    (self[:end_time] - self[:start_time]).to_i
   end
   
   def format_duration
-    h = (duration_second / 3600).to_i
-    m = ((duration_second % 3600) / 60).to_i
-    s = ((duration_second % 3600) % 60).to_i
+    h = (duration / 3600).to_i
+    m = ((duration % 3600) / 60).to_i
+    s = ((duration % 3600) % 60).to_i
     (h==0?'':h.to_s+'h') + (m==0?'':m.to_s+'m') + (s==0?'':s.to_s+'s')
   end
   
   def print_line(verbose=false)
     print "#{(record==nil)?'  ':'* '}"
     print "#{self[:id].to_s.rjust(6)} #{channel.channel_key.ljust(5)} "
-    print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+duration+')').ljust(8)} "
+    print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+format_duration+')').ljust(8)} "
     print "#{self[:title]}\n"
     if verbose
       puts "#{' '.rjust(9)}#{channel[:name].ljust(20)} - #{self[:end_time].format_display}"
