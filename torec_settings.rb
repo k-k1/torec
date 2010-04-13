@@ -9,7 +9,7 @@ SETTINGS = {
   :channel_types => [
     {:type => "GR", :name => "地上波", :tunner_type => "GR"},
     {:type => "BS", :name => "BS", :tunner_type => "BS/CS"},
-    {:type => "CS", :name => "CS", :tunner_type => "BS/CS"},
+#    {:type => "CS", :name => "CS", :tunner_type => "BS/CS"},
   ],
   :channels => [
     #GR

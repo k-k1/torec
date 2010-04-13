@@ -62,6 +62,10 @@ class ChannelType < Sequel::Model(:channel_types)
   def tunners
     Tunner.filter(:type => self[:tunner_type]).order(:id).all
   end
+
+  def self.types
+    ChannelType.all.collect{|r| r[:type]}
+  end
 end
 
 class Category < Sequel::Model(:categories)
@@ -281,6 +285,10 @@ class Program < Sequel::Model(:programs)
     if opt[:category_id] != nil
       ds = ds.filter(:category_id => opt[:category_id])
     end
+    if opt[:channel_type] != nil
+      ds = ds.eager_graph(:channel).filter(:channel__type => opt[:channel_type])
+    end
+    
     if opt[:keyword] != nil
       kw = opt[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
       kw.each do |s|
@@ -601,17 +609,20 @@ if __FILE__ == $0
       opts.parse!(ARGV)
       Reservation.update_reserve
     when 'search'
-      opt = {:channel_id => nil, :category_id => nil, :keyword => nil, :verbose => false, :reserve => false, :now => false, :all => false}
+      opt = {:channel_id => nil, :category_id => nil, :channel_type => nil, :keyword => nil,
+        :verbose => false, :reserve => false, :now => false, :all => false}
       opts.program_name = $0 + ' search'
-      opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
-      opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
-      opts.on("--all", "display all records."){opt[:all] = true }
       opts.on("-n", "--now", "display now on-air programs"){opt[:now] = true }
+      opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
+      opts.on("-g", "--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
+      opts.on("-t", "--type CHANNEL_TYPE", ChannelType.types){|cid| opt[:channel_type] = cid }
+      opts.on("-a", "--all", "display all records."){opt[:all] = true }
       opts.on("-v", "--verbose", "display program description"){opt[:verbose] = true }
       opts.on("-r", "--reserve", "add auto-recording reserve"){opt[:reserve] = true }
       opts.permute!(ARGV)
       if opt[:now]
         Program.now_onair.each do |r|
+          next if opt[:channel_type] != nil and opt[:channel_type] != r.channel[:type]
           r.print_line(opt[:verbose])
         end
         exit
