@@ -691,7 +691,12 @@ if __FILE__ == $0
         print "#{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} "
         print "#{r[:title]}\n"
         rid = rc[:reservation_id]
-        puts " + #{(rid==nil)?' ':'A'} #{rc[:state].upcase.ljust(6)} #{rc[:filename]}"
+        puts "   #{(rid==nil)?' ':'A'} #{rc[:state].upcase.ljust(20)} #{rc[:filename]}"
+        if not rc.reserve? and not rc.waiting?
+          jid = r[:jobid]
+          dtime = rc[:done_time]
+          puts "     job:#{((jid==nil)?'':jid).ljust(16)} #{rc[:start_time].format_display.ljust(20)}- #{((dtime==nil)?'':dtime.format_display).ljust(20)}"
+        end
       end
     when 'state'
       opt = {:schedule => false, :start => false, :done => false}
