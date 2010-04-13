@@ -250,11 +250,11 @@ class Program < Sequel::Model(:programs)
     end
   end
   
-  def duration_second
+  def duration
     (self[:end_time] - self[:start_time])
   end
   
-  def duration
+  def format_duration
     h = (duration_second / 3600).to_i
     m = ((duration_second % 3600) / 60).to_i
     s = ((duration_second % 3600) % 60).to_i
@@ -688,7 +688,7 @@ if __FILE__ == $0
       Record.search(opt).all.each do |rc|
         r = rc.program
         print "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} "
-        print "#{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.duration+')').ljust(7)} "
+        print "#{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.format_duration+')').ljust(7)} "
         print "#{r[:title]}\n"
         rid = rc[:reservation_id]
         puts "   #{(rid==nil)?' ':'A'} #{rc[:state].upcase.ljust(20)} #{rc[:filename]}"
