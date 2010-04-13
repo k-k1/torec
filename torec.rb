@@ -410,6 +410,9 @@ class Record < Sequel::Model(:records)
     if waiting? and self[:job] != nil
       # remove job
       system("atrm #{self[:job]}")
+      self[:job] = nil
+      self[:state] = RESERVE
+      save
     end
     
     at_start = (program[:start_time] - PREVENIENT_TIME)
