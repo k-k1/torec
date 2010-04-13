@@ -8,6 +8,8 @@ require 'digest/md5'
 require 'nkf'
 require 'optparse'
 
+require File.join(File.dirname($0), 'torec_settings.rb')
+
 class String
   def to_han()
     NKF.nkf('-Z1wW', self).tr('　', ' ')
@@ -26,28 +28,30 @@ class Time
   end
 end
 
-DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})
-
-Sequel.default_timezone = :local
 Sequel::Model.plugin(:schema)
 Sequel::Model.plugin(:hook_class_methods )
 
+module InitData
+  def create_init_data()
+    return if SETTINGS[table_name] == nil
+    SETTINGS[table_name].each do |h|
+      create(h)
+    end
+  end
+end
+
 class Tunner < Sequel::Model(:tunners)
+  extend InitData
   set_schema do
     primary_key :id
     string :name, :size => 128, :null => false, :unique => true
     string :type, :size => 20, :null => false
     string :device_name, :size => 20, :null => false
   end
-  def self.create_init_data()
-    Tunner << {:name => "GR0", :type => "GR", :device_name => "PT2"}
-    Tunner << {:name => "GR1", :type => "GR", :device_name => "PT2"}
-    Tunner << {:name => "BS0", :type => "BS/CS", :device_name => "PT2"}
-    Tunner << {:name => "BS1", :type => "BS/CS", :device_name => "PT2"}
-  end
 end
 
 class ChannelType < Sequel::Model(:channel_types)
+  extend InitData
   set_schema do
     primary_key :id
     string :type, :size => 20, :null => false, :unique => true
@@ -57,12 +61,6 @@ class ChannelType < Sequel::Model(:channel_types)
   #one_to_many
   def tunners
     Tunner.filter(:type => self[:tunner_type]).order(:id).all
-  end
-  
-  def self.create_init_data()
-    ChannelType << {:type => "GR", :name => "地上波", :tunner_type => "GR"}
-    ChannelType << {:type => "BS", :name => "BS", :tunner_type => "BS/CS"}
-    ChannelType << {:type => "CS", :name => "CS", :tunner_type => "BS/CS"}
   end
 end
 
@@ -84,6 +82,7 @@ class Category < Sequel::Model(:categories)
 end
 
 class Channel < Sequel::Model(:channels)
+  extend InitData
   set_schema do
     primary_key :id
     string :type, :size => 20, :null => false
@@ -95,33 +94,6 @@ class Channel < Sequel::Model(:channels)
   #many_to_one
   def channel_type
     ChannelType.filter(:type => self[:type]).first
-  end
-  
-  def self.create_init_data()
-    #GR
-    Channel << { :type => 'GR', :channel => '27', :name => 'NHK総合・東京' }
-    Channel << { :type => 'GR', :channel => '26', :name => 'NHK教育・東京' }
-    Channel << { :type => 'GR', :channel => '25', :name => '日テレ' }
-    Channel << { :type => 'GR', :channel => '22', :name => 'TBS' }
-    Channel << { :type => 'GR', :channel => '21', :name => 'フジテレビ' }
-    Channel << { :type => 'GR', :channel => '24', :name => 'テレビ朝日' }
-    Channel << { :type => 'GR', :channel => '23', :name => 'テレビ東京' }
-    Channel << { :type => 'GR', :channel => '20', :name => 'TOKYO MX' }
-    Channel << { :type => 'GR', :channel => '28', :name => '放送大学' }
-    #BS
-    Channel << { :type => 'BS', :channel => '101', :name => 'NHK BS1' }
-    Channel << { :type => 'BS', :channel => '102', :name => 'NHK BS2' }
-    Channel << { :type => 'BS', :channel => '103', :name => 'NHK BSh' }
-    Channel << { :type => 'BS', :channel => '141', :name => 'BS日テレ' }
-    Channel << { :type => 'BS', :channel => '151', :name => 'BS朝日' }
-    Channel << { :type => 'BS', :channel => '161', :name => 'BS-i' }
-    Channel << { :type => 'BS', :channel => '171', :name => 'BSジャパン' }
-    Channel << { :type => 'BS', :channel => '181', :name => 'BSフジ' }
-    Channel << { :type => 'BS', :channel => '191', :name => 'WOWOW' }
-    Channel << { :type => 'BS', :channel => '192', :name => 'WOWOW2' }
-    Channel << { :type => 'BS', :channel => '193', :name => 'WOWOW3' }
-    Channel << { :type => 'BS', :channel => '211', :name => 'BS11' }
-    Channel << { :type => 'BS', :channel => '222', :name => 'TwellV' }
   end
   
   def self.find(chname)
