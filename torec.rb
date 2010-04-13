@@ -467,27 +467,50 @@ class Torec
   
   EPGDUMP = File.join(File.dirname($0), 'do-epgget.sh')
   
-  def self.update_epg
-    #TODO rescue
+  def self.update_epg_bs
+    result = nil
     bs =  Channel.filter(:type => 'BS')
     if bs.count != 0
-      puts "BS"
       if bs.first.find_empty_tunner(Time.now, Time.now + 190) != nil
         IO.popen("#{EPGDUMP} BS 211 180 2>/dev/null") do |io|
-          p import_from_io(io)
+          result = import_from_io(io)
         end
         bs.all.each do |r|
           r.update_program
         end
       end
     end
-    Channel.filter(:type => 'GR').order(:channel).all.each do |r|
-      puts r.channel_key
-      next if r.find_empty_tunner(Time.now, Time.now + 70) == nil
-      IO.popen("#{EPGDUMP} #{r[:type]} #{r[:channel]} 60") do |io|
-        p import_from_io(io)
+    result
+  end
+  
+  def self.update_epg_gr(channel = nil)
+    result = nil
+    next if channel.find_empty_tunner(Time.now, Time.now + 70) == nil
+    IO.popen("#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60") do |io|
+      result = import_from_io(io)
+    end
+    channel.update_program
+    result
+  end
+
+  def self.update_epg(chid = nil)
+    #TODO rescue
+    if chid != nil
+      ch = Channel[:id => chid]
+      if ch[:type] == 'BS'
+        puts ch[:type]
+        p Torec.update_epg_bs
+      elsif ch[:type] == 'GR'
+        puts ch.channel_key
+        p Torec.update_epg_gr(ch)
       end
-      r.update_program
+    else
+      #all
+      Channel.filter(:type => 'GR').order(:channel).all.each do |ch|
+        puts ch.channel_key
+        p Torec.update_epg_gr(ch)
+      end
+      p Torec.update_epg_bs
     end
     Reservation.update_reserve
   end
@@ -500,7 +523,11 @@ if __FILE__ == $0
   opts = OptionParser.new
   case ARGV.shift
     when 'update'
-      Torec.update_epg
+      opt = {:channel_id => nil}
+      opts.program_name = $0 + ' update'
+      opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
+      opts.parse!(ARGV)
+      Torec.update_epg(opt[:channel_id])
     when 'import'
       opts.program_name = $0 + ' import'
       opts.on("-f", "--file XMLFILE"){|f| p Torec.import_from_file(f) }
@@ -588,6 +615,7 @@ if __FILE__ == $0
   else
     opts.program_name = $0 + ' COMMAND'
     puts opts.help
+    puts "  update     "
     puts "  import     "
     puts "  search     "
     puts "  reserve    "
