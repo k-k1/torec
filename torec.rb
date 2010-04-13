@@ -353,8 +353,8 @@ class Reservation < Sequel::Model(:reservations)
   end
   
   def self.update_reserve
-    self.all.each do |rs|
-      rs.search_program_dataset.all.each do |pg|
+    order(:id).each do |rs|
+      rs.search.all.each do |pg|
         next if pg.record != nil
         #p 'update record reserve. pg:'+ pg.pk.to_s + ' rs' + rs.pk.to_s
         pg.reserve(rs.pk)
