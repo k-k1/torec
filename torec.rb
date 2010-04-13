@@ -406,17 +406,17 @@ class Record < Sequel::Model(:records)
   PREVENIENT_TIME = 15
 
   def schedule
-    return if reserve?
+    return if not reserve?
     
     at_start = (program[:start_time] - PREVENIENT_TIME)
     duration = program[:end_time] - program[:start_time] - 5
     
     output_dir = SETTINGS[:output_path]
     output_dir = File.join(output_dir, reservation[:folder]) if reservation != nil and reservation[:folder] != nil
-    output_file = File.join(output_dir, program.filename)
+    output_file = File.join(output_dir, program.create_filename)
     
     jobid = nil
-    IO.popen("at #{at_start..strftime('%H:%M %m/%d/%Y')} 2>&1", 'r+') do |io|
+    IO.popen("at #{at_start.strftime('%H:%M %m/%d/%Y')} 2>&1", 'r+') do |io|
       io << 'TYPE=' <<  program.channel[:type] << "\n"
       io << 'CHANNEL=' <<  program.channel[:channel] << "\n"
       io << 'DURATION=' << duration << "\n"
@@ -448,13 +448,13 @@ class Record < Sequel::Model(:records)
   end
 
   def start
-    return if waiting?
+    return if not waiting?
     self[:start_time] = Time.now
     self[:state] = RECORDING
     save
   end
   def done
-    return if recording?
+    return if not recording?
     self[:done_time] = Time.now
     self[:state] = DONE
     save
