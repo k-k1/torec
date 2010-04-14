@@ -435,7 +435,7 @@ class Record < Sequel::Model(:records)
       io << "/bin/date\n"
       io << File.join(SETTINGS[:application_path],'torec.rb') << " state --start " << program.pk << "\n"
       io << "/bin/date\n"
-      io << SETTINGS[:recorder_program_path] << " --b25 --strip -sid hd $CHANNEL $DURATION $OUTPUT \n"
+      io << SETTINGS[:recorder_program_path] << " --b25 --strip --sid hd $CHANNEL $DURATION $OUTPUT \n"
       io << "/bin/date\n"
       io << File.join(SETTINGS[:application_path],'torec.rb') << " state --done " << program.pk << "\n"
       #kick post process... thumbnail/ffmpeg
