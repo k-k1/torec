@@ -453,6 +453,28 @@ class Record < Sequel::Model(:records)
     save
   end
 
+  def stop_recording
+    return if not recording?
+    begin
+      Process.kill(:INT,self[:recording_pid])
+      p "process killed. #{self[:recording_pid]}"
+    rescue
+      p "process not found. #{self[:recording_pid]}"
+    end
+  end
+  
+  def find_prev_record
+    ds = Record.dataset
+    ds = ds.eager_graph(:program)
+    ds = ds.filter(:tunner_id => self[:tunner_id])
+    ds = ds.filter(:state => RECORDING) 
+    ds = ds.filter(:program__end_time >= program[:start_time])
+    ds = ds.order(:program__end_time.desc)
+    rc = ds.first
+    return nil if rc == nil
+    rc[Record.table_name]
+  end
+
   def start
     return if not waiting?
     
@@ -463,6 +485,7 @@ class Record < Sequel::Model(:records)
     args << "--b25"
     args << "--strip"
     args << "--sid" << sid
+    args << "--device" << "/dev/pt1video2"
     args << program.channel[:channel]
     args << program.duration.to_s
     args << File.join(output_dir, program.create_filename)
@@ -471,7 +494,8 @@ class Record < Sequel::Model(:records)
     
     #waiting..
     (program[:start_time] - 1).wait
-    #TODO check empty tunner
+    rc = find_prev_record
+    rc.stop_recording if rc != nil
     
     #recording
     pid = Process.fork do
