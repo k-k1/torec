@@ -369,6 +369,7 @@ class Record < Sequel::Model(:records)
     #enum :state, :elements => ['reserve', 'waiting', 'recording', 'done', 'cancel']
     string :state, :size => 20, :null => false, :default => RESERVE
     string :job, :size => 30
+    integer :recording_pid
     datetime :start_time
     datetime :done_time
   end
@@ -473,10 +474,16 @@ class Record < Sequel::Model(:records)
     #TODO check empty tunner
     
     #recording
+    pid = Process.fork do
+      #child process
+      exec(SETTINGS[:recorder_program_path], *args)
+    end
     self[:start_time] = Time.now
     self[:state] = RECORDING
+    self[:recording_pid] = pid
     save
-    system(SETTINGS[:recorder_program_path], *args)
+    th = Process.detach(pid)
+    th.value
     done
   end
   def done
