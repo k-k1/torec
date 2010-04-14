@@ -718,10 +718,10 @@ if __FILE__ == $0
         print "#{r[:title]}\n"
         rid = rc[:reservation_id]
         state = rc[:state].upcase
-        state = state + ' ' + r[:job] if rc.waiting?
+        state = state + ' ' + rc[:job] if rc.waiting?
         puts "   #{(rid==nil)?' ':'A'} #{state.ljust(20)} #{rc[:filename]}"
         if not rc.reserve? and not rc.waiting?
-          jid = r[:job]
+          jid = rc[:job]
           dtime = rc[:done_time]
           puts "#{' '.ljust(25)} #{rc[:start_time].format_display.ljust(20)}- #{((dtime==nil)?'':dtime.format_display).ljust(20)}"
         end
