@@ -7,6 +7,7 @@ require 'date'
 require 'digest/md5'
 require 'nkf'
 require 'optparse'
+require 'fileutils'
 
 require File.join(File.dirname($0), 'torec_settings.rb')
 
@@ -25,6 +26,13 @@ class Time
   end
   def format_display
     self.strftime("%Y/%m/%d %H:%M:%S")
+  end
+  INTERVAL = 0.1
+  def wait
+    loop do
+      break if self <= Time.now
+      sleep(INTERVAL) 
+    end
   end
 end
 
@@ -401,7 +409,13 @@ class Record < Sequel::Model(:records)
     p ds.sql if $DEBUG
     ds
   end
-
+  
+  def output_dir
+    dir = SETTINGS[:output_path]
+    dir = File.join(dir, reservation[:folder]) if reservation != nil and reservation[:folder] != nil
+    dir
+  end
+  
   # 15秒前から録画開始
   PREVENIENT_TIME = 15
 
@@ -418,27 +432,11 @@ class Record < Sequel::Model(:records)
     at_start = (program[:start_time] - PREVENIENT_TIME)
     duration = program.duration - 5
     
-    output_dir = SETTINGS[:output_path]
-    output_dir = File.join(output_dir, reservation[:folder]) if reservation != nil and reservation[:folder] != nil
     output_file = File.join(output_dir, program.create_filename)
     
     jobid = nil
     IO.popen("at #{at_start.strftime('%H:%M %m/%d/%Y')} 2>&1", 'r+') do |io|
-      io << 'TYPE=' <<  program.channel[:type] << "\n"
-      io << 'CHANNEL=' <<  program.channel[:channel] << "\n"
-      io << 'DURATION=' << duration << "\n"
-      io << 'OUTPUT=' << output_file << "\n"
-      
-      io << 'mkdir -p ' << output_dir << "\n"
-      io << "/bin/date\n"
-      io << "/bin/sleep " << at_start.sec << "\n"
-      io << "/bin/date\n"
       io << File.join(SETTINGS[:application_path],'torec.rb') << " state --start " << program.pk << "\n"
-      io << "/bin/date\n"
-      io << SETTINGS[:recorder_program_path] << " --b25 --strip --sid hd $CHANNEL $DURATION $OUTPUT \n"
-      io << "/bin/date\n"
-      io << File.join(SETTINGS[:application_path],'torec.rb') << " state --done " << program.pk << "\n"
-      #kick post process... thumbnail/ffmpeg
       
       io.close_write
       io.each do |l|
@@ -456,9 +454,30 @@ class Record < Sequel::Model(:records)
 
   def start
     return if not waiting?
+    
+    #FIXME sid
+    sid = 'hd'
+    
+    args = []
+    args << "--b25"
+    args << "--strip"
+    args << "--sid" << sid
+    args << program.channel[:channel]
+    args << program.duration
+    args << File.join(output_dir, program.create_filename)
+    
+    FileUtils.mkdir_p(output_dir)
+    
+    #waiting..
+    (program[:start_time] - 1).wait
+    #TODO check empty tunner
+    
+    #recording
     self[:start_time] = Time.now
     self[:state] = RECORDING
     save
+    system(SETTINGS[:recorder_program_path], *args)
+    done
   end
   def done
     return if not recording?
