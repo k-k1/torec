@@ -464,7 +464,7 @@ class Record < Sequel::Model(:records)
     args << "--strip"
     args << "--sid" << sid
     args << program.channel[:channel]
-    args << program.duration.to_i
+    args << program.duration.to_s
     args << File.join(output_dir, program.create_filename)
     
     FileUtils.mkdir_p(output_dir)
