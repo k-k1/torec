@@ -435,8 +435,8 @@ class Record < Sequel::Model(:records)
       delete_job
     end
     
-    at_start = (program[:start_time] - PREVENIENT_TIME)
-    duration = program.duration - 5
+    #before 1 minute
+    at_start = (program[:start_time] - 60)
     
     output_file = File.join(output_dir, program.create_filename)
     
