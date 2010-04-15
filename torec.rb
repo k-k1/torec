@@ -318,8 +318,8 @@ class Program < Sequel::Model(:programs)
   def remaining_second
     return 0 if closed?
     now = Time.now
-    if program[:start_time] < now
-      duration - (program[:start_time] - now)
+    if self[:start_time] < now
+      duration - (self[:start_time] - now).to_i
     else
       duration        
     end
@@ -465,7 +465,7 @@ class Record < Sequel::Model(:records)
     at_start = (program[:start_time] - 60)
     at_start_str = at_start.strftime('%H:%M %m/%d/%Y')
     
-    if at_start > Time.now
+    if at_start < Time.now
       at_start_str = 'now'
     end
 
