@@ -684,7 +684,6 @@ class Torec
       end
       p Torec.update_epg_bs
     end
-    Reservation.update_reserve
   end
 end
 
@@ -695,15 +694,12 @@ if __FILE__ == $0
   opts = OptionParser.new
   case ARGV.shift
     when 'update'
-      opt = {:channel_id => nil}
+      opt = {:file => nil, :channel_id => nil}
       opts.program_name = $0 + ' update'
-      opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
+      opts.on("-f", "--file XMLFILE"){|f| opt[:file] = f; p Torec.import_from_file(f) }
+      opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.parse!(ARGV)
-      Torec.update_epg(opt[:channel_id])
-    when 'import'
-      opts.program_name = $0 + ' import'
-      opts.on("-f", "--file XMLFILE"){|f| p Torec.import_from_file(f) }
-      opts.parse!(ARGV)
+      Torec.update_epg(opt[:channel_id]) if opt[:file] == nil
       Reservation.update_reserve
     when 'search'
       opt = {:channel_id => nil, :category_id => nil, :channel_type => nil, :keyword => nil,
@@ -813,7 +809,6 @@ if __FILE__ == $0
     opts.program_name = $0 + ' COMMAND'
     puts opts.help
     puts "  update     "
-    puts "  import     "
     puts "  search     "
     puts "  reserve    "
     puts "  record     "
