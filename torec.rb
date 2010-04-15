@@ -520,9 +520,11 @@ class Record < Sequel::Model(:records)
   def start
     return if not waiting?
     
-    #FIXME sid
     sid = 'hd'
-    
+     if ['101','102','191','192','193'].index(program.channel[:channel]) != nil
+       sid = program.channel[:channel]
+     end
+
     args = []
     args << "--b25"
     args << "--strip"
