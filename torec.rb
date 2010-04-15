@@ -417,6 +417,9 @@ class Record < Sequel::Model(:records)
     if opts[:category_id] != nil
       ds = ds.filter(:program__category_id => opts[:category_id])
     end
+    if opts[:state] != nil
+      ds = ds.filter(:state => opts[:state].to_s)
+    end
     if !opts[:all]
       ds = ds.filter(:program__end_time > Time.now)
     end
@@ -763,18 +766,32 @@ if __FILE__ == $0
         puts "#{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
     when 'record'
-      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false}
+      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false, :state => nil}
       opts.program_name = $0 + ' record'
-      opts.on("--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
-      opts.on("--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
-      opts.on("--tunner TUNNER_TYPE", "simple recording"){|type| opt[:tunner_type] = type }
-      opts.on("--all", "display all records."){opt[:all] = true }
-      opts.on("--add PROGRAM_ID", Integer, "simple recording"){|pid| opt[:program_id] = pid }
-      opts.permute!(ARGV)
+      opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
+      opts.on("-g", "--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
+      opts.on("-t", "--tunner TUNNER_TYPE"){|type| opt[:tunner_type] = type }
+      opts.on("-a", "--all", "display all records."){opt[:all] = true }
+      opts.on("--schedule [PROGRAM_ID]", "schedule records."){|pid| opt[:state] = :schedule; opt[:program_id] = pid }
+      opts.on("--start PROGRAM_ID"){|pid| opt[:state] = :start; opt[:program_id] = pid }
+      opts.on("--add PROGRAM_ID", Integer, "simple recording"){|pid| opt[:state] = :add; opt[:program_id] = pid }
+      opts.parse!(ARGV)
       if opt[:program_id] != nil
         pg = Program[opt[:program_id]]
         raise "program not found." if pg == nil
-        pg.reserve
+        if opt[:state] == :schedule
+          pg.record.schedule
+        elsif opt[:state] == :start
+          pg.record.start
+        elsif opt[:state] == :add
+          pg.reserve
+        end
+        exit
+      elsif opt[:state] == :schedule
+        opt[:state] = :reserve
+        Record.search(opt).all.each do |rc|
+          rc.schedule
+        end
         exit
       end
       Record.search(opt).all.each do |rc|
@@ -791,25 +808,6 @@ if __FILE__ == $0
           dtime = rc[:done_time]
           puts "#{' '.ljust(25)} #{rc[:start_time].format_display.ljust(20)}- #{((dtime==nil)?'':dtime.format_display).ljust(20)}"
         end
-      end
-    when 'state'
-      opt = {:schedule => false, :start => false, :done => false}
-      opts.program_name = $0 + ' state'
-      opts.on("--schedule"){opt[:schedule] = true }
-      opts.on("--start"){opt[:start] = true }
-      opts.on("--done"){opt[:done] = true }
-      opts.permute!(ARGV)
-      ARGV.each do |pid|
-        pg = Program[pid]
-        raise "program not found." if pg == nil
-        if opt[:schedule]
-          pg.record.schedule
-        elsif opt[:start]
-          pg.record.start
-        elsif opt[:done]
-          pg.record.done
-        end
-        exit
       end
   else
     opts.program_name = $0 + ' COMMAND'
