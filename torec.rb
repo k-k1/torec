@@ -253,7 +253,7 @@ class Program < Sequel::Model(:programs)
   def cancel_reserve
     return if record == nil
     if record.reserve? or record.waiting?
-      #TODO remove at job
+      record.delete_job
       record.delete
     end
   end
@@ -418,17 +418,21 @@ class Record < Sequel::Model(:records)
     dir
   end
   
-  # 15秒前から録画開始
-  PREVENIENT_TIME = 15
-
+  def delete_job
+    return if self[:job] == nil
+    return if not waiting?
+    #FIXME error handling
+    system("atrm #{self[:job]} 2>&1")
+    self[:job] = nil
+    self[:state] = RESERVE
+    save
+  end
+  
   def schedule
     return if not reserve? and not waiting?
-    if waiting? and self[:job] != nil
-      # remove job
-      system("atrm #{self[:job]}")
-      self[:job] = nil
-      self[:state] = RESERVE
-      save
+    if waiting?
+      #reschedule
+      delete_job
     end
     
     at_start = (program[:start_time] - PREVENIENT_TIME)
