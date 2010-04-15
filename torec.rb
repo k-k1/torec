@@ -474,7 +474,7 @@ class Record < Sequel::Model(:records)
 
     jobid = nil
     IO.popen("at #{at_start_str} 2>&1", 'r+') do |io|
-      io << File.join(SETTINGS[:application_path],'torec.rb') << " state --start " << program.pk << "\n"
+      io << File.join(SETTINGS[:application_path],'torec.rb') << " record --start " << program.pk << "\n"
       
       io.close_write
       io.each do |l|
