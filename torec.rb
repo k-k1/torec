@@ -339,7 +339,8 @@ class Reservation < Sequel::Model(:reservations)
   end
   
   def self.create(opt)
-    self.new({:channel_id => opt[:channel_id], :category_id => opt[:category_id], :keyword => opt[:keyword]}, true)
+    self.new({:channel_id => opt[:channel_id], :category_id => opt[:category_id],
+        :keyword => opt[:keyword], :folder => opt[:folder]}, true)
   end
   
   def self.update_reserve
@@ -670,7 +671,7 @@ if __FILE__ == $0
       Reservation.update_reserve
     when 'search'
       opt = {:channel_id => nil, :category_id => nil, :channel_type => nil, :keyword => nil,
-        :verbose => false, :reserve => false, :now => false, :all => false}
+        :verbose => false, :reserve => false, :folder => nil, :now => false, :all => false}
       opts.program_name = $0 + ' search'
       opts.on("-n", "--now", "display now on-air programs"){opt[:now] = true }
       opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
@@ -679,6 +680,7 @@ if __FILE__ == $0
       opts.on("-a", "--all", "display all records."){opt[:all] = true }
       opts.on("-v", "--verbose", "display program description"){opt[:verbose] = true }
       opts.on("-r", "--reserve", "add auto-recording reserve"){opt[:reserve] = true }
+      opts.on("-d", "--dir DIRNAME", "auto-recording save directory"){|d| opt[:folder] = d }
       opts.permute!(ARGV)
       if opt[:now]
         Program.now_onair.each do |r|
