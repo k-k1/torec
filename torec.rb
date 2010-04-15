@@ -310,7 +310,20 @@ class Program < Sequel::Model(:programs)
     p ds.sql if $DEBUG
     ds
   end
-
+  
+  def closed?
+    ((self[:end_time] - 60) < Time.now)
+  end
+  
+  def remaining_second
+    return 0 if closed?
+    now = Time.now
+    if program[:start_time] < now
+      duration - (program[:start_time] - now)
+    else
+      duration        
+    end
+  end
 end
 
 class Reservation < Sequel::Model(:reservations)
@@ -427,9 +440,22 @@ class Record < Sequel::Model(:records)
     self[:state] = RESERVE
     save
   end
-  
+
+  def cancel
+    if reserve?
+      self[:job] = nil
+      self[:state] = CANCEL
+      save
+    end
+  end
+
   def schedule
     return if not reserve? and not waiting?
+    if program.closed?
+      cancel
+      return
+    end
+
     if waiting?
       #reschedule
       delete_job
@@ -437,11 +463,14 @@ class Record < Sequel::Model(:records)
     
     #before 1 minute
     at_start = (program[:start_time] - 60)
+    at_start_str = at_start.strftime('%H:%M %m/%d/%Y')
     
-    output_file = File.join(output_dir, program.create_filename)
-    
+    if at_start > Time.now
+      at_start_str = 'now'
+    end
+
     jobid = nil
-    IO.popen("at #{at_start.strftime('%H:%M %m/%d/%Y')} 2>&1", 'r+') do |io|
+    IO.popen("at #{at_start_str} 2>&1", 'r+') do |io|
       io << File.join(SETTINGS[:application_path],'torec.rb') << " state --start " << program.pk << "\n"
       
       io.close_write
@@ -452,7 +481,7 @@ class Record < Sequel::Model(:records)
       end
     end
     
-    self[:filename] = output_file
+    self[:filename] = File.join(output_dir, program.create_filename)
     self[:job] = jobid
     self[:state] = WAITING
     save
@@ -479,7 +508,7 @@ class Record < Sequel::Model(:records)
     return nil if rc == nil
     rc[Record.table_name]
   end
-
+  
   def start
     return if not waiting?
     
@@ -492,7 +521,7 @@ class Record < Sequel::Model(:records)
     args << "--sid" << sid
     args << "--device" << "/dev/pt1video2"
     args << program.channel[:channel]
-    args << (program.duration + 5).to_s
+    args << (program.remaining_second + 5).to_s
     args << File.join(output_dir, program.create_filename)
     
     FileUtils.mkdir_p(output_dir)
