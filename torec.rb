@@ -300,8 +300,13 @@ class Program < Sequel::Model(:programs)
     if opt[:keyword] != nil
       kw = opt[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
       kw.each do |s|
-        sl = '%' + s + '%'
-        ds = ds.filter((:title.like(sl)) | (:description.like(sl)) )
+        if s[0..0] == '-'
+          sl = '%' + s[1..-1] + '%'
+          ds = ds.exclude((:title.like(sl)) | (:description.like(sl)) )
+        else
+          sl = '%' + s + '%'
+          ds = ds.filter((:title.like(sl)) | (:description.like(sl)) )
+        end
       end
     end
     if !opt[:all]
