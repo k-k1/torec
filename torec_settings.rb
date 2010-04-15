@@ -42,7 +42,8 @@ SETTINGS = {
   :recorder_program_path => '/usr/local/bin/recpt1',
 }
 
-DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})
+#DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})
+DB = Sequel.connect("sqlite://#{SETTINGS[:application_path]}/torec.sqlite3", {:encoding=>"utf8"})
 
 Sequel.default_timezone = :local
 
