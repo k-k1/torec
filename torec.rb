@@ -488,7 +488,7 @@ class Record < Sequel::Model(:records)
     args << "--sid" << sid
     args << "--device" << "/dev/pt1video2"
     args << program.channel[:channel]
-    args << program.duration.to_s
+    args << (program.duration + 5).to_s
     args << File.join(output_dir, program.create_filename)
     
     FileUtils.mkdir_p(output_dir)
