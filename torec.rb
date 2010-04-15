@@ -522,7 +522,7 @@ class Record < Sequel::Model(:records)
     args << "--b25"
     args << "--strip"
     args << "--sid" << sid
-    args << "--device" << "/dev/pt1video2"
+    #args << "--device" << "/dev/pt1video2"
     args << program.channel[:channel]
     args << (program.remaining_second + 5).to_s
     args << File.join(output_dir, program.create_filename)
