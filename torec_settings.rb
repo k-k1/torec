@@ -37,6 +37,7 @@ SETTINGS = {
     { :type => 'BS', :channel => '211', :name => 'BS11' },
     { :type => 'BS', :channel => '222', :name => 'TwellV' },
   ],
+  :sid_replace_channels => ['101','102','191','192','193'],
   :application_path => '/home/k1/torec',
   :output_path => '/data/record/',
   :recorder_program_path => '/usr/local/bin/recpt1',
