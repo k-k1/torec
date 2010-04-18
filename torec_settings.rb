@@ -39,7 +39,7 @@ SETTINGS = {
   ],
   :sid_replace_channels => ['101','102','191','192','193'],
   :application_path => '/home/k1/torec',
-  :output_path => '/data/record/',
+  :output_path => '/data/record/video',
   :recorder_program_path => '/usr/local/bin/recpt1',
 }
 
