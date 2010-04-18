@@ -370,6 +370,16 @@ class Reservation < Sequel::Model(:reservations)
       end
     end
   end
+  
+  def output_dir
+    dir = SETTINGS[:output_path]
+    dir = File.join(dir, self[:folder]) if self[:folder] != nil
+    dir
+  end
+  
+  def make_output_dir
+    FileUtils.mkdir_p(output_dir)
+  end
 end
 
 class Record < Sequel::Model(:records)
@@ -434,9 +444,12 @@ class Record < Sequel::Model(:records)
   end
   
   def output_dir
-    dir = SETTINGS[:output_path]
-    dir = File.join(dir, reservation[:folder]) if reservation != nil and reservation[:folder] != nil
-    dir
+    return reservation.output_dir if reservation != nil
+    SETTINGS[:output_path]
+  end
+  
+  def make_output_dir
+    FileUtils.mkdir_p(output_dir)
   end
   
   def delete_job
@@ -534,7 +547,7 @@ class Record < Sequel::Model(:records)
     args << (program.remaining_second + 5).to_s
     args << File.join(output_dir, program.create_filename)
     
-    FileUtils.mkdir_p(output_dir)
+    make_output_dir
     
     #waiting..
     (program[:start_time] - 1).wait
@@ -753,10 +766,17 @@ if __FILE__ == $0
         end
       end
     when 'reserve'
-      opt = {:reserve_id => nil}
+      opt = {:reserve_id => nil, :mkdir => false}
       opts.program_name = $0 + ' reserve'
       opts.on("--delete RESERVE_ID", Integer, "simple recording"){|rid| opt[:reserve_id] = rid }
+      opts.on("--mkdir", "make reserve directories"){ opt[:mkdir] = true }
       opts.permute!(ARGV)
+      if opt[:mkdir]
+        Reservation.order(:id).each do |r|
+          r.make_output_dir
+        end
+        exit
+      end
       if opt[:reserve_id] != nil
         rs = Reservation[opt[:reserve_id]]
         raise "reservation not found." if rs == nil
