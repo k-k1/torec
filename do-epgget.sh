@@ -8,12 +8,13 @@ TMPTS=$(tempfile --suffix=.ts)
 
 RECPT1=/usr/local/bin/recpt1
 
-EPGDUMP=/usr/local/bin/torec_epgdump
+EPGDUMP=/usr/local/bin/epgdump
 
 $RECPT1 --b25 --strip $CHANNEL $DURATION $TMPTS 2>/dev/null
 if [ $CHTYPE = 'BS' ]; then
-  CHANNEL='/BS'
+  CHTYPE='/BS'
+  CHANNEL=''
 fi
-$EPGDUMP $CHANNEL $TMPTS -
+$EPGDUMP $CHTYPE$CHANNEL $TMPTS -
 
 rm -f $TMPTS
