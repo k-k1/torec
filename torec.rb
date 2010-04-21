@@ -153,7 +153,9 @@ class Program < Sequel::Model(:programs)
   one_to_one :record
   
   def set_element(e)
-    ch = Channel.find(e.attributes[:channel])
+    chname = SETTINGS[:epgdump_channel_id][e.attributes[:channel]]
+    chname = e.attributes[:channel] if chname == nil
+    ch = Channel.find(chname)
     if ch != nil
       self[:channel_id] = ch[:id]
     end
