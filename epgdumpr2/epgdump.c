@@ -18,22 +18,22 @@ typedef		struct	_ContentTYPE{
 
 #define		CAT_COUNT		16
 static  CONTENT_TYPE	ContentCatList[CAT_COUNT] = {
-	{ "•À•Â°º•π°¶ Û∆ª", "news" },
-	{ "•π•›°º•ƒ", "sports" },
-	{ "æ Û", "information" },
-	{ "•…•È•ﬁ", "drama" },
-	{ "≤ª≥⁄", "music" },
-	{ "•–•È•®•∆•£", "variety" },
-	{ "±«≤Ë", "cinema" },
-	{ "•¢•À•·°¶∆√ª£", "anime" },
-	{ "•…•≠•Â•·•Û•ø•Í°º°¶∂µÕ‹", "documentary" },
-	{ "±È∑‡", "stage" },
-	{ "ºÒÃ£°¶º¬Õ—", "hobby" },
-	{ " °ª„", "etc" },			// °ª„
-	{ "ÕΩ»˜", "etc" }, //ÕΩ»˜
-	{ "ÕΩ»˜", "etc" }, //ÕΩ»˜
-	{ "ÕΩ»˜", "etc" }, //ÕΩ»˜
-	{ "§Ω§Œ¬æ", "etc" } //§Ω§Œ¬æ
+	{ "„Éã„É•„Éº„Çπ„ÉªÂ†±ÈÅì", "news" },
+	{ "„Çπ„Éù„Éº„ÉÑ", "sports" },
+	{ "ÊÉÖÂ†±", "information" },
+	{ "„Éâ„É©„Éû", "drama" },
+	{ "Èü≥Ê•Ω", "music" },
+	{ "„Éê„É©„Ç®„ÉÜ„Ç£", "variety" },
+	{ "Êò†Áîª", "cinema" },
+	{ "„Ç¢„Éã„É°„ÉªÁâπÊíÆ", "anime" },
+	{ "„Éâ„Ç≠„É•„É°„É≥„Çø„É™„Éº„ÉªÊïôÈ§ä", "documentary" },
+	{ "ÊºîÂäá", "stage" },
+	{ "Ë∂£Âë≥„ÉªÂÆüÁî®", "hobby" },
+	{ "Á¶èÁ•â", "etc" },			//Á¶èÁ•â
+	{ "‰∫àÂÇô", "etc" }, //‰∫àÂÇô
+	{ "‰∫àÂÇô", "etc" }, //‰∫àÂÇô
+	{ "‰∫àÂÇô", "etc" }, //‰∫àÂÇô
+	{ "„Åù„ÅÆ‰ªñ", "etc" } //„Åù„ÅÆ‰ªñ
 };
 typedef struct _TAG_STATION
 {
@@ -48,14 +48,15 @@ static STATION bsSta[] = {
 	{ "NHK BS1", "3001.ontvjapan.com", 16625, 4, 101},
 	{ "NHK BS2", "3002.ontvjapan.com", 16625, 4, 102},
 	{ "NHK BSh", "3003.ontvjapan.com", 16626, 4, 103},
-	{ "BS∆¸•∆•Ï", "3004.ontvjapan.com", 16592, 4, 141},
-	{ "BSƒ´∆¸", "3005.ontvjapan.com", 16400, 4, 151},
-	{ "BS-i", "3006.ontvjapan.com", 16401, 4, 161},
-	{ "BS•∏•„•—•Û", "3007.ontvjapan.com", 16433, 4, 171},
-	{ "BS•’•∏", "3008.ontvjapan.com", 16593, 4, 181},
+	{ "BSÊó•„ÉÜ„É¨", "3004.ontvjapan.com", 16592, 4, 141},
+	{ "BSÊúùÊó•", "3005.ontvjapan.com", 16400, 4, 151},
+	{ "BS-TBS", "3006.ontvjapan.com", 16401, 4, 161},
+	{ "BS„Ç∏„É£„Éë„É≥", "3007.ontvjapan.com", 16433, 4, 171},
+	{ "BS„Éï„Ç∏", "3008.ontvjapan.com", 16593, 4, 181},
 	{ "WOWOW", "3009.ontvjapan.com", 16432, 4, 191},
 	{ "WOWOW2", "3010.ontvjapan.com", 16432, 4, 192},
 	{ "WOWOW3", "3011.ontvjapan.com", 16432, 4, 193},
+	{ "„Çπ„Çø„Éº„Éª„ÉÅ„É£„É≥„Éç„É´", "3012.ontvjapan.com", 16529, 4, 200},
 	{ "BS11", "3013.ontvjapan.com", 16528, 4, 211},
 	{ "TwellV", "3014.ontvjapan.com", 16530, 4, 222},
 };
@@ -65,75 +66,75 @@ static int bsStaCount = sizeof(bsSta) / sizeof (STATION);
 
 
 static STATION csSta[] = {
-	{ "•π•ø°º£„£Ë•◊•È•π", "1002.ontvjapan.com", 24608, 6, 237},
-	{ "∆¸À‹±«≤Ë¿ÏÃÁ£„£Ë£»£ƒ", "1086.ontvjapan.com", 24608, 6, 239},
-	{ "•’•∏•∆•Ï•”£√£”£»£ƒ", "306ch.epgdata.ontvjapan", 24608, 6, 306},
-	{ "•∑•Á•√•◊•¡•„•Û•Õ•Î", "1059.ontvjapan.com", 24704, 6, 55},
-	{ "•∂°¶•∑•Õ•ﬁ", "1217.ontvjapan.com", 24736, 6, 228},
-	{ "•π•´•¡•„•Û£»£ƒ£∏£∞£∞", "800ch.epgdata.ontvjapan", 24736, 6, 800},
-	{ "•π•´•¡•„•Û£∏£∞£±", "801ch.epgdata.ontvjapan", 24736, 6, 801},
-	{ "•π•´•¡•„•Û£∏£∞£≤", "802ch.epgdata.ontvjapan", 24736, 6, 802},
-	{ "£Â£≤•◊•Ì•‚", "100ch.epgdata.ontvjapan", 28736, 7, 100},
-	{ "•§•Û•ø°º•Ì°º•´•Î£‘£÷", "194ch.epgdata.ontvjapan", 28736, 7, 194},
-	{ "£ •π•›°º•ƒ°°£≈£”£–£Œ", "1025.ontvjapan.com", 28736, 7, 256},
-	{ "£∆£œ£ÿ", "1016.ontvjapan.com", 28736, 7, 312},
-	{ "•π•⁄°º•π•∑•„•Ô°º£‘£÷", "1018.ontvjapan.com", 28736, 7, 322},
-	{ "•´°º•»••°º•Û°°•Õ•√•»", "1046.ontvjapan.com", 28736, 7, 331},
-	{ "•»••°º•Û°¶•«•£•∫•À°º", "1213.ontvjapan.com", 28736, 7, 334},
-	{ "≈Ï±«•¡•„•Û•Õ•Î", "1010.ontvjapan.com", 28768, 7, 221},
-	{ "±“¿±∑‡æÏ", "1005.ontvjapan.com", 28768, 7, 222},
-	{ "•¡•„•Û•Õ•Î£Œ£≈£√£œ", "1008.ontvjapan.com", 28768, 7, 223},
-	{ "ÕŒ≤Ë°˙•∑•Õ•’•£•Î", "1009.ontvjapan.com", 28768, 7, 224},
-	{ "•π•ø°º°¶•Ø•È•∑•√•Ø", "1003.ontvjapan.com", 28768, 7, 238},
-	{ "ª˛¬Â∑‡¿ÏÃÁ•¡•„•Û•Õ•Î", "1133.ontvjapan.com", 28768, 7, 292},
-	{ "•π°º•—°º•…•È•ﬁ", "1006.ontvjapan.com", 28768, 7, 310},
-	{ "£¡£ÿ£Œ", "1014.ontvjapan.com", 28768, 7, 311},
-	{ "• •∑•Á•∏•™•¡•„•Û•Õ•Î", "1204.ontvjapan.com", 28768, 7, 343},
-	{ "•Ô•Û•∆•Û•›°º•ø•Î", "110ch.epgdata.ontvjapan", 28864, 7, 110},
-	{ "•¥•Î•’•¡•„•Û•Õ•Î", "1028.ontvjapan.com", 28864, 7, 260},
-	{ "•∆•Ïƒ´•¡•„•Û•Õ•Î", "1092.ontvjapan.com", 28864, 7, 303},
-	{ "£Õ£‘£÷", "1019.ontvjapan.com", 28864, 7, 323},
-	{ "•ﬂ•Â°º•∏•√•Ø°¶•®•¢", "1024.ontvjapan.com", 28864, 7, 324},
-	{ "ƒ´∆¸•À•Â°º•π•ø°º", "1067.ontvjapan.com", 28864, 7, 352},
-	{ "£¬£¬£√•Ô°º•Î•…", "1070.ontvjapan.com", 28864, 7, 353},
-	{ "£√£Œ£Œ£Í", "1069.ontvjapan.com", 28864, 7, 354},
-	{ "•∏•„•π•»°¶•¢•§", "361ch.epgdata.ontvjapan", 28864, 7, 361},
-	{ "£ •π•›°º•ƒ°°£±", "1041.ontvjapan.com", 28896, 7, 251},
-	{ "£ •π•›°º•ƒ°°£≤", "1042.ontvjapan.com", 28896, 7, 252},
-	{ "£ •π•›°º•ƒ£–£Ï£ı£Û£»", "1043.ontvjapan.com", 28896, 7, 253},
-	{ "£«£¡£œ£“£¡", "1026.ontvjapan.com", 28896, 7, 254},
-	{ "£Û£Î£˘°¶£¡•π•›°º•ƒ°‹", "1040.ontvjapan.com", 28896, 7, 255},
-	{ " ıƒÕ•◊•Ì•‚•¡•„•Û•Õ•Î", "101ch.epgdata.ontvjapan", 28928, 7, 101},
-	{ "£”£À£Ÿ°¶£”£‘£¡£«£≈", "1207.ontvjapan.com", 28928, 7, 290},
-	{ "•¡•„•Û•Õ•Î∂‰≤œ", "305ch.epgdata.ontvjapan", 28928, 7, 305},
-	{ "£¡£‘-£ÿ", "1201.ontvjapan.com", 28928, 7, 333},
-	{ "•“•π•»•Í°º•¡•„•Û•Õ•Î", "1050.ontvjapan.com", 28928, 7, 342},
-	{ "•π•´•¡•„•Û£∏£∞£≥", "803ch.epgdata.ontvjapan", 28928, 7, 803},
-	{ "•π•´•¡•„•Û£∏£∞£¥", "804ch.epgdata.ontvjapan", 28928, 7, 804},
-	{ "•‡°º•”°º•◊•È•π£»£ƒ", "1007.ontvjapan.com", 28960, 7, 240},
-	{ "•¥•Î•’•Õ•√•»•Ô°º•Ø", "1027.ontvjapan.com", 28960, 7, 262},
-	{ "£Ã£·£Ã£·°°£»£ƒ", "1074.ontvjapan.com", 28960, 7, 314},
-	{ "•’•∏•∆•Ï•”£∑£≥£π", "1073.ontvjapan.com", 28992, 7, 258},
-	{ "•’•∏•∆•Ï•”£∑£≤£±", "1072.ontvjapan.com", 28992, 7, 302},
-	{ "•¢•À•ﬁ•√•Ø•π", "1047.ontvjapan.com", 28992, 7, 332},
-	{ "•«•£•π•´•–•Í°º", "1062.ontvjapan.com", 28992, 7, 340},
-	{ "•¢•À•ﬁ•Î•◊•È•Õ•√•»", "1193.ontvjapan.com", 28992, 7, 341},
-	{ "£√-£‘£¬£”•¶•®•Î•´•‡", "160ch.epgdata.ontvjapan", 29024, 7, 160},
-	{ "£—£÷£√", "1120.ontvjapan.com", 29024, 7, 161},
-	{ "•◊•È•§•‡£≥£∂£µ°•£‘£÷", "185ch.epgdata.ontvjapan", 29024, 7, 185},
-	{ "•’•°•ﬂ•Í°º∑‡æÏ", "1015.ontvjapan.com", 29024, 7, 293},
-	{ "£‘£¬£”•¡•„•Û•Õ•Î", "3201.ontvjapan.com", 29024, 7, 301},
-	{ "•«•£•∫•À°º•¡•„•Û•Õ•Î", "1090.ontvjapan.com", 29024, 7, 304},
+	{ "„Çπ„Çø„ÉºÔΩÉÔΩà„Éó„É©„Çπ", "1002.ontvjapan.com", 24608, 6, 237},
+	{ "Êó•Êú¨Êò†ÁîªÂ∞ÇÈñÄÔΩÉÔΩàÔº®Ôº§", "1086.ontvjapan.com", 24608, 6, 239},
+	{ "„Éï„Ç∏„ÉÜ„É¨„ÉìÔº£Ôº≥Ôº®Ôº§", "306ch.epgdata.ontvjapan", 24608, 6, 306},
+	{ "„Ç∑„Éß„ÉÉ„Éó„ÉÅ„É£„É≥„Éç„É´", "1059.ontvjapan.com", 24704, 6, 55},
+	{ "„Ç∂„Éª„Ç∑„Éç„Éû", "1217.ontvjapan.com", 24736, 6, 228},
+	{ "„Çπ„Ç´„ÉÅ„É£„É≥Ôº®Ôº§ÔºòÔºêÔºê", "800ch.epgdata.ontvjapan", 24736, 6, 800},
+	{ "„Çπ„Ç´„ÉÅ„É£„É≥ÔºòÔºêÔºë", "801ch.epgdata.ontvjapan", 24736, 6, 801},
+	{ "„Çπ„Ç´„ÉÅ„É£„É≥ÔºòÔºêÔºí", "802ch.epgdata.ontvjapan", 24736, 6, 802},
+	{ "ÔΩÖÔºí„Éó„É≠„É¢", "100ch.epgdata.ontvjapan", 28736, 7, 100},
+	{ "„Ç§„É≥„Çø„Éº„É≠„Éº„Ç´„É´Ôº¥Ôº∂", "194ch.epgdata.ontvjapan", 28736, 7, 194},
+	{ "Ôº™„Çπ„Éù„Éº„ÉÑ„ÄÄÔº•Ôº≥Ôº∞ÔºÆ", "1025.ontvjapan.com", 28736, 7, 256},
+	{ "Ôº¶ÔºØÔº∏", "1016.ontvjapan.com", 28736, 7, 312},
+	{ "„Çπ„Éö„Éº„Çπ„Ç∑„É£„ÉØ„ÉºÔº¥Ôº∂", "1018.ontvjapan.com", 28736, 7, 322},
+	{ "„Ç´„Éº„Éà„Ç•„Éº„É≥„ÄÄ„Éç„ÉÉ„Éà", "1046.ontvjapan.com", 28736, 7, 331},
+	{ "„Éà„Ç•„Éº„É≥„Éª„Éá„Ç£„Ç∫„Éã„Éº", "1213.ontvjapan.com", 28736, 7, 334},
+	{ "Êù±Êò†„ÉÅ„É£„É≥„Éç„É´", "1010.ontvjapan.com", 28768, 7, 221},
+	{ "Ë°õÊòüÂäáÂ†¥", "1005.ontvjapan.com", 28768, 7, 222},
+	{ "„ÉÅ„É£„É≥„Éç„É´ÔºÆÔº•Ôº£ÔºØ", "1008.ontvjapan.com", 28768, 7, 223},
+	{ "Ê¥ãÁîª‚òÖ„Ç∑„Éç„Éï„Ç£„É´", "1009.ontvjapan.com", 28768, 7, 224},
+	{ "„Çπ„Çø„Éº„Éª„ÇØ„É©„Ç∑„ÉÉ„ÇØ", "1003.ontvjapan.com", 28768, 7, 238},
+	{ "ÊôÇ‰ª£ÂäáÂ∞ÇÈñÄ„ÉÅ„É£„É≥„Éç„É´", "1133.ontvjapan.com", 28768, 7, 292},
+	{ "„Çπ„Éº„Éë„Éº„Éâ„É©„Éû", "1006.ontvjapan.com", 28768, 7, 310},
+	{ "Ôº°Ôº∏ÔºÆ", "1014.ontvjapan.com", 28768, 7, 311},
+	{ "„Éä„Ç∑„Éß„Ç∏„Ç™„ÉÅ„É£„É≥„Éç„É´", "1204.ontvjapan.com", 28768, 7, 343},
+	{ "„ÉØ„É≥„ÉÜ„É≥„Éù„Éº„Çø„É´", "110ch.epgdata.ontvjapan", 28864, 7, 110},
+	{ "„Ç¥„É´„Éï„ÉÅ„É£„É≥„Éç„É´", "1028.ontvjapan.com", 28864, 7, 260},
+	{ "„ÉÜ„É¨Êúù„ÉÅ„É£„É≥„Éç„É´", "1092.ontvjapan.com", 28864, 7, 303},
+	{ "Ôº≠Ôº¥Ôº∂", "1019.ontvjapan.com", 28864, 7, 323},
+	{ "„Éü„É•„Éº„Ç∏„ÉÉ„ÇØ„Éª„Ç®„Ç¢", "1024.ontvjapan.com", 28864, 7, 324},
+	{ "ÊúùÊó•„Éã„É•„Éº„Çπ„Çø„Éº", "1067.ontvjapan.com", 28864, 7, 352},
+	{ "Ôº¢Ôº¢Ôº£„ÉØ„Éº„É´„Éâ", "1070.ontvjapan.com", 28864, 7, 353},
+	{ "Ôº£ÔºÆÔºÆÔΩä", "1069.ontvjapan.com", 28864, 7, 354},
+	{ "„Ç∏„É£„Çπ„Éà„Éª„Ç¢„Ç§", "361ch.epgdata.ontvjapan", 28864, 7, 361},
+	{ "Ôº™„Çπ„Éù„Éº„ÉÑ„ÄÄÔºë", "1041.ontvjapan.com", 28896, 7, 251},
+	{ "Ôº™„Çπ„Éù„Éº„ÉÑ„ÄÄÔºí", "1042.ontvjapan.com", 28896, 7, 252},
+	{ "Ôº™„Çπ„Éù„Éº„ÉÑÔº∞ÔΩåÔΩïÔΩìÔº®", "1043.ontvjapan.com", 28896, 7, 253},
+	{ "ÔºßÔº°ÔºØÔº≤Ôº°", "1026.ontvjapan.com", 28896, 7, 254},
+	{ "ÔΩìÔΩãÔΩô„ÉªÔº°„Çπ„Éù„Éº„ÉÑÔºã", "1040.ontvjapan.com", 28896, 7, 255},
+	{ "ÂÆùÂ°ö„Éó„É≠„É¢„ÉÅ„É£„É≥„Éç„É´", "101ch.epgdata.ontvjapan", 28928, 7, 101},
+	{ "Ôº≥Ôº´Ôºπ„ÉªÔº≥Ôº¥Ôº°ÔºßÔº•", "1207.ontvjapan.com", 28928, 7, 290},
+	{ "„ÉÅ„É£„É≥„Éç„É´ÈäÄÊ≤≥", "305ch.epgdata.ontvjapan", 28928, 7, 305},
+	{ "Ôº°Ôº¥-Ôº∏", "1201.ontvjapan.com", 28928, 7, 333},
+	{ "„Éí„Çπ„Éà„É™„Éº„ÉÅ„É£„É≥„Éç„É´", "1050.ontvjapan.com", 28928, 7, 342},
+	{ "„Çπ„Ç´„ÉÅ„É£„É≥ÔºòÔºêÔºì", "803ch.epgdata.ontvjapan", 28928, 7, 803},
+	{ "„Çπ„Ç´„ÉÅ„É£„É≥ÔºòÔºêÔºî", "804ch.epgdata.ontvjapan", 28928, 7, 804},
+	{ "„É†„Éº„Éì„Éº„Éó„É©„ÇπÔº®Ôº§", "1007.ontvjapan.com", 28960, 7, 240},
+	{ "„Ç¥„É´„Éï„Éç„ÉÉ„Éà„ÉØ„Éº„ÇØ", "1027.ontvjapan.com", 28960, 7, 262},
+	{ "Ôº¨ÔΩÅÔº¨ÔΩÅ„ÄÄÔº®Ôº§", "1074.ontvjapan.com", 28960, 7, 314},
+	{ "„Éï„Ç∏„ÉÜ„É¨„ÉìÔºóÔºìÔºô", "1073.ontvjapan.com", 28992, 7, 258},
+	{ "„Éï„Ç∏„ÉÜ„É¨„ÉìÔºóÔºíÔºë", "1072.ontvjapan.com", 28992, 7, 302},
+	{ "„Ç¢„Éã„Éû„ÉÉ„ÇØ„Çπ", "1047.ontvjapan.com", 28992, 7, 332},
+	{ "„Éá„Ç£„Çπ„Ç´„Éê„É™„Éº", "1062.ontvjapan.com", 28992, 7, 340},
+	{ "„Ç¢„Éã„Éû„É´„Éó„É©„Éç„ÉÉ„Éà", "1193.ontvjapan.com", 28992, 7, 341},
+	{ "Ôº£-Ôº¥Ôº¢Ôº≥„Ç¶„Ç®„É´„Ç´„É†", "160ch.epgdata.ontvjapan", 29024, 7, 160},
+	{ "Ôº±Ôº∂Ôº£", "1120.ontvjapan.com", 29024, 7, 161},
+	{ "„Éó„É©„Ç§„É†ÔºìÔºñÔºïÔºéÔº¥Ôº∂", "185ch.epgdata.ontvjapan", 29024, 7, 185},
+	{ "„Éï„Ç°„Éü„É™„ÉºÂäáÂ†¥", "1015.ontvjapan.com", 29024, 7, 293},
+	{ "Ôº¥Ôº¢Ôº≥„ÉÅ„É£„É≥„Éç„É´", "3201.ontvjapan.com", 29024, 7, 301},
+	{ "„Éá„Ç£„Ç∫„Éã„Éº„ÉÅ„É£„É≥„Éç„É´", "1090.ontvjapan.com", 29024, 7, 304},
 	{ "MUSIC ON! TV", "1022.ontvjapan.com", 29024, 7, 325},
-	{ "•≠•√•∫•π•∆°º•∑•Á•Û", "1045.ontvjapan.com", 29024, 7, 330},
-	{ "£‘£¬£”•À•Â°º•π•–°º•…", "1076.ontvjapan.com", 29024, 7, 351},
-	{ "£√£”∆¸À‹»÷¡»•¨•§•…", "147ch.epgdata.ontvjapan", 29056, 7, 147},
-	{ "∆¸•∆•Ï£«°‹", "1068.ontvjapan.com", 29056, 7, 257},
+	{ "„Ç≠„ÉÉ„Ç∫„Çπ„ÉÜ„Éº„Ç∑„Éß„É≥", "1045.ontvjapan.com", 29024, 7, 330},
+	{ "Ôº¥Ôº¢Ôº≥„Éã„É•„Éº„Çπ„Éê„Éº„Éâ", "1076.ontvjapan.com", 29024, 7, 351},
+	{ "Ôº£Ôº≥Êó•Êú¨Áï™ÁµÑ„Ç¨„Ç§„Éâ", "147ch.epgdata.ontvjapan", 29056, 7, 147},
+	{ "Êó•„ÉÜ„É¨ÔºßÔºã", "1068.ontvjapan.com", 29056, 7, 257},
 	{ "fashion TV", "5004.ontvjapan.com", 29056, 7, 291},
-	{ "∆¸•∆•Ï•◊•È•π", "300ch.epgdata.ontvjapan", 29056, 7, 300},
-	{ "•®•≥•ﬂ•Â°º•∏•√•Ø£‘£÷", "1023.ontvjapan.com", 29056, 7, 320},
+	{ "Êó•„ÉÜ„É¨„Éó„É©„Çπ", "300ch.epgdata.ontvjapan", 29056, 7, 300},
+	{ "„Ç®„Ç≥„Éü„É•„Éº„Ç∏„ÉÉ„ÇØÔº¥Ôº∂", "1023.ontvjapan.com", 29056, 7, 320},
 	{ "Music Japan TV", "1208.ontvjapan.com", 29056, 7, 321},
-	{ "∆¸•∆•Ï£Œ£≈£◊£”£≤£¥", "2002.ontvjapan.com", 29056, 7, 350},
+	{ "Êó•„ÉÜ„É¨ÔºÆÔº•Ôº∑Ôº≥ÔºíÔºî", "2002.ontvjapan.com", 29056, 7, 350},
 };
 
 static int csStaCount = sizeof(csSta) / sizeof (STATION);
@@ -143,8 +144,6 @@ char	title[1024];
 char	subtitle[1024];
 char	Category[1024];
 char	ServiceName[1024];
-char	ChannelPrefix[3];
-iconv_t	cd ;
 
 void	xmlspecialchars(char *str)
 {
@@ -174,10 +173,6 @@ void	GetEIT(FILE *infile, FILE *outfile, STATION *psta, SECcache *secs, int coun
 	EIT_CONTROL	*eitcur ;
 	EIT_CONTROL	*eitnext ;
 	EIT_CONTROL	*eittop = NULL;
-	char	*outptr ;
-	char	*inptr ;
-	size_t	ilen;
-	size_t	olen;
 	time_t	l_time ;
 	time_t	end_time ;
 	struct	tm	tl ;
@@ -207,28 +202,16 @@ void	GetEIT(FILE *infile, FILE *outfile, STATION *psta, SECcache *secs, int coun
 		if(eitcur->content_type > CAT_COUNT){
 			eitcur->content_type = CAT_COUNT -1 ;
 		}
-		outptr = title ;
 		memset(title, '\0', sizeof(title));
-		ilen = strlen(eitcur->title);
-		olen = sizeof(title);
-		inptr = eitcur->title;
-		iconv(cd, &inptr, &ilen, &outptr, &olen);
+		strcpy(title, eitcur->title);
 		xmlspecialchars(title);
 
 		memset(subtitle, '\0', sizeof(subtitle));
-		ilen = strlen(eitcur->subtitle);
-		olen = sizeof(subtitle);
-		outptr = subtitle ;
-		inptr = eitcur->subtitle;
-		iconv(cd, &inptr, &ilen, &outptr, &olen);
+		strcpy(subtitle, eitcur->subtitle);
 		xmlspecialchars(subtitle);
 
 		memset(Category, '\0', sizeof(Category));
-		ilen = strlen(ContentCatList[eitcur->content_type].japanese);
-		olen = sizeof(Category);
-		outptr = Category ;
-		inptr = ContentCatList[eitcur->content_type].japanese;
-		iconv(cd, &inptr, &ilen, &outptr, &olen);
+		strcpy(Category, ContentCatList[eitcur->content_type].japanese);
 		xmlspecialchars(Category);
 
 		tl.tm_sec = eitcur->ss ;
@@ -243,7 +226,7 @@ void	GetEIT(FILE *infile, FILE *outfile, STATION *psta, SECcache *secs, int coun
 		l_time = mktime(&tl);
 		if((eitcur->ehh == 0) && (eitcur->emm == 0) && (eitcur->ess == 0)){
 			(void)time(&l_time);
-			end_time = l_time + (60 * 5);		// £µ ¨∏Â§À¿ﬂƒÍ
+			end_time = l_time + (60 * 5);		// ÔºïÂàÜÂæå„Å´Ë®≠ÂÆö
 		endtl = localtime(&end_time);
 		}else{
 			end_time = l_time + eitcur->ehh * 3600 + eitcur->emm * 60 + eitcur->ess;
@@ -254,13 +237,8 @@ void	GetEIT(FILE *infile, FILE *outfile, STATION *psta, SECcache *secs, int coun
 		strftime(cendtime, (sizeof(cendtime) - 1), "%Y%m%d%H%M%S", endtl);
 		strftime(cstarttime, (sizeof(cstarttime) - 1), "%Y%m%d%H%M%S", &tl);
 #if 1
-		fprintf(outfile, "  <programme start=\"%s +0900\" stop=\"%s +0900\" ",	
-				cstarttime, cendtime);
-		if( ChannelPrefix[0] == 'G' )
-			fprintf(outfile, "channel=\"%s%s\">\n",	ChannelPrefix, psta->ontv);
-		else
-			fprintf(outfile, "channel=\"%s%d\">\n",	ChannelPrefix, psta->svId);
-
+		fprintf(outfile, "  <programme start=\"%s +0900\" stop=\"%s +0900\" channel=\"%s\">\n",	
+				cstarttime, cendtime, psta->ontv);
 		fprintf(outfile, "    <title lang=\"ja_JP\">%s</title>\n", title);
 		fprintf(outfile, "    <desc lang=\"ja_JP\">%s</desc>\n", subtitle);
 		fprintf(outfile, "    <category lang=\"ja_JP\">%s</category>\n", Category);
@@ -298,28 +276,19 @@ int main(int argc, char *argv[])
 
 	FILE *infile = stdin;
 	FILE *outfile = stdout;
-	int		arg_maxcount = 1 ;
 	char	*arg_onTV ;
-	int   mode = 1;
 	int		staCount ;
-	int   eitcnt;
 	char *file;
 	int   inclose = 0;
 	int   outclose = 0;
-	int		flag = 0 ;
 	SVT_CONTROL	*svtcur ;
 	SVT_CONTROL	*svtsave ;
-	char	*outptr ;
-	char	*inptr ;
-	size_t	ilen;
-	size_t	olen;
 	SECcache   secs[SECCOUNT];
-	int rtn;
 	int		lp ;
 	STATION	*pStas ;
 	int		act ;
 
-	/* ∂ΩÃ£§Œ§¢§Îpid§ÚªÿƒÍ */
+	/* ËààÂë≥„ÅÆ„ÅÇ„Çãpid„ÇíÊåáÂÆö */
 	memset(secs, 0,  sizeof(SECcache) * SECCOUNT);
 	secs[0].pid = 0x11;
 	secs[1].pid = 0x12;
@@ -338,33 +307,35 @@ int main(int argc, char *argv[])
 			outclose = 1;
 		}
 	}else{
-		fprintf(stdout, "Usage : %s /BS <tsFile> <outfile>\n", argv[0]);
-		fprintf(stdout, "Usage : %s <channelno> <tsFile> <outfile>\n", argv[0]);
-		//fprintf(stdout, "ontvcode •¡•„•Û•Õ•Îº± Ãª“°£****.ontvjapan.com § §…\n");
-		//fprintf(stdout, "/BS      BS•‚°º•…°£∞Ï§ƒ§ŒTS§´§ÈBS¡¥∂…§Œ•«°º•ø§Ú∆…§ﬂπ˛§ﬂ§ﬁ§π°£\n");
-		//fprintf(stdout, "/CS      CS•‚°º•…°£∞Ï§ƒ§ŒTS§´§È £øÙ∂…§Œ•«°º•ø§Ú∆…§ﬂπ˛§ﬂ§ﬁ§π°£\n");
+		fprintf(stdout, "Usage : %s {/BS|/CS} <tsFile> <outfile>\n", argv[0]);
+		fprintf(stdout, "Usage : %s <ontvcode> <tsFile> <outfile>\n", argv[0]);
+		fprintf(stdout, "\n");
+		fprintf(stdout, "  ontvcode   Channel identifier (ex. ****.ontvjapan.com)\n");
+		fprintf(stdout, "  /BS        BS mode\n");
+		fprintf(stdout, "               This mode reads the data of all BS TV stations\n");
+		fprintf(stdout, "               from one TS data.\n");
+		fprintf(stdout, "  /CS        CS mode\n");
+		fprintf(stdout, "               This mode reads the data of two or more CS TV stations\n");
+		fprintf(stdout, "               from one TS data.\n");
 		return 0;
 	}
 
 	if(strcmp(arg_onTV, "/BS") == 0){
-		ChannelPrefix[0]='B';ChannelPrefix[1]='S';ChannelPrefix[2]=0;
 		pStas = bsSta;
 		staCount = bsStaCount;
 		act = 0 ;
 	}else if(strcmp(arg_onTV, "/CS") == 0){
-		ChannelPrefix[0]='C';ChannelPrefix[1]='S';ChannelPrefix[2]=0;
 		pStas = csSta;
 		staCount = csStaCount;
 		act = 0 ;
 	}else{
-		ChannelPrefix[0]='G';ChannelPrefix[1]='R';ChannelPrefix[2]=0;
 		act = 1 ;
 		svttop = calloc(1, sizeof(SVT_CONTROL));
 		GetSDT(infile, svttop, secs, SECCOUNT);
-		svtcur = svttop->next ;	//¿Ë∆¨
+		svtcur = svttop->next ;	//ÂÖàÈ†≠
 		if(svtcur == NULL){
 			free(svttop);
-			return ;
+			return 1;
 		}
 
 		pStas = calloc(1, sizeof(STATION));
@@ -380,20 +351,12 @@ int main(int argc, char *argv[])
 	fprintf(outfile, "<!DOCTYPE tv SYSTEM \"xmltv.dtd\">\n\n");
 	fprintf(outfile, "<tv generator-info-name=\"tsEPG2xml\" generator-info-url=\"http://localhost/\">\n");
 
-	cd = iconv_open("UTF-8", "EUC-JP");
 	for(lp = 0 ; lp < staCount ; lp++){
 		memset(ServiceName, '\0', sizeof(ServiceName));
-		ilen = strlen(pStas[lp].name);
-		olen = sizeof(ServiceName);
-		outptr = ServiceName ;
-		inptr = pStas[lp].name ;
-		iconv(cd, &inptr, &ilen, &outptr, &olen);
+		strcpy(ServiceName, pStas[lp].name);
 		xmlspecialchars(ServiceName);
 
-		if( ChannelPrefix[0] == 'G' )
-			fprintf(outfile, "  <channel id=\"%s%s\">\n", ChannelPrefix, pStas[lp].ontv);
-		else
-			fprintf(outfile, "  <channel id=\"%s%d\">\n", ChannelPrefix, pStas[lp].svId);
+		fprintf(outfile, "  <channel id=\"%s\">\n", pStas[lp].ontv);
 		fprintf(outfile, "    <display-name lang=\"ja_JP\">%s</display-name>\n", ServiceName);
 		fprintf(outfile, "  </channel>\n");
 	}
@@ -408,10 +371,9 @@ int main(int argc, char *argv[])
 	if(outclose) {
 		fclose(outfile);
 	}
-	iconv_close(cd);
 	if(act){
 		free(pStas);
-		svtcur = svttop ;	//¿Ë∆¨
+		svtcur = svttop ;	//ÂÖàÈ†≠
 		while(svtcur != NULL){
 			svtsave = svtcur->next ;
 			free(svtcur);

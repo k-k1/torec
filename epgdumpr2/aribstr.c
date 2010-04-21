@@ -6,7 +6,7 @@
 
 #include "aribstr.h"
 
-#define CODE_UNKNOWN 		0	// …‘Ã¿§ •∞•È•’•£•√•Ø•ª•√•»(»Û¬–±˛)
+#define CODE_UNKNOWN 		0	// ‰∏çÊòé„Å™„Ç∞„É©„Éï„Ç£„ÉÉ„ÇØ„Çª„ÉÉ„Éà(ÈùûÂØæÂøú)
 #define CODE_KANJI 		1	// Kanji
 #define CODE_ALPHANUMERIC 	2	// Alphanumeric
 #define CODE_HIRAGANA 		3	// Hiragana
@@ -50,6 +50,7 @@ static	const DWORD ProcessCharCode(TCHAR *lpszDst, const WORD wCode, const CODE_
 
 static	const DWORD PutKanjiChar(TCHAR *lpszDst, const WORD wCode);
 static	const DWORD PutAlphanumericChar(TCHAR *lpszDst, const WORD wCode);
+//static	const DWORD PutAlphanumericHankakuChar(TCHAR *lpszDst, const WORD wCode);
 static	const DWORD PutHiraganaChar(TCHAR *lpszDst, const WORD wCode);
 static	const DWORD PutKatakanaChar(TCHAR *lpszDst, const WORD wCode);
 static	const DWORD PutJisKatakanaChar(TCHAR *lpszDst, const WORD wCode);
@@ -64,11 +65,9 @@ static	void SingleShiftGL(const BYTE byIndexG);
 static	const bool DesignationGSET(const BYTE byIndexG, const BYTE byCode);
 static	const bool DesignationDRCS(const BYTE byIndexG, const BYTE byCode);
 
-static WORD convertjis(DWORD);
-
 static const bool abCharSizeTable[] =
 {
-	false,	// CODE_UNKNOWN					…‘Ã¿§ •∞•È•’•£•√•Ø•ª•√•»(»Û¬–±˛)
+	false,	// CODE_UNKNOWN					‰∏çÊòé„Å™„Ç∞„É©„Éï„Ç£„ÉÉ„ÇØ„Çª„ÉÉ„Éà(ÈùûÂØæÂøú)
 	true,	// CODE_KANJI					Kanji
 	false,	// CODE_ALPHANUMERIC			Alphanumeric
 	false,	// CODE_HIRAGANA				Hiragana
@@ -85,6 +84,57 @@ static const bool abCharSizeTable[] =
 	true,	// CODE_JIS_KANJI_PLANE_2		JIS compatible Kanji Plane 2
 	true	// CODE_ADDITIONAL_SYMBOLS		Additional symbols
 };
+
+typedef enum{
+	STR_SMALL = 0,	//SSZ
+	STR_MEDIUM,		//MSZ
+	STR_NORMAL,		//NSZ
+	STR_MICRO,		//SZX 0x60
+	STR_HIGH_W,		//SZX 0x41
+	STR_WIDTH_W,	//SZX 0x44
+	STR_W,			//SZX 0x45
+	STR_SPECIAL_1,	//SZX 0x6B
+	STR_SPECIAL_2,	//SZX 0x64
+} STRING_SIZE;
+
+STRING_SIZE m_emStrSize;
+
+bool IsSmallCharMode(void)
+{
+	bool bRet = false;
+	switch(m_emStrSize){
+		case STR_SMALL:
+			bRet = true;
+			break;
+		case STR_MEDIUM:
+			bRet = true;
+			break;
+		case STR_NORMAL:
+			bRet = false;
+			break;
+		case STR_MICRO:
+			bRet = true;
+			break;
+		case STR_HIGH_W:
+			bRet = false;
+			break;
+		case STR_WIDTH_W:
+			bRet = false;
+			break;
+		case STR_W:
+			bRet = false;
+			break;
+		case STR_SPECIAL_1:
+			bRet = false;
+			break;
+		case STR_SPECIAL_2:
+			bRet = false;
+			break;
+		default:
+			break;
+	}
+	return bRet;
+}
 
 int AribToString(
 	char *lpszDst, 
@@ -104,7 +154,7 @@ const DWORD AribToStringInternal(TCHAR *lpszDst,
 	DWORD dwDstLen = 0UL;
 	int   dwSrcData;
   
-	// æı¬÷ΩÈ¥¸¿ﬂƒÍ
+	// Áä∂ÊÖãÂàùÊúüË®≠ÂÆö
 	m_byEscSeqCount = 0U;
 	m_pSingleGL = NULL;
 
@@ -116,68 +166,81 @@ const DWORD AribToStringInternal(TCHAR *lpszDst,
 	m_pLockingGL = &m_CodeG[0];
 	m_pLockingGR = &m_CodeG[2];
 
+	m_emStrSize = STR_NORMAL;
+
 	while(dwSrcPos < dwSrcLen){
 		dwSrcData = pSrcData[dwSrcPos] & 0xFF;
 
 		if(!m_byEscSeqCount){
       
-			// GL/GRŒŒ∞Ë
+			// GL/GRÈ†òÂüü
 			if((dwSrcData >= 0x21U) && (dwSrcData <= 0x7EU)){
-				// GLŒŒ∞Ë
+				// GLÈ†òÂüü
 				const CODE_SET CurCodeSet = (m_pSingleGL)? *m_pSingleGL : *m_pLockingGL;
 				m_pSingleGL = NULL;
 				
 				if(abCharSizeTable[CurCodeSet]){
-					// 2•–•§•»•≥°º•…
+					// 2„Éê„Ç§„Éà„Ç≥„Éº„Éâ
 					if((dwSrcLen - dwSrcPos) < 2UL)break;
 					
 					dwDstLen += ProcessCharCode(&lpszDst[dwDstLen], ((WORD)pSrcData[dwSrcPos + 0] << 8) | (WORD)pSrcData[dwSrcPos + 1], CurCodeSet);
 					dwSrcPos++;
 				}
 				else{
-					// 1•–•§•»•≥°º•…
+					// 1„Éê„Ç§„Éà„Ç≥„Éº„Éâ
 					dwDstLen += ProcessCharCode(&lpszDst[dwDstLen], (WORD)dwSrcData, CurCodeSet);
 				}
 			}
 			else if((dwSrcData >= 0xA1U) && (dwSrcData <= 0xFEU)){
-				// GRŒŒ∞Ë
+				// GRÈ†òÂüü
 				const CODE_SET CurCodeSet = *m_pLockingGR;
 				
 				if(abCharSizeTable[CurCodeSet]){
-					// 2•–•§•»•≥°º•…
+					// 2„Éê„Ç§„Éà„Ç≥„Éº„Éâ
 					if((dwSrcLen - dwSrcPos) < 2UL)break;
 					
 					dwDstLen += ProcessCharCode(&lpszDst[dwDstLen], ((WORD)(pSrcData[dwSrcPos + 0] & 0x7FU) << 8) | (WORD)(pSrcData[dwSrcPos + 1] & 0x7FU), CurCodeSet);
 					dwSrcPos++;
 				}
 				else{
-					// 1•–•§•»•≥°º•…
+					// 1„Éê„Ç§„Éà„Ç≥„Éº„Éâ
 					dwDstLen += ProcessCharCode(&lpszDst[dwDstLen], (WORD)(dwSrcData & 0x7FU), CurCodeSet);
 				}
 			}
 			else{
-				// ¿©∏Ê•≥°º•…
+				// Âà∂Âæ°„Ç≥„Éº„Éâ
 				switch(dwSrcData){
 				case 0x0FU	: LockingShiftGL(0U);				break;	// LS0
 				case 0x0EU	: LockingShiftGL(1U);				break;	// LS1
 				case 0x19U	: SingleShiftGL(2U);				break;	// SS2
 				case 0x1DU	: SingleShiftGL(3U);				break;	// SS3
 				case 0x1BU	: m_byEscSeqCount = 1U;				break;	// ESC
+				case 0x89U	: m_emStrSize = STR_MEDIUM;			break;	// MSZ
+				case 0x8AU	: m_emStrSize = STR_NORMAL;			break;	// NSZ
 				case 0x20U	:
-				case 0xA0U	: lpszDst[dwDstLen++] = TEXT(' ');	break;	// SP
-				default		: break;	// »Û¬–±˛
+				case 0xA0U	:
+					//SP Á©∫ÁôΩ
+					//Á©∫ÁôΩ„ÅØÊñáÂ≠ó„Çµ„Ç§„Ç∫„ÅÆÂΩ±Èüø„ÅÇ„Çä
+					if( IsSmallCharMode() == false ){
+						strcpy(&lpszDst[dwDstLen], "„ÄÄ");
+						dwDstLen += 3U;
+					} else {
+						lpszDst[dwDstLen++] = TEXT(' ');
+					}
+					break;
+				default		: break;	// ÈùûÂØæÂøú
 				}
 			}
 		}
 		else{
-			// •®•π•±°º•◊•∑°º•±•Û•πΩËÕ˝
+			// „Ç®„Çπ„Ç±„Éº„Éó„Ç∑„Éº„Ç±„É≥„ÇπÂá¶ÁêÜ
 			ProcessEscapeSeq(dwSrcData);
 		}
 		
 		dwSrcPos++;
 	}
 
-	// Ω™√º ∏ª˙
+	// ÁµÇÁ´ØÊñáÂ≠ó
 	lpszDst[dwDstLen] = TEXT('\0');
 
 	return dwDstLen;
@@ -189,32 +252,39 @@ const DWORD ProcessCharCode(TCHAR *lpszDst, const WORD wCode, const CODE_SET Cod
 	case CODE_KANJI	:
 	case CODE_JIS_KANJI_PLANE_1 :
 	case CODE_JIS_KANJI_PLANE_2 :
-		// ¥¡ª˙•≥°º•…Ω–Œœ
+		// Êº¢Â≠ó„Ç≥„Éº„ÉâÂá∫Âäõ
 		return PutKanjiChar(lpszDst, wCode);
 
 	case CODE_ALPHANUMERIC :
 	case CODE_PROP_ALPHANUMERIC :
-		// ±—øÙª˙•≥°º•…Ω–Œœ
+		// Ëã±Êï∞Â≠ó„Ç≥„Éº„ÉâÂá∫Âäõ
+		if( IsSmallCharMode() == false ){
+			//ÂÖ®Ëßí„ÉÜ„Éº„Éñ„É´„Ç≥„Éº„ÉâÂèñÂæó
 		return PutAlphanumericChar(lpszDst, wCode);
+		} else {
+			//ÂçäËßí„ÅØ„Åù„ÅÆ„Åæ„ÅæÂá∫Âäõ
+			lpszDst[0] = wCode;
+			return 1UL;
+		}
 
 	case CODE_HIRAGANA :
 	case CODE_PROP_HIRAGANA :
-		// §“§È§¨§ •≥°º•…Ω–Œœ
+		// „Å≤„Çâ„Åå„Å™„Ç≥„Éº„ÉâÂá∫Âäõ
 		return PutHiraganaChar(lpszDst, wCode);
 
 	case CODE_PROP_KATAKANA :
 	case CODE_KATAKANA :
-		// •´•ø•´• •≥°º•…Ω–Œœ
+		// „Ç´„Çø„Ç´„Éä„Ç≥„Éº„ÉâÂá∫Âäõ
 		return PutKatakanaChar(lpszDst, wCode);
 
 	case CODE_JIS_X0201_KATAKANA :
-		// JIS•´•ø•´• •≥°º•…Ω–Œœ
+		// JIS„Ç´„Çø„Ç´„Éä„Ç≥„Éº„ÉâÂá∫Âäõ
 		return PutJisKatakanaChar(lpszDst, wCode);
-#if 0
+
 	case CODE_ADDITIONAL_SYMBOLS :
-		// ƒ…≤√•∑•Û•‹•Î•≥°º•…Ω–Œœ
+		// ËøΩÂä†„Ç∑„É≥„Éú„É´„Ç≥„Éº„ÉâÂá∫Âäõ
 		return PutSymbolsChar(lpszDst, wCode);
-#endif
+
 	default :
 		return 0UL;
 	}
@@ -222,185 +292,232 @@ const DWORD ProcessCharCode(TCHAR *lpszDst, const WORD wCode, const CODE_SET Cod
 
 const DWORD PutKanjiChar(TCHAR *lpszDst, const WORD wCode)
 {
-	// JIS¢™Shift-JIS¥¡ª˙•≥°º•… —¥π
-	const WORD wShiftJIS = convertjis(wCode);
+	char code[9];
+	char xcode[5];
+	iconv_t cd;
 
-#ifdef _UNICODE
-	// Shift-JIS ¢™ UNICODE
-	const char szShiftJIS[3] = {(char)(wShiftJIS >> 8), (char)(wShiftJIS & 0x00FFU), '\0'};
-	::MultiByteToWideChar(CP_OEMCP, MB_PRECOMPOSED, szShiftJIS, 2, lpszDst, 2);
+	size_t inbyte = 8;
+	size_t outbyte = sizeof(xcode);
 
-	return 1UL;
-#else
-	// Shift-JIS ¢™ Shift-JIS
-	lpszDst[0] = (wShiftJIS >> 8) & 0xFF;
-	lpszDst[1] = (char)(wShiftJIS & 0x00FFU);
+	memset(xcode, '\0', sizeof(xcode));
   
-	return 2UL;
-#endif
+	const char *fptr;
+	char *tptr;
+
+	code[0] = 0x1BU;
+	code[1] = 0x24U;
+	code[2] = 0x40U;
+	code[3] = wCode >> 8;
+	code[4] = wCode & 0xFF;
+	code[5] = 0x1BU;
+	code[6] = 0x28U;
+	code[7] = 0x4AU;
+	code[8] = '\0';
+
+	cd = iconv_open("UTF-8","ISO-2022-JP");
+
+	fptr = code;
+	tptr = xcode;
+	iconv(cd, &fptr, &inbyte, &tptr, &outbyte);
+
+	iconv_close(cd);
+
+	strncpy(lpszDst, xcode, strlen(xcode));
+
+	return strlen(lpszDst);
 }
 
 const DWORD PutAlphanumericChar(TCHAR *lpszDst, const WORD wCode)
 {
-	// ±—øÙª˙ ∏ª˙•≥°º•… —¥π
+	// Ëã±Êï∞Â≠óÂÖ®ËßíÊñáÂ≠ó„Ç≥„Éº„ÉâÂ§âÊèõ
 	static const TCHAR *acAlphanumericTable = 
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°°™°…°Ù°°Û°ı°«° °À°ˆ°‹°§°›°•°ø")
-		TEXT("£∞£±£≤£≥£¥£µ£∂£∑£∏£π°ß°®°„°·°‰°©")
-		TEXT("°˜£¡£¬£√£ƒ£≈£∆£«£»£…£ £À£Ã£Õ£Œ£œ")
-		TEXT("£–£—£“£”£‘£’£÷£◊£ÿ£Ÿ£⁄°Œ°Ô°œ°∞°≤")
-		TEXT("°°£·£‚£„£‰£Â£Ê£Á£Ë£È£Ï£Î£Ï£Ì£Ó£Ô")
-		TEXT("££Ò£Ú£Û£Ù£ı£ˆ£˜£¯£˘£˙°–°√°—°±°°");
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄÔºÅ‚ÄùÔºÉÔºÑÔºÖÔºÜ‚ÄôÔºàÔºâÔºäÔºãÔºåÔºçÔºéÔºè")
+		TEXT("ÔºêÔºëÔºíÔºìÔºîÔºïÔºñÔºóÔºòÔºôÔºöÔºõÔºúÔºùÔºûÔºü")
+		TEXT("Ôº†Ôº°Ôº¢Ôº£Ôº§Ôº•Ôº¶ÔºßÔº®Ôº©Ôº™Ôº´Ôº¨Ôº≠ÔºÆÔºØ")
+		TEXT("Ôº∞Ôº±Ôº≤Ôº≥Ôº¥ÔºµÔº∂Ôº∑Ôº∏ÔºπÔº∫ÔºªÔø•ÔºΩÔºæÔºø")
+		TEXT("„ÄÄÔΩÅÔΩÇÔΩÉÔΩÑÔΩÖÔΩÜÔΩáÔΩàÔΩâÔΩäÔΩãÔΩåÔΩçÔΩéÔΩè")
+		TEXT("ÔΩêÔΩëÔΩíÔΩìÔΩîÔΩïÔΩñÔΩóÔΩòÔΩôÔΩöÔΩõÔΩúÔΩùÔø£„ÄÄ");
 
 #ifdef _UNICODE
-	lpszDst[0] = acAlphanumericTable[wCode];
+	lpszDst[0] = acAlphanumericTableZenkaku[wCode];
 
 	return 1UL;
 #else
-	lpszDst[0] = acAlphanumericTable[wCode * 2U + 0U];
-	lpszDst[1] = acAlphanumericTable[wCode * 2U + 1U];
+	lpszDst[0] = acAlphanumericTable[wCode * 3U + 0U];
+	lpszDst[1] = acAlphanumericTable[wCode * 3U + 1U];
+	lpszDst[2] = acAlphanumericTable[wCode * 3U + 2U];
 
-	return 2UL;
+	return 3UL;
 #endif
 }
 
 const DWORD PutHiraganaChar(TCHAR *lpszDst, const WORD wCode)
 {
-	// §“§È§¨§  ∏ª˙•≥°º•… —¥π
+	// „Å≤„Çâ„Åå„Å™ÊñáÂ≠ó„Ç≥„Éº„ÉâÂ§âÊèõ
 	static const TCHAR *acHiraganaTable = 
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°§°§¢§£§§§•§¶§ß§®§©§™§´§¨§≠§Æ§Ø")
-		TEXT("§∞§±§≤§≥§¥§µ§∂§∑§∏§π§∫§ª§º§Ω§æ§ø")
-		TEXT("§¿§¡§¬§√§ƒ§≈§∆§«§»§…§ §À§Ã§Õ§Œ§œ")
-		TEXT("§–§—§“§”§‘§’§÷§◊§ÿ§Ÿ§⁄§€§‹§›§ﬁ§ﬂ")
-		TEXT("§‡§·§‚§„§‰§Â§Ê§Á§Ë§È§Í§Î§Ï§Ì§Ó§Ô")
-		TEXT("§§Ò§Ú§Û°°°°°°°µ°∂°º°£°÷°◊°¢°¶°°");
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄ„ÅÅ„ÅÇ„ÅÉ„ÅÑ„ÅÖ„ÅÜ„Åá„Åà„Åâ„Åä„Åã„Åå„Åç„Åé„Åè")
+		TEXT("„Åê„Åë„Åí„Åì„Åî„Åï„Åñ„Åó„Åò„Åô„Åö„Åõ„Åú„Åù„Åû„Åü")
+		TEXT("„Å†„Å°„Å¢„Å£„Å§„Å•„Å¶„Åß„Å®„Å©„Å™„Å´„Å¨„Å≠„ÅÆ„ÅØ")
+		TEXT("„Å∞„Å±„Å≤„Å≥„Å¥„Åµ„Å∂„Å∑„Å∏„Åπ„Å∫„Åª„Åº„ÅΩ„Åæ„Åø")
+		TEXT("„ÇÄ„ÇÅ„ÇÇ„ÇÉ„ÇÑ„ÇÖ„ÇÜ„Çá„Çà„Çâ„Çä„Çã„Çå„Çç„Çé„Çè")
+		TEXT("„Çê„Çë„Çí„Çì„ÄÄ„ÄÄ„ÄÄ„Çù„Çû„Éº„ÄÇ„Äå„Äç„ÄÅ„Éª„ÄÄ");
 	
 #ifdef _UNICODE
 	lpszDst[0] = acHiraganaTable[wCode];
 
 	return 1UL;
 #else
-	lpszDst[0] = acHiraganaTable[wCode * 2U + 0U];
-	lpszDst[1] = acHiraganaTable[wCode * 2U + 1U];
+	lpszDst[0] = acHiraganaTable[wCode * 3U + 0U];
+	lpszDst[1] = acHiraganaTable[wCode * 3U + 1U];
+	lpszDst[2] = acHiraganaTable[wCode * 3U + 2U];
 
-	return 2UL;
+	return 3UL;
 #endif
 }
 
 const DWORD PutKatakanaChar(TCHAR *lpszDst, const WORD wCode)
 {
-	// •´•ø•´• ±—øÙª˙ ∏ª˙•≥°º•… —¥π
+	// „Ç´„Çø„Ç´„ÉäËã±Êï∞Â≠óÊñáÂ≠ó„Ç≥„Éº„ÉâÂ§âÊèõ
 	static const TCHAR *acKatakanaTable = 
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°•°•¢•£•§•••¶•ß•®•©•™•´•¨•≠•Æ•Ø")
-		TEXT("•∞•±•≤•≥•¥•µ•∂•∑•∏•π•∫•ª•º•Ω•æ•ø")
-		TEXT("•¿•¡•¬•√•ƒ•≈•∆•«•»•…• •À•Ã•Õ•Œ•œ")
-		TEXT("•–•—•“•”•‘•’•÷•◊•ÿ•Ÿ•⁄•€•‹•›•ﬁ•ﬂ")
-		TEXT("•‡•·•‚•„•‰•Â•Ê•Á•Ë•È•Í•Î•Ï•Ì•Ó•Ô")
-		TEXT("••Ò•Ú•Û•Ù•ı•ˆ°≥°¥°º°£°÷°◊°¢°¶°°");
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄ„Ç°„Ç¢„Ç£„Ç§„Ç•„Ç¶„Çß„Ç®„Ç©„Ç™„Ç´„Ç¨„Ç≠„ÇÆ„ÇØ")
+		TEXT("„Ç∞„Ç±„Ç≤„Ç≥„Ç¥„Çµ„Ç∂„Ç∑„Ç∏„Çπ„Ç∫„Çª„Çº„ÇΩ„Çæ„Çø")
+		TEXT("„ÉÄ„ÉÅ„ÉÇ„ÉÉ„ÉÑ„ÉÖ„ÉÜ„Éá„Éà„Éâ„Éä„Éã„Éå„Éç„Éé„Éè")
+		TEXT("„Éê„Éë„Éí„Éì„Éî„Éï„Éñ„Éó„Éò„Éô„Éö„Éõ„Éú„Éù„Éû„Éü")
+		TEXT("„É†„É°„É¢„É£„É§„É•„É¶„Éß„É®„É©„É™„É´„É¨„É≠„ÉÆ„ÉØ")
+		TEXT("„É∞„É±„É≤„É≥„É¥„Éµ„É∂„ÉΩ„Éæ„Éº„ÄÇ„Äå„Äç„ÄÅ„Éª„ÄÄ");
 	
 #ifdef _UNICODE
 	lpszDst[0] = acKatakanaTable[wCode];
 
 	return 1UL;
 #else
-	lpszDst[0] = acKatakanaTable[wCode * 2U + 0U];
-	lpszDst[1] = acKatakanaTable[wCode * 2U + 1U];
+	lpszDst[0] = acKatakanaTable[wCode * 3U + 0U];
+	lpszDst[1] = acKatakanaTable[wCode * 3U + 1U];
+	lpszDst[2] = acKatakanaTable[wCode * 3U + 2U];
 
-	return 2UL;
+	return 3UL;
 #endif
 }
 
 const DWORD PutJisKatakanaChar(TCHAR *lpszDst, const WORD wCode)
 {
-	// JIS•´•ø•´•  ∏ª˙•≥°º•… —¥π
+	// JIS„Ç´„Çø„Ç´„ÉäÊñáÂ≠ó„Ç≥„Éº„ÉâÂ§âÊèõ
 	static const TCHAR *acJisKatakanaTable = 
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°°£°÷°◊°¢°¶•Ú•°•£•••ß•©•„•Â•Á•√")
-		TEXT("°º•¢•§•¶•®•™•´•≠•Ø•±•≥•µ•∑•π•ª•Ω")
-		TEXT("•ø•¡•ƒ•∆•»• •À•Ã•Õ•Œ•œ•“•’•ÿ•€•ﬁ")
-		TEXT("•ﬂ•‡•·•‚•‰•Ê•Ë•È•Í•Î•Ï•Ì•Ô•Û°´°¨")
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-		TEXT("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄ„ÄÇ„Äå„Äç„ÄÅ„Éª„É≤„Ç°„Ç£„Ç•„Çß„Ç©„É£„É•„Éß„ÉÉ")
+		TEXT("„Éº„Ç¢„Ç§„Ç¶„Ç®„Ç™„Ç´„Ç≠„ÇØ„Ç±„Ç≥„Çµ„Ç∑„Çπ„Çª„ÇΩ")
+		TEXT("„Çø„ÉÅ„ÉÑ„ÉÜ„Éà„Éä„Éã„Éå„Éç„Éé„Éè„Éí„Éï„Éò„Éõ„Éû")
+		TEXT("„Éü„É†„É°„É¢„É§„É¶„É®„É©„É™„É´„É¨„É≠„ÉØ„É≥„Çõ„Çú")
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ")
+		TEXT("„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ„ÄÄ");
 	
 #ifdef _UNICODE
 	lpszDst[0] = acJisKatakanaTable[wCode];
 
 	return 1UL;
 #else
-	lpszDst[0] = acJisKatakanaTable[wCode * 2U + 0U];
-	lpszDst[1] = acJisKatakanaTable[wCode * 2U + 1U];
+	lpszDst[0] = acJisKatakanaTable[wCode * 3U + 0U];
+	lpszDst[1] = acJisKatakanaTable[wCode * 3U + 1U];
+	lpszDst[2] = acJisKatakanaTable[wCode * 3U + 2U];
 
-	return 2UL;
+	return 3UL;
 #endif
 }
 
 const DWORD PutSymbolsChar(TCHAR *lpszDst, const WORD wCode)
 {
-	// ƒ…≤√•∑•Û•‹•Î ∏ª˙•≥°º•… —¥π(§»§Í§¢§®§∫…¨Õ◊§Ω§¶§ §‚§Œ§¿§±)
+	// ËøΩÂä†„Ç∑„É≥„Éú„É´ÊñáÂ≠ó„Ç≥„Éº„ÉâÂ§âÊèõ(„Å®„Çä„ÅÇ„Åà„ÅöÂøÖË¶Å„Åù„ÅÜ„Å™„ÇÇ„ÅÆ„Å†„Åë)
 	static const TCHAR *aszSymbolsTable1[] =
 		{
-			_T("[HV]"),		_T("[SD]"),		_T("[£–]"),		_T("[£◊]"),		_T("[MV]"),		_T("[ºÍ]"),		_T("[ª˙]"),		_T("[¡–]"),			// 0x7A50 - 0x7A57	90/48 - 90/55
-			_T("[•«]"),		_T("[£”]"),		_T("[∆Û]"),		_T("[¬ø]"),		_T("[≤Ú]"),		_T("[SS]"),		_T("[£¬]"),		_T("[£Œ]"),			// 0x7A58 - 0x7A5F	90/56 - 90/63
-			_T("¢£"),		_T("°¸"),		_T("[≈∑]"),		_T("[∏Ú]"),		_T("[±«]"),		_T("[Ãµ]"),		_T("[Œ¡]"),		_T("[«ØŒ¿©∏¬]"),	// 0x7A60 - 0x7A67	90/64 - 90/71
-			_T("[¡∞]"),		_T("[∏Â]"),		_T("[∫∆]"),		_T("[ø∑]"),		_T("[ΩÈ]"),		_T("[Ω™]"),		_T("[¿∏]"),		_T("[»Œ]"),			// 0x7A68 - 0x7A6F	90/72 - 90/79
-			_T("[¿º]"),		_T("[ø·]"),		_T("[PPV]"),	_T("(»Î)"),		_T("§€§´")															// 0x7A70 - 0x7A74	90/80 - 90/84
+			_T("„ÄêHV„Äë"),	_T("„ÄêSD„Äë"),	_T("„ÄêÔº∞„Äë"),	_T("„ÄêÔº∑„Äë"),	_T("„ÄêMV„Äë"),	_T("„ÄêÊâã„Äë"),	_T("„ÄêÂ≠ó„Äë"),	_T("„ÄêÂèå„Äë"),		// 0x7A50 - 0x7A57	90/48 - 90/55
+			_T("„Äê„Éá„Äë"),	_T("„ÄêÔº≥„Äë"),	_T("„Äê‰∫å„Äë"),	_T("„ÄêÂ§ö„Äë"),	_T("„ÄêËß£„Äë"),	_T("„ÄêSS„Äë"),	_T("„ÄêÔº¢„Äë"),	_T("„ÄêÔºÆ„Äë"),		// 0x7A58 - 0x7A5F	90/56 - 90/63
+			_T("‚ñ†"),		_T("‚óè"),		_T("„ÄêÂ§©„Äë"),	_T("„Äê‰∫§„Äë"),	_T("„ÄêÊò†„Äë"),	_T("„ÄêÁÑ°„Äë"),	_T("„ÄêÊñô„Äë"),	_T("„ÄêÂπ¥ÈΩ¢Âà∂Èôê„Äë"),	// 0x7A60 - 0x7A67	90/64 - 90/71
+			_T("„ÄêÂâç„Äë"),	_T("„ÄêÂæå„Äë"),	_T("„ÄêÂÜç„Äë"),	_T("„ÄêÊñ∞„Äë"),	_T("„ÄêÂàù„Äë"),	_T("„ÄêÁµÇ„Äë"),	_T("„ÄêÁîü„Äë"),	_T("„ÄêË≤©„Äë"),		// 0x7A68 - 0x7A6F	90/72 - 90/79
+			_T("„ÄêÂ£∞„Äë"),	_T("„ÄêÂêπ„Äë"),	_T("„ÄêPPV„Äë"),	_T("ÔºàÁßòÔºâ"),	_T("„Åª„Åã")															// 0x7A70 - 0x7A74	90/80 - 90/84
 		};
 
 	static const TCHAR *aszSymbolsTable2[] =
 		{
-			_T("¢™"),		_T("¢´"),		_T("¢¨"),		_T("¢≠"),		_T("°¸"),		_T("°˚"),		_T("«Ø"),		_T("∑Ó"),			// 0x7C21 - 0x7C28	92/01 - 92/08
-			_T("∆¸"),		_T("±ﬂ"),		_T("≠÷"),		_T("Œ© ˝£Ì"),	_T("≠—"),		_T(" ø ˝≠—"),	_T("Œ© ˝≠—"),	_T("£∞."),			// 0x7C29 - 0x7C30	92/09 - 92/16
-			_T("£±."),		_T("£≤."),		_T("£≥."),		_T("£¥."),		_T("£µ."),		_T("£∂."),		_T("£∑."),		_T("£∏."),			// 0x7C31 - 0x7C38	92/17 - 92/24
-			_T("£π."),		_T("ª·"),		_T("…˚"),		_T("∏µ"),		_T("∏Œ"),		_T("¡∞"),		_T("ø∑"),		_T("£∞,"),			// 0x7C39 - 0x7C40	92/25 - 92/32
-			_T("£±,"),		_T("£≤,"),		_T("£≥,"),		_T("£¥,"),		_T("£µ,"),		_T("£∂,"),		_T("£∑,"),		_T("£∏,"),			// 0x7C41 - 0x7C48	92/33 - 92/40
-			_T("£π,"),		_T("(º“)"),		_T("(∫‚)"),		_T("(Õ≠)"),		_T("(≥Ù)"),		_T("(¬Â)"),		_T("(Ã‰)"),		_T("°‰"),			// 0x7C49 - 0x7C50	92/41 - 92/48
-			_T("°„"),		_T("°⁄"),		_T("°€"),		_T("°˛"),		_T("^2"),		_T("^3"),		_T("(CD)"),		_T("(vn)"),			// 0x7C51 - 0x7C58	92/49 - 92/56
+			_T("‚Üí"),		_T("‚Üê"),		_T("‚Üë"),		_T("‚Üì"),		_T("‚óè"),		_T("‚óã"),		_T("Âπ¥"),		_T("Êúà"),			// 0x7C21 - 0x7C28	92/01 - 92/08
+			_T("Êó•"),		_T("ÂÜÜ"),		_T("„é°"),		_T("„é•"),		_T("„éù"),		_T("„é†"),		_T("„é§"),		_T("Ôºê."),			// 0x7C29 - 0x7C30	92/09 - 92/16
+			_T("Ôºë."),		_T("Ôºí."),		_T("Ôºì."),		_T("Ôºî."),		_T("Ôºï."),		_T("Ôºñ."),		_T("Ôºó."),		_T("Ôºò."),			// 0x7C31 - 0x7C38	92/17 - 92/24
+			_T("Ôºô."),		_T("Ê∞è"),		_T("ÂâØ"),		_T("ÂÖÉ"),		_T("ÊïÖ"),		_T("Ââç"),		_T("[Êñ∞]"),		_T("Ôºê,"),			// 0x7C39 - 0x7C40	92/25 - 92/32
+			_T("Ôºë,"),		_T("Ôºí,"),		_T("Ôºì,"),		_T("Ôºî,"),		_T("Ôºï,"),		_T("Ôºñ,"),		_T("Ôºó,"),		_T("Ôºò,"),			// 0x7C41 - 0x7C48	92/33 - 92/40
+			_T("Ôºô,"),		_T("(Á§æ)"),		_T("(Ë≤°)"),		_T("(Êúâ)"),		_T("(Ê†™)"),		_T("(‰ª£)"),		_T("(Âïè)"),		_T("‚ñ∂"),			// 0x7C49 - 0x7C50	92/41 - 92/48
+			_T("‚óÄ"),		_T("„Äñ"),		_T("„Äó"),		_T("‚üê"),		_T("^2"),		_T("^3"),		_T("(CD)"),		_T("(vn)"),			// 0x7C51 - 0x7C58	92/49 - 92/56
 			_T("(ob)"),		_T("(cb)"),		_T("(ce"),		_T("mb)"),		_T("(hp)"),		_T("(br)"),		_T("(p)"),		_T("(s)"),			// 0x7C59 - 0x7C60	92/57 - 92/64
 			_T("(ms)"),		_T("(t)"),		_T("(bs)"),		_T("(b)"),		_T("(tb)"),		_T("(tp)"),		_T("(ds)"),		_T("(ag)"),			// 0x7C61 - 0x7C68	92/65 - 92/72
 			_T("(eg)"),		_T("(vo)"),		_T("(fl)"),		_T("(ke"),		_T("y)"),		_T("(sa"),		_T("x)"),		_T("(sy"),			// 0x7C69 - 0x7C70	92/73 - 92/80
-			_T("n)"),		_T("(or"),		_T("g)"),		_T("(pe"),		_T("r)"),		_T("(R)"),		_T("(C)"),		_T("(‰∑)"),			// 0x7C71 - 0x7C78	92/81 - 92/88
-			_T("DJ"),		_T("[±È]"),		_T("Fax")																							// 0x7C79 - 0x7C7B	92/89 - 92/91
+			_T("n)"),		_T("(or"),		_T("g)"),		_T("(pe"),		_T("r)"),		_T("(R)"),		_T("(C)"),		_T("(ÁÆè)"),			// 0x7C71 - 0x7C78	92/81 - 92/88
+			_T("DJ"),		_T("[Êºî]"),		_T("Fax")																							// 0x7C79 - 0x7C7B	92/89 - 92/91
 		};
 
 	static const TCHAR *aszSymbolsTable3[] =
 		{
-			_T("(∑Ó)"),		_T("(≤–)"),		_T("(øÂ)"),		_T("(Ã⁄)"),		_T("(∂‚)"),		_T("(≈⁄)"),		_T("(∆¸)"),		_T("(ΩÀ)"),			// 0x7D21 - 0x7D28	93/01 - 93/08
-			_T("≠Ì"),		_T("≠Ó"),		_T("≠Ô"),		_T("≠ﬂ"),		_T("≠‚"),		_T("≠‰"),		_T("(¢©)"),		_T("°˚"),			// 0x7D29 - 0x7D30	93/09 - 93/16
-			_T("°ÃÀ‹°Õ"),	_T("°Ãª∞°Õ"),	_T("°Ã∆Û°Õ"),	_T("°Ã∞¬°Õ"),	_T("°Ã≈¿°Õ"),	_T("°Ã¬«°Õ"),	_T("°Ã≈°Õ"),	_T("°Ãæ°°Õ"),		// 0x7D31 - 0x7D38	93/17 - 93/24
-			_T("°Ã«‘°Õ"),	_T("°Ã£”°Õ"),	_T("°Œ≈Í°œ"),	_T("°Œ ·°œ"),	_T("°Œ∞Ï°œ"),	_T("°Œ∆Û°œ"),	_T("°Œª∞°œ"),	_T("°ŒÕ∑°œ"),		// 0x7D39 - 0x7D40	93/25 - 93/32
-			_T("°Œ∫∏°œ"),	_T("°Œ√Ê°œ"),	_T("°Œ±¶°œ"),	_T("°Œªÿ°œ"),	_T("°Œ¡ˆ°œ"),	_T("°Œ¬«°œ"),	_T("≠»"),		_T("≠‘"),			// 0x7D41 - 0x7D48	93/33 - 93/40
-			_T("Hz"),		_T("ha"),		_T("km"),		_T(" ø ˝km"),	_T("hPa"),		_T("°¶"),		_T("°¶"),		_T("1/2"),			// 0x7D49 - 0x7D50	93/41 - 93/48
+			_T("„à™"),		_T("„à´"),		_T("„à¨"),		_T("„à≠"),		_T("„àÆ"),		_T("„àØ"),		_T("„à∞"),		_T("„à∑"),			// 0x7D21 - 0x7D28	93/01 - 93/08
+			_T("„çæ"),		_T("„çΩ"),		_T("„çº"),		_T("„çª"),		_T("‚Ññ"),		_T("‚Ñ°"),		_T("„Ä∂"),		_T("‚óã"),			// 0x7D29 - 0x7D30	93/09 - 93/16
+			_T("„ÄîÊú¨„Äï"),	_T("„Äî‰∏â„Äï"),	_T("„Äî‰∫å„Äï"),	_T("„ÄîÂÆâ„Äï"),	_T("„ÄîÁÇπ„Äï"),	_T("„ÄîÊâì„Äï"),	_T("„ÄîÁõó„Äï"),	_T("„ÄîÂãù„Äï"),		// 0x7D31 - 0x7D38	93/17 - 93/24
+			_T("„ÄîÊïó„Äï"),	_T("„ÄîÔº≥„Äï"),	_T("ÔºªÊäïÔºΩ"),	_T("ÔºªÊçïÔºΩ"),	_T("Ôºª‰∏ÄÔºΩ"),	_T("Ôºª‰∫åÔºΩ"),	_T("Ôºª‰∏âÔºΩ"),	_T("ÔºªÈÅäÔºΩ"),		// 0x7D39 - 0x7D40	93/25 - 93/32
+			_T("ÔºªÂ∑¶ÔºΩ"),	_T("Ôºª‰∏≠ÔºΩ"),	_T("ÔºªÂè≥ÔºΩ"),	_T("ÔºªÊåáÔºΩ"),	_T("ÔºªËµ∞ÔºΩ"),	_T("ÔºªÊâìÔºΩ"),	_T("„çë"),		_T("„éè"),			// 0x7D41 - 0x7D48	93/33 - 93/40
+			_T("„éê"),		_T("ha"),		_T("„éû"),		_T("„é¢"),		_T("„ç±"),		_T("„Éª"),		_T("„Éª"),		_T("1/2"),			// 0x7D49 - 0x7D50	93/41 - 93/48
 			_T("0/3"),		_T("1/3"),		_T("2/3"),		_T("1/4"),		_T("3/4"),		_T("1/5"),		_T("2/5"),		_T("3/5"),			// 0x7D51 - 0x7D58	93/49 - 93/56
-			_T("4/5"),		_T("1/6"),		_T("5/6"),		_T("1/7"),		_T("1/8"),		_T("1/9"),		_T("1/10"),		_T("¿≤§Ï"),			// 0x7D59 - 0x7D60	93/57 - 93/64
-			_T("∆ﬁ§Í"),		_T("±´"),		_T("¿„"),		_T("¢§"),		_T("¢•"),		_T("¢¶"),		_T("¢ß"),		_T("¢°"),			// 0x7D61 - 0x7D68	93/65 - 93/72
-			_T("°¶"),		_T("°¶"),		_T("°¶"),		_T("°˛"),		_T("°˝"),		_T("!!"),		_T("!?"),		_T("∆ﬁ/¿≤"),		// 0x7D69 - 0x7D70	93/73 - 93/80
-			_T("±´"),		_T("±´"),		_T("¿„"),		_T("¬Á¿„"),		_T("ÕÎ"),		_T("ÕÎ±´"),		_T("°°"),		_T("°¶"),			// 0x7D71 - 0x7D78	93/81 - 93/88
-			_T("°¶"),		_T("¢ˆ"),		_T("≠‰")																							// 0x7D79 - 0x7D7B	93/89 - 93/91
+			_T("4/5"),		_T("1/6"),		_T("5/6"),		_T("1/7"),		_T("1/8"),		_T("1/9"),		_T("1/10"),		_T("‚òÄ"),			// 0x7D59 - 0x7D60	93/57 - 93/64
+			_T("‚òÅ"),		_T("‚òÇ"),		_T("‚òÉ"),		_T("‚òñ"),		_T("‚òó"),		_T("‚ñΩ"),		_T("‚ñº"),		_T("‚ô¶"),			// 0x7D61 - 0x7D68	93/65 - 93/72
+			_T("‚ô•"),		_T("‚ô£"),		_T("‚ô†"),		_T("‚å∫"),		_T("‚¶ø"),		_T("‚Äº"),		_T("‚Åâ"),		_T("(Êõá/Êô¥)"),		// 0x7D69 - 0x7D70	93/73 - 93/80
+			_T("‚òî"),		_T("(Èõ®)"),		_T("(Èõ™)"),		_T("(Â§ßÈõ™)"),	_T("‚ö°"),		_T("(Èõ∑Èõ®)"),	_T("„ÄÄ"),		_T("„Éª"),			// 0x7D71 - 0x7D78	93/81 - 93/88
+			_T("„Éª"),		_T("‚ô¨"),		_T("‚òé")																							// 0x7D79 - 0x7D7B	93/89 - 93/91
 		};
 
 	static const TCHAR *aszSymbolsTable4[] =
 		{
-			_T("≠µ"),		_T("≠∂"),		_T("≠∑"),		_T("≠∏"),		_T("≠π"),		_T("≠∫"),		_T("≠ª"),		_T("≠º"),			// 0x7E21 - 0x7E28	94/01 - 94/08
-			_T("≠Ω"),		_T("≠æ"),		_T("XI"),		_T("X≠∂"),		_T("≠±"),		_T("≠≤"),		_T("≠≥"),		_T("≠¥"),			// 0x7E29 - 0x7E30	94/09 - 94/16
-			_T("(1)"),		_T("(2)"),		_T("(3)"),		_T("(4)"),		_T("(5)"),		_T("(6)"),		_T("(7)"),		_T("(8)"),			// 0x7E31 - 0x7E38	94/17 - 94/24
-			_T("(9)"),		_T("(10)"),		_T("(11)"),		_T("(12)"),		_T("(21)"),		_T("(22)"),		_T("(23)"),		_T("(24)"),			// 0x7E39 - 0x7E40	94/25 - 94/32
+			_T("‚Ö†"),		_T("‚Ö°"),		_T("‚Ö¢"),		_T("‚Ö£"),		_T("‚Ö§"),		_T("‚Ö•"),		_T("‚Ö¶"),		_T("‚Öß"),			// 0x7E21 - 0x7E28	94/01 - 94/08
+			_T("‚Ö®"),		_T("‚Ö©"),		_T("‚Ö™"),		_T("‚Ö´"),		_T("‚ë∞"),		_T("‚ë±"),		_T("‚ë≤"),		_T("‚ë≥"),			// 0x7E29 - 0x7E30	94/09 - 94/16
+			_T("‚ë¥"),		_T("‚ëµ"),		_T("‚ë∂"),		_T("‚ë∑"),		_T("‚ë∏"),		_T("‚ëπ"),		_T("‚ë∫"),		_T("‚ëª"),			// 0x7E31 - 0x7E38	94/17 - 94/24
+			_T("‚ëº"),		_T("‚ëΩ"),		_T("‚ëæ"),		_T("‚ëø"),		_T("„âë"),		_T("„âí"),		_T("„âì"),		_T("„âî"),			// 0x7E39 - 0x7E40	94/25 - 94/32
 			_T("(A)"),		_T("(B)"),		_T("(C)"),		_T("(D)"),		_T("(E)"),		_T("(F)"),		_T("(G)"),		_T("(H)"),			// 0x7E41 - 0x7E48	94/33 - 94/40
 			_T("(I)"),		_T("(J)"),		_T("(K)"),		_T("(L)"),		_T("(M)"),		_T("(N)"),		_T("(O)"),		_T("(P)"),			// 0x7E49 - 0x7E50	94/41 - 94/48
 			_T("(Q)"),		_T("(R)"),		_T("(S)"),		_T("(T)"),		_T("(U)"),		_T("(V)"),		_T("(W)"),		_T("(X)"),			// 0x7E51 - 0x7E58	94/49 - 94/56
-			_T("(Y)"),		_T("(Z)"),		_T("(25)"),		_T("(26)"),		_T("(27)"),		_T("(28)"),		_T("(29)"),		_T("(30)"),			// 0x7E59 - 0x7E60	94/57 - 94/64
-			_T("≠°"),		_T("≠¢"),		_T("≠£"),		_T("≠§"),		_T("≠•"),		_T("≠¶"),		_T("≠ß"),		_T("≠®"),			// 0x7E61 - 0x7E68	94/65 - 94/72
-			_T("≠©"),		_T("≠™"),		_T("≠´"),		_T("≠¨"),		_T("≠≠"),		_T("≠Æ"),		_T("≠Ø"),		_T("≠∞"),			// 0x7E69 - 0x7E70	94/73 - 94/80
-			_T("≠°"),		_T("≠¢"),		_T("≠£"),		_T("≠§"),		_T("≠•"),		_T("≠¶"),		_T("≠ß"),		_T("≠®"),			// 0x7E71 - 0x7E78	94/81 - 94/88
-			_T("≠©"),		_T("≠™"),		_T("≠´"),		_T("≠¨"),		_T("(31)")															// 0x7E79 - 0x7E7D	94/89 - 94/93
+			_T("(Y)"),		_T("(Z)"),		_T("„âï"),		_T("„âñ"),		_T("„âó"),		_T("„âò"),		_T("„âô"),		_T("„âö"),			// 0x7E59 - 0x7E60	94/57 - 94/64
+			_T("‚ë†"),		_T("‚ë°"),		_T("‚ë¢"),		_T("‚ë£"),		_T("‚ë§"),		_T("‚ë•"),		_T("‚ë¶"),		_T("‚ëß"),			// 0x7E61 - 0x7E68	94/65 - 94/72
+			_T("‚ë®"),		_T("‚ë©"),		_T("‚ë™"),		_T("‚ë´"),		_T("‚ë¨"),		_T("‚ë≠"),		_T("‚ëÆ"),		_T("‚ëØ"),			// 0x7E69 - 0x7E70	94/73 - 94/80
+			_T("‚ù∂"),		_T("‚ù∑"),		_T("‚ù∏"),		_T("‚ùπ"),		_T("‚ù∫"),		_T("‚ùª"),		_T("‚ùº"),		_T("‚ùΩ"),			// 0x7E71 - 0x7E78	94/81 - 94/88
+			_T("‚ùæ"),		_T("‚ùø"),		_T("‚ì´"),		_T("‚ì¨"),		_T("„âõ")															// 0x7E79 - 0x7E7D	94/89 - 94/93
 		};
 
-	// •∑•Û•‹•Î§Ú —¥π§π§Î
+	static const TCHAR *aszSymbolsTable5[] =
+		{
+			_T("„êÇ"),		_T("‰∫≠"),		_T("‰ªΩ"),		_T("‰ªø"),		_T("‰æö"),		_T("‰øâ"),		_T("ÂÇú"),		_T("ÂÑû"),			// 0x7521 - 0x7528	85/01 - 85/08
+			_T("ÂÜº"),		_T("„îü"),		_T("Âåá"),		_T("Âç°"),		_T("Âç¨"),		_T("Ë©π"),		_T("Âêâ"),		_T("Âëç"),			// 0x7529 - 0x7530	85/09 - 85/16
+			_T("Âíñ"),		_T("Âíú"),		_T("Âí©"),		_T("Âîé"),		_T("Âïä"),		_T("Âô≤"),		_T("Âõ§"),		_T("Âú≥"),			// 0x7531 - 0x7538	85/17 - 85/24
+			_T("Âú¥"),		_T("Ô®ê"),		_T("Â¢Ä"),		_T("Âß§"),		_T("Â®£"),		_T("Â©ï"),		_T("ÂØ¨"),		_T("Ô®ë"),			// 0x7539 - 0x7540	85/25 - 85/32
+			_T("„ü¢"),		_T("Â∫¨"),		_T("Âº¥"),		_T("ÂΩÖ"),		_T("Âæ∑"),		_T("ÊÄó"),		_T("ÊÅµ"),		_T("ÊÑ∞"),			// 0x7541 - 0x7548	85/33 - 85/40
+			_T("Êò§"),		_T("Êõà"),		_T("Êõô"),		_T("Êõ∫"),		_T("Êõª"),		_T("Ê°í"),		_T("„Éª"),		_T("Ê§ë"),			// 0x7549 - 0x7550	85/41 - 85/48
+			_T("Ê§ª"),		_T("Ê©Ö"),		_T("Ê™ë"),		_T("Ê´õ"),		_T("„Éª"),		_T("„Éª"),		_T("„Éª"),		_T("ÊØ±"),			// 0x7551 - 0x7558	85/49 - 85/56
+			_T("Ê≥†"),		_T("Ê¥Æ"),		_T("Ô©Ö"),		_T("Ê∂ø"),		_T("Ê∑ä"),		_T("Ê∑∏"),		_T("Ô©Ü"),		_T("ÊΩû"),			// 0x7559 - 0x7560	85/57 - 85/64
+			_T("Êøπ"),		_T("ÁÅ§"),		_T("„Éª"),		_T("„Éª"),		_T("ÁÖá"),		_T("ÁáÅ"),		_T("ÁàÄ"),		_T("Áéü"),			// 0x7561 - 0x7568	85/65 - 85/72
+			_T("„Éª"),		_T("Áèâ"),		_T("Áèñ"),		_T("Áêõ"),		_T("Áê°"),		_T("Ô©ä"),		_T("Áê¶"),		_T("Áê™"),			// 0x7569 - 0x7570	85/73 - 85/80
+			_T("Áê¨"),		_T("Áêπ"),		_T("Áëã"),		_T("„ªö"),		_T("Áïµ"),		_T("ÁñÅ"),		_T("Áù≤"),		_T("‰Çì"),			// 0x7571 - 0x7578	85/81 - 85/88
+			_T("Á£à"),		_T("Á£†"),		_T("Á•á"),		_T("Á¶Æ"),		_T("„Éª"),		_T("„Éª")											// 0x7579 - 0x757E	85/89 - 85/94
+		};
+
+	static const TCHAR *aszSymbolsTable6[] =
+		{
+			_T("„Éª"),		_T("Áßö"),		_T("Á®û"),		_T("Á≠ø"),		_T("Á∞±"),		_T("‰â§"),		_T("Á∂ã"),		_T("Áæ°"),			// 0x7621 - 0x7628	86/01 - 86/08
+			_T("ËÑò"),		_T("ËÑ∫"),		_T("„Éª"),		_T("ËäÆ"),		_T("Ëëõ"),		_T("Ëìú"),		_T("Ëì¨"),		_T("Ëïô"),			// 0x7629 - 0x7630	86/09 - 86/16
+			_T("Ëóé"),		_T("Ëùï"),		_T("Ëü¨"),		_T("Ë†ã"),		_T("Ë£µ"),		_T("Ëßí"),		_T("Ë´∂"),		_T("Ë∑é"),			// 0x7631 - 0x7638	86/17 - 86/24
+			_T("Ëæª"),		_T("Ëø∂"),		_T("ÈÉù"),		_T("ÈÑß"),		_T("ÈÑ≠"),		_T("ÈÜ≤"),		_T("Èà≥"),		_T("Èäà"),			// 0x7639 - 0x7640	86/25 - 86/32
+			_T("Èå°"),		_T("Èçà"),		_T("Èñí"),		_T("Èõû"),		_T("È§É"),		_T("È•Ä"),		_T("È´ô"),		_T("ÈØñ"),			// 0x7641 - 0x7648	86/33 - 86/40
+			_T("È∑ó"),		_T("È∫¥"),		_T("È∫µ")																							// 0x7649 - 0x764B	86/41 - 86/43
+		};
+
+	// „Ç∑„É≥„Éú„É´„ÇíÂ§âÊèõ„Åô„Çã
 	if((wCode >= 0x7A50U) && (wCode <= 0x7A74U)){
 		strcpy(lpszDst, aszSymbolsTable1[wCode - 0x7A50U]);
 	}
@@ -413,8 +530,14 @@ const DWORD PutSymbolsChar(TCHAR *lpszDst, const WORD wCode)
 	else if((wCode >= 0x7E21U) && (wCode <= 0x7E7DU)){
 		strcpy(lpszDst, aszSymbolsTable4[wCode - 0x7E21U]);
 	}
+	else if((wCode >= 0x7521U) && (wCode <= 0x757EU)){
+		strcpy(lpszDst, aszSymbolsTable5[wCode - 0x7521U]);
+	}
+	else if((wCode >= 0x7621U) && (wCode <= 0x764BU)){
+		strcpy(lpszDst, aszSymbolsTable6[wCode - 0x7621U]);
+	}
 	else{
-		strcpy(lpszDst, TEXT("°¶"));
+		strcpy(lpszDst, TEXT("„Éª"));
 	}
 
 	return strlen(lpszDst);
@@ -422,9 +545,9 @@ const DWORD PutSymbolsChar(TCHAR *lpszDst, const WORD wCode)
 
 void ProcessEscapeSeq(const BYTE byCode)
 {
-	// •®•π•±°º•◊•∑°º•±•Û•πΩËÕ˝
+	// „Ç®„Çπ„Ç±„Éº„Éó„Ç∑„Éº„Ç±„É≥„ÇπÂá¶ÁêÜ
 	switch(m_byEscSeqCount){
-		// 1•–•§•»Ã‹
+		// 1„Éê„Ç§„ÉàÁõÆ
 	case 1U	:
 		switch(byCode){
 			// Invocation of code elements
@@ -440,11 +563,11 @@ void ProcessEscapeSeq(const BYTE byCode)
 		case 0x29U	: m_byEscSeqIndex = 1U;		break;
 		case 0x2AU	: m_byEscSeqIndex = 2U;		break;
 		case 0x2BU	: m_byEscSeqIndex = 3U;		break;
-		default		: m_byEscSeqCount = 0U;		return;		// •®•È°º
+		default		: m_byEscSeqCount = 0U;		return;		// „Ç®„É©„Éº
 		}
 		break;
 
-		// 2•–•§•»Ã‹
+		// 2„Éê„Ç§„ÉàÁõÆ
 	case 2U	:
 		if(DesignationGSET(m_byEscSeqIndex, byCode)){
 			m_byEscSeqCount = 0U;
@@ -457,11 +580,11 @@ void ProcessEscapeSeq(const BYTE byCode)
 		case 0x29	: m_bIsEscSeqDrcs = false;	m_byEscSeqIndex = 1U;	break;
 		case 0x2A	: m_bIsEscSeqDrcs = false;	m_byEscSeqIndex = 2U;	break;
 		case 0x2B	: m_bIsEscSeqDrcs = false;	m_byEscSeqIndex = 3U;	break;
-		default		: m_byEscSeqCount = 0U;		return;		// •®•È°º
+		default		: m_byEscSeqCount = 0U;		return;		// „Ç®„É©„Éº
 		}
 		break;
 
-		// 3•–•§•»Ã‹
+		// 3„Éê„Ç§„ÉàÁõÆ
 	case 3U	:
 		if(!m_bIsEscSeqDrcs){
 			if(DesignationGSET(m_byEscSeqIndex, byCode)){
@@ -480,13 +603,13 @@ void ProcessEscapeSeq(const BYTE byCode)
 			m_bIsEscSeqDrcs = true;
 		}
 		else{
-			// •®•È°º
+			// „Ç®„É©„Éº
 			m_byEscSeqCount = 0U;
 			return;
 		}
 		break;
 
-		// 4•–•§•»Ã‹
+		// 4„Éê„Ç§„ÉàÁõÆ
 	case 4U	:
 		DesignationDRCS(m_byEscSeqIndex, byCode);
 		m_byEscSeqCount = 0U;
@@ -516,7 +639,7 @@ void SingleShiftGL(const BYTE byIndexG)
 
 const bool DesignationGSET(const BYTE byIndexG, const BYTE byCode)
 {
-	// G§Œ•∞•È•’•£•√•Ø•ª•√•»§Ú≥‰§Í≈ˆ§∆§Î
+	// G„ÅÆ„Ç∞„É©„Éï„Ç£„ÉÉ„ÇØ„Çª„ÉÉ„Éà„ÇíÂâ≤„ÇäÂΩì„Å¶„Çã
 	switch(byCode){
 	case 0x42U	: m_CodeG[byIndexG] = CODE_KANJI;				return true;	// Kanji
 	case 0x4AU	: m_CodeG[byIndexG] = CODE_ALPHANUMERIC;		return true;	// Alphanumeric
@@ -533,13 +656,13 @@ const bool DesignationGSET(const BYTE byIndexG, const BYTE byCode)
 	case 0x39U	: m_CodeG[byIndexG] = CODE_JIS_KANJI_PLANE_1;	return true;	// JIS compatible Kanji Plane 1
 	case 0x3AU	: m_CodeG[byIndexG] = CODE_JIS_KANJI_PLANE_2;	return true;	// JIS compatible Kanji Plane 2
 	case 0x3BU	: m_CodeG[byIndexG] = CODE_ADDITIONAL_SYMBOLS;	return true;	// Additional symbols
-	default		: return false;		// …‘Ã¿§ •∞•È•’•£•√•Ø•ª•√•»
+	default		: return false;		// ‰∏çÊòé„Å™„Ç∞„É©„Éï„Ç£„ÉÉ„ÇØ„Çª„ÉÉ„Éà
 	}
 }
 
 const bool DesignationDRCS(const BYTE byIndexG, const BYTE byCode)
 {
-	// DRCS§Œ•∞•È•’•£•√•Ø•ª•√•»§Ú≥‰§Í≈ˆ§∆§Î
+	// DRCS„ÅÆ„Ç∞„É©„Éï„Ç£„ÉÉ„ÇØ„Çª„ÉÉ„Éà„ÇíÂâ≤„ÇäÂΩì„Å¶„Çã
 	switch(byCode){
 	case 0x40U	: m_CodeG[byIndexG] = CODE_UNKNOWN;				return true;	// DRCS-0
 	case 0x41U	: m_CodeG[byIndexG] = CODE_UNKNOWN;				return true;	// DRCS-1
@@ -558,42 +681,6 @@ const bool DesignationDRCS(const BYTE byIndexG, const BYTE byCode)
 	case 0x4EU	: m_CodeG[byIndexG] = CODE_UNKNOWN;				return true;	// DRCS-14
 	case 0x4FU	: m_CodeG[byIndexG] = CODE_UNKNOWN;				return true;	// DRCS-15
 	case 0x70U	: m_CodeG[byIndexG] = CODE_UNKNOWN;				return true;	// Macro
-	default		: return false;		// …‘Ã¿§ •∞•È•’•£•√•Ø•ª•√•»
-	}
+	default		: return false;		// ‰∏çÊòé„Å™„Ç∞„É©„Éï„Ç£„ÉÉ„ÇØ„Çª„ÉÉ„Éà
 }
-
-WORD convertjis(DWORD jiscode) {
-	char code[3];
-	char xcode[4];
-	iconv_t cd;
-  
-	size_t inbyte = 2;
-	size_t outbyte = 4;
-
-	const char *fptr;
-	char *tptr;
-
-	WORD rtn;
-
-	code[0] = jiscode >> 8;
-	code[1] = jiscode & 0xFF;
-	code[3] = '\0';
-
-	/*
-	  cd = iconv_open("ISO-2022-JP","UTF-8");
-
-	  fptr = code;
-	  tptr = xcode;
-	  iconv(cd, &fptr, &inbyte, &tptr, &outbyte);
-
-	  iconv_close(cd);
-	*/
-
-	xcode[0] = code[0] | 0x80;
-	xcode[1] = code[1] | 0x80;
-
-	rtn = ((xcode[0] << 8) & 0xFF00) | (xcode[1] & 0xFF);
-
-	return rtn;
-
 }

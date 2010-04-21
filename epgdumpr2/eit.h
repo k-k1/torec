@@ -32,7 +32,7 @@ typedef struct _EITbody {
 	int running_status;
 	int free_CA_mode;
 	int descriptors_loop_length;
-	/* °Ê²¼¤Ï²òÀÏ·ë²ÌÊİÂ¸ÍÑ */
+	/* ä»¥ä¸‹ã¯è§£æçµæœä¿å­˜ç”¨ */
 	int yy;
 	int mm;
 	int dd;
@@ -87,7 +87,7 @@ typedef struct _EEVTDitem {
 	char item_description[MAXSECLEN];
 	int  item_length;
 	char item[MAXSECLEN];
-	/* ÂàÈòÍÑ */
+	/* é€€é¿ç”¨ */
 	int  descriptor_number;
 } EEVTDitem;
 

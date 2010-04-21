@@ -7,10 +7,10 @@ typedef	struct	_SVT_CONTROL	SVT_CONTROL;
 struct	_SVT_CONTROL{
 	SVT_CONTROL	*next ;
 	SVT_CONTROL	*prev ;
-	int		event_id ;			// •§•Ÿ•Û•»ID
+	int		event_id ;			// „Ç§„Éô„É≥„ÉàID
 	int		original_network_id ;			// OriginalNetworkID
 	int		transport_stream_id ;			// TransporrtStreamID
-	char	servicename[MAXSECLEN] ;		// •µ°º•”•πÃæ
+	char	servicename[MAXSECLEN] ;		// „Çµ„Éº„Éì„ÇπÂêç
 };
 
 typedef	struct	_EIT_CONTROL	EIT_CONTROL;
@@ -19,8 +19,8 @@ struct	_EIT_CONTROL{
 	EIT_CONTROL	*prev ;
 	int		table_id ;
 	int		servid ;
-	int		event_id ;			// •§•Ÿ•Û•»ID
-	int		content_type ;		// •≥•Û•∆•Û•»•ø•§•◊
+	int		event_id ;			// „Ç§„Éô„É≥„ÉàID
+	int		content_type ;		// „Ç≥„É≥„ÉÜ„É≥„Éà„Çø„Ç§„Éó
     int		yy;
     int		mm;
     int		dd;
@@ -33,7 +33,7 @@ struct	_EIT_CONTROL{
 	int		ehh;
 	int		emm;
 	int		ess;
-	char	*title ;			// •ø•§•»•Î
-	char	*subtitle ;			// •µ•÷•ø•§•»•Î
+	char	*title ;			// „Çø„Ç§„Éà„É´
+	char	*subtitle ;			// „Çµ„Éñ„Çø„Ç§„Éà„É´
 };
 #endif

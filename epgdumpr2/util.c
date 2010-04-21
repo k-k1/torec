@@ -7,16 +7,28 @@
 
 int strrep(char *buf, char *mae, char *ato)
 {
-    char *mituke;
+    char *mitsuke, *findpos;
 	size_t maelen, atolen;
+	int shift;
 		    
+	findpos = buf;
 	maelen = strlen(mae);
 	atolen = strlen(ato);
-	if (maelen == 0 || (mituke = strstr(buf, mae)) == NULL) return 0;
-	memmove(mituke + atolen, mituke + maelen, strlen(buf) - (mituke + maelen - buf ) + 1);
-	memcpy(mituke, ato, atolen);
+	shift = (int)(strlen(ato)-strlen(mae));
+
+	if (maelen == 0 || strstr(findpos, mae) == NULL) return 0;
+	while ((mitsuke = strstr(findpos, mae)) != NULL) {
+		if (shift > 0) {
+			memmove(mitsuke + shift, mitsuke, strlen(mitsuke) + 1);
+		} else if (shift < 0) {
+			memmove(mitsuke, mitsuke - shift, strlen(mitsuke) + shift + 1);
+		}
+		memmove(mitsuke, ato, atolen);
+		findpos = mitsuke + atolen;
+	}
 	return 1;
 }
+
 int getBit(unsigned char *byte, int *pbit, int gbit) {
 	int pbyte = *pbit / 8;
 	unsigned char *fbyte = byte + pbyte;
@@ -24,19 +36,19 @@ int getBit(unsigned char *byte, int *pbit, int gbit) {
 	int cutbit = *pbit - (pbyte * 8);
 	int lcutbit = 32 - (cutbit + gbit);
 
-	unsigned char tbuf[4]; /* int¤ÎºÇÂç32bit */
+	unsigned char tbuf[4]; /* intã®æœ€å¤§32bit */
 	unsigned int tnum;
 
 	memcpy(tbuf, fbyte, sizeof(unsigned char) * 4);
 
-	/* ÀèÆ¬¥Ğ¥¤¥È¤«¤éÉÔÍ×bit¤ò¥«¥Ã¥È */
+	/* å…ˆé ­ãƒã‚¤ãƒˆã‹ã‚‰ä¸è¦bitã‚’ã‚«ãƒƒãƒˆ */
 	tbuf[0] = tbuf[0] << cutbit;
 	tbuf[0] = tbuf[0] >> cutbit;
 
-	/* int¤Ë¤·¤Æ¤·¤Ş¤¦ */
+	/* intã«ã—ã¦ã—ã¾ã† */
 	tnum = tbuf[0] << 24 | tbuf[1] << 16 | tbuf[2] << 8 | tbuf[3];
 
-	/* ¸å¤í¤ÎÉÔÍ×¥Ğ¥¤¥È¤ò¥«¥Ã¥È */
+	/* å¾Œã‚ã®ä¸è¦ãƒã‚¤ãƒˆã‚’ã‚«ãƒƒãƒˆ */
 	tnum = tnum >> lcutbit;
 
 	*pbit += gbit;
@@ -73,4 +85,3 @@ int parseOTHERdesc(unsigned char *data) {
 
 	return descriptor_length + 2;
 }
-

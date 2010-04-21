@@ -22,7 +22,7 @@ SECcache *readTS(FILE *in, SECcache secs[], int size) {
 	int inchar;
 	int i;
 
-	/* sync¥Ğ¥¤¥È¤Ş¤ÇÆÉ¤ßÈô¤Ğ¤· */
+	/* syncãƒã‚¤ãƒˆã¾ã§èª­ã¿é£›ã°ã— */
 	if(rcount == 0) {
 		while((inchar = fgetc(in)) != EOF) {
 			if((inchar & 0xFF) == 0x47) {
@@ -38,9 +38,9 @@ SECcache *readTS(FILE *in, SECcache secs[], int size) {
 
 retry:
   
-	/* Ìá¤¹¤Ù¤­»Ä¤ê¤¬¤¢¤ë¤«? */
+	/* æˆ»ã™ã¹ãæ®‹ã‚ŠãŒã‚ã‚‹ã‹? */
 	if(ridx >= 0 && secs[ridx].cont) {
-		/* ¥Ğ¥Ã¥Õ¥¡¥Á¥§¥Ã¥¯ */
+		/* ãƒãƒƒãƒ•ã‚¡ãƒã‚§ãƒƒã‚¯ */
 		if((secs[ridx].cur.payload[secs[ridx].curlen] & 0xFF) == 0xFF) {
 			secs[ridx].cont = 0;
 			secs[ridx].seclen = 0;
@@ -48,14 +48,14 @@ retry:
 			secs[ridx].curlen = 0;
 		} else {
 			len = secs[ridx].cur.payloadlen - secs[ridx].curlen;
-			/* Á´ÉôÀßÄêºÑ¤ß¥Á¥§¥Ã¥¯ */
+			/* å…¨éƒ¨è¨­å®šæ¸ˆã¿ãƒã‚§ãƒƒã‚¯ */
 			if(len == 0) {
 				secs[ridx].cont = 0;
 				secs[ridx].seclen = 0;
 				secs[ridx].setlen = 0;
 				secs[ridx].curlen = 0;
 			} else {
-				/* ¤³¤³¤Çseclen¤¬¸Ù¤ë¤è¤¦¤ËTSÊ¬³ä¤µ¤ì¤Æ¤¤¤ë¤Èº¤¤ë¤Ê @@
+				/* ã“ã“ã§seclenãŒè·¨ã‚‹ã‚ˆã†ã«TSåˆ†å‰²ã•ã‚Œã¦ã„ã‚‹ã¨å›°ã‚‹ãª @@
 				   if(secs[ridx].pid == 0x12) {
 				   int check = secs[ridx].cur.payload[secs[ridx].curlen] & 0xFF;
 				   if(!(check == 0x4E ||
@@ -67,7 +67,7 @@ retry:
 				*/
 	
 				boff = 12;
-				secs[ridx].seclen = getBit(&secs[ridx].cur.payload[secs[ridx].curlen], &boff, 12) + 3; // ¥Ø¥Ã¥À
+				secs[ridx].seclen = getBit(&secs[ridx].cur.payload[secs[ridx].curlen], &boff, 12) + 3; // ãƒ˜ãƒƒãƒ€
 	
 				/*
 				  if(secs[ridx].seclen == 2334) {
@@ -75,13 +75,13 @@ retry:
 				  }
 				*/
 	
-				/* TS¥Ç¡¼¥¿Ä¹-ÀßÄêºÑ¤ß¥Ç¡¼¥¿Ä¹ */
+				/* TSãƒ‡ãƒ¼ã‚¿é•·-è¨­å®šæ¸ˆã¿ãƒ‡ãƒ¼ã‚¿é•· */
 				if(secs[ridx].seclen > len) {
 					memcpy(secs[ridx].buf, &secs[ridx].cur.payload[secs[ridx].curlen], len);
 					secs[ridx].setlen = len;
 					secs[ridx].curlen = 0;
 					secs[ridx].cont   = 1;
-					/* ¼¡¤Î¥ì¥³¡¼¥ÉÆÉ¤ß¹ş¤ß */
+					/* æ¬¡ã®ãƒ¬ã‚³ãƒ¼ãƒ‰èª­ã¿è¾¼ã¿ */
 				} else {
 					memcpy(secs[ridx].buf, 
 						   &secs[ridx].cur.payload[secs[ridx].curlen], secs[ridx].seclen);
@@ -89,11 +89,11 @@ retry:
 					secs[ridx].curlen += secs[ridx].seclen;
 					secs[ridx].cont = 1;
 
-					/* CRC¤Î¥Á¥§¥Ã¥¯ */
+					/* CRCã®ãƒã‚§ãƒƒã‚¯ */
 					if(checkcrc(&(secs[ridx]))) {
-						return &(secs[ridx]); /* Ìá¤ë */
+						return &(secs[ridx]); /* æˆ»ã‚‹ */
 					}
-					goto retry; /* ¤â¤¦°ì²ó */
+					goto retry; /* ã‚‚ã†ä¸€å› */
 				}
 			}
 		}
@@ -102,14 +102,14 @@ retry:
 	int roffset = 0;
 	while(1) {
 		if(fread(buf+roffset, 188-roffset, 1, in) != 1) {
-			/* »Ä¤ê¤Î½èÍı? */
+			/* æ®‹ã‚Šã®å‡¦ç†? */
 			return NULL;
 		}
 		roffset = 0;
 		rcount++;
 
 		if((buf[0] & 0xFF) != 0x47) {
-			/* ºÇ½é¤ÏbufÃæ¤Ë0x47¤¬¤¢¤ë¤«¥Á¥§¥Ã¥¯ */
+			/* æœ€åˆã¯bufä¸­ã«0x47ãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ */
 			for(i = 1; i < 188; i++) {
 				if((buf[i] & 0xFF) == 0x47) {
 					break;
@@ -117,7 +117,7 @@ retry:
 			}
 
 			if(i < 188) {
-				/* ¤½¤³¤«¤éºÆÆÉ¤ß¹ş¤ß¤·¤ÆÍß¤·¤¤¤Î¤Çseek */
+				/* ãã“ã‹ã‚‰å†èª­ã¿è¾¼ã¿ã—ã¦æ¬²ã—ã„ã®ã§seek */
 				//fseek(in, (188 - i) * -1, SEEK_CUR);
 				roffset = i;
 				memmove(buf, buf + i, 188 - i);
@@ -197,7 +197,7 @@ retry:
 		   shall be '1', indicating that the first byte of the payload of this Transport Stream packet carries the pointer_field.
 		*/
 		if(pk.payload_unit_start_indicator == 1) {
-			/* pointer_field¤Ï¤¤¤é¤Ê¤¤ */
+			/* pointer_fieldã¯ã„ã‚‰ãªã„ */
 			payptr += 1;
 			pk.payloadlen -= 1;
 		}
@@ -214,15 +214,15 @@ retry:
 		  }
 		*/
     
-		/* ¶½Ì£¤Î¤¢¤ëpid¤«³ÎÇ§ */
+		/* èˆˆå‘³ã®ã‚ã‚‹pidã‹ç¢ºèª */
 		for(int i = 0;i < size; i++) {
 			if(secs[i].pid == pk.pid) {
 				secs[i].cur = pk;
-				/* ÅÓÃæ½èÍıÃæ¤«ºÇ½é¤«? */
+				/* é€”ä¸­å‡¦ç†ä¸­ã‹æœ€åˆã‹? */
 				if(!secs[i].cont) {
-					/* ºÇ½é ¥»¥¯¥·¥ç¥óÄ¹¤òÄ´¤Ù¤ë */
+					/* æœ€åˆ ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·ã‚’èª¿ã¹ã‚‹ */
 					boff = 12;
-					secs[i].seclen = getBit(secs[i].cur.payload, &boff, 12) + 3; // ¥Ø¥Ã¥À;
+					secs[i].seclen = getBit(secs[i].cur.payload, &boff, 12) + 3; // ãƒ˜ãƒƒãƒ€;
 					/*
 					  if(secs[i].seclen == 2334) {
 					  printf("aa");
@@ -240,32 +240,32 @@ retry:
 					secs[i].curlen = secs[i].seclen;
 					secs[i].cont = 1;
 					ridx = i;
-					/* CRC¤Î¥Á¥§¥Ã¥¯ */
+					/* CRCã®ãƒã‚§ãƒƒã‚¯ */
 					if(checkcrc(&(secs[ridx]))) {
-						return &(secs[i]); /* ¼è¤ê¹ç¤¨¤ºÌá¤ë */
+						return &(secs[i]); /* å–ã‚Šåˆãˆãšæˆ»ã‚‹ */
 					}
-					goto retry; /* »Ä¤ê½èÍı¤Ø */
+					goto retry; /* æ®‹ã‚Šå‡¦ç†ã¸ */
 				}
-				/* ¥»¥¯¥·¥ç¥óÄ¹-ÀßÄêºÑ¤ßÄ¹ */
+				/* ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·-è¨­å®šæ¸ˆã¿é•· */
 				len = secs[i].seclen - secs[i].setlen;
 				if(len > secs[i].cur.payloadlen) {
-					/* Á´ÂÎÅ¾Á÷ */
+					/* å…¨ä½“è»¢é€ */
 					memcpy(&secs[i].buf[secs[i].setlen], 
 						   secs[i].cur.payload, secs[i].cur.payloadlen);
 					secs[i].setlen += secs[i].cur.payloadlen;
 					continue;
 				}
-				/* ¥»¥¯¥·¥ç¥óÄ¹¤Î»Ä¤ê¤òÀßÄê */
+				/* ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·ã®æ®‹ã‚Šã‚’è¨­å®š */
 				memcpy(&secs[i].buf[secs[i].setlen], secs[i].cur.payload, len);
 				secs[i].setlen  = secs[i].seclen;
 				secs[i].curlen += len;
 				secs[i].cont    = 1;
 				ridx = i;
-				/* CRC¤Î¥Á¥§¥Ã¥¯ */
+				/* CRCã®ãƒã‚§ãƒƒã‚¯ */
 				if(checkcrc(&(secs[ridx]))) {
 					return &(secs[i]);
 				}
-				goto retry; /* »Ä¤ê½èÍı¤Ø */
+				goto retry; /* æ®‹ã‚Šå‡¦ç†ã¸ */
 			}
 		}
 	}
@@ -273,7 +273,7 @@ retry:
 	//return NULL;
 }
 
-/* BonTest/TsStream.cpp¤«¤é¤Î¥Ñ¥¯¥ê */
+/* BonTest/TsStream.cppã‹ã‚‰ã®ãƒ‘ã‚¯ãƒª */
 unsigned int CalcCrc(unsigned int crc, unsigned char *buf, int len) {
 	unsigned int c = crc;
 	int n;
@@ -307,9 +307,9 @@ unsigned int CalcCrc(unsigned int crc, unsigned char *buf, int len) {
 
 int checkcrc(SECcache *secs) {
 
-	/* ¥»¥¯¥·¥ç¥ó¤Î½ª¤ê¤ËÃÖ¤«¤ì¤ë4¥Ğ¥¤¥È¤ÎCRC32¤Ï¡¢
-	   CRC·×»»¤Î·ë²Ì0¤Ë¤Ê¤ë¤è¤¦¤ËÀßÄê¤µ¤ì¤ë¡£
-	   ÃÍ¤¬È¯À¸¤·¤¿¾ì¹ç¤Ï¡¢¥¨¥é¡¼¤Ê¤Î¤ÇÂĞ¾İ³°¤Ë¤¹¤ë */
+	/* ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®çµ‚ã‚Šã«ç½®ã‹ã‚Œã‚‹4ãƒã‚¤ãƒˆã®CRC32ã¯ã€
+	   CRCè¨ˆç®—ã®çµæœ0ã«ãªã‚‹ã‚ˆã†ã«è¨­å®šã•ã‚Œã‚‹ã€‚
+	   å€¤ãŒç™ºç”Ÿã—ãŸå ´åˆã¯ã€ã‚¨ãƒ©ãƒ¼ãªã®ã§å¯¾è±¡å¤–ã«ã™ã‚‹ */
 	if(CalcCrc(0xffffffffU, secs->buf, secs->seclen)) {
 //		fprintf(stderr, "tblid:0x%x CRC error\n", secs->buf[0]);
 		return 0;

@@ -5,14 +5,6 @@
 #include "eit.h"
 
 char		*subtitle_cnv_str[] = {
-	"¡¡Âè",
-	"¡¼Âè",
-	"-Âè",
-	" Âè",
-	"¡¡¡Ö",
-	"¡¡¡ô",
-	"¡Ö",
-	"¡Ê",
 	NULL
 };
 static void timecmp(int *,int *,int *,
@@ -62,7 +54,7 @@ int parseEITbody(unsigned char *data, EITbody *b)
 	b->free_CA_mode = getBit(data, &boff, 1);
 	b->descriptors_loop_length = getBit(data, &boff, 12);
 
-	/* ÆüÉÕÊÑ´¹ */
+	/* æ—¥ä»˜å¤‰æ› */
 	tnum = (b->start_time[0] & 0xFF) << 8 | (b->start_time[1] & 0xFF);
   
 	b->yy = (tnum - 15078.2) / 365.25;
@@ -233,14 +225,14 @@ int checkEEVTDitem(EEVTDitem *save, EEVTDitem *new, int descriptor_number) {
 	}
 
 	if(new->item_description_length == 0) {
-		/* Â³¤­ ÊİÂ¸ */
+		/* ç¶šã ä¿å­˜ */
 		memcpy(save->item + save->item_length, new->item, new->item_length);
 		save->item_length += new->item_length;
 		return 0;
 	} else {
-		/* ¥Ö¥ì¡¼¥¯¡£save¤ò°õºşÂĞ¾İ¤Ë¤¹¤ë¡£save¤ò¥¯¥ê¥¢? */
+		/* ãƒ–ãƒ¬ãƒ¼ã‚¯ã€‚saveã‚’å°åˆ·å¯¾è±¡ã«ã™ã‚‹ã€‚saveã‚’ã‚¯ãƒªã‚¢? */
 		if(save->item_length != 0) {
-			/* ÂàÈòºÑ¤ß¤¬¤¢¤ê */
+			/* é€€é¿æ¸ˆã¿ãŒã‚ã‚Š */
 			swap = *save;
 			getStr(save->item, (unsigned char*)swap.item, &boff, swap.item_length);
 			swap = *new;
@@ -270,11 +262,34 @@ EIT_CONTROL	*searcheit(EIT_CONTROL *top, int servid, int eventid)
 	}
 	return NULL ;
 }
+char	*strstr_eucjp(const char *str, const char *search)
+{
+	char *pos ;
+	pos = (char *)str ;
+
+	while (*pos != '\0') {
+		if (*pos == *search) {
+			if (strncmp(pos, search, strlen(search)) == 0) {
+				return pos ;
+			}
+		}
+		if ((unsigned char)*pos == 0x8Fu) {
+			pos += 3 ;
+		} else if ((unsigned char)*pos >= 0x80u) {
+			pos += 2 ;
+		} else {
+			pos += 1 ;
+		}
+	}
+
+	return NULL ;
+}
 void	conv_title_subtitle(EIT_CONTROL *eitptr)
 {
 	int		lp = 0 ;
-	size_t	addsize ;
+//	size_t	addsize ;
 	char	*ptr ;
+	char	*ptr2 ;
 	char	*newsubtitle ;
 
 	for(lp = 0 ; subtitle_cnv_str[lp] != NULL ; lp++){
@@ -282,14 +297,19 @@ void	conv_title_subtitle(EIT_CONTROL *eitptr)
 		if(ptr == NULL){
 			continue ;
 		}
-		// ¥¿¥¤¥È¥ë¤¬¤Ê¤¯¤Ê¤é¤Ê¤¤¤è¤¦¤Ë
+		// ã‚¿ã‚¤ãƒˆãƒ«ãŒãªããªã‚‰ãªã„ã‚ˆã†ã«
 		if(ptr == eitptr->title){
 			continue ;
 		}
-		newsubtitle = calloc(1, ((strlen(ptr) + 1) + (strlen(eitptr->subtitle) + 1)));
-		memcpy(newsubtitle, ptr, strlen(ptr));
-		newsubtitle[strlen(ptr)] = ' ';
-		*ptr = NULL ;
+		ptr2 = ptr ;
+		for( ; (unsigned char)*ptr2 == 0x20u ; ptr2++ );
+		for( ; (unsigned char)*ptr2 == 0xA1u && (unsigned char)*(ptr2+1) == 0xA1u ; ptr2 += 2);
+		for( ; (unsigned char)*ptr2 == 0x20u ; ptr2++ );
+		newsubtitle = calloc(1, ((strlen(ptr2) + 2) + (strlen(eitptr->subtitle) + 1)));
+		memcpy(newsubtitle, ptr2, strlen(ptr2));
+//		*(newsubtitle+strlen(ptr)) = ' ';
+		strcat(newsubtitle, "â–½");
+		*ptr = '\0';
 		strcat(newsubtitle, eitptr->subtitle);
 		free(eitptr->subtitle);
 		eitptr->subtitle = newsubtitle ;
@@ -377,11 +397,11 @@ void dumpEIT(unsigned char *ptr, int serv_id, int original_network_id, int trans
 	len = parseEIThead(ptr, &eith); 
 
 	ptr += len;
-	loop_len = eith.section_length - (len - 3 + 4); // 3¤Ï¶¦ÄÌ¥Ø¥Ã¥ÀÄ¹ 4¤ÏCRC
+	loop_len = eith.section_length - (len - 3 + 4); // 3ã¯å…±é€šãƒ˜ãƒƒãƒ€é•· 4ã¯CRC
 	while(loop_len > 0) {
-		/* Ï¢Â³¤¹¤ë³ÈÄ¥¥¤¥Ù¥ó¥È¤Ï¡¢´Á»ú¥³¡¼¥É¤¬µã¤­ÊÌ¤ì¤·¤Æ
-		   Ê¬³ä¤µ¤ì¤ë¤è¤¦¤À¡£Ï¢Â³¤«¤É¤¦¤«¤Ï¡¢item_description_length¤¬
-		   ÀßÄê¤µ¤ì¤Æ¤¤¤ë¤«¤É¤¦¤«¤ÇÈ½ÃÇ¤Ç¤­¤ë¤è¤¦¤À¡£ */
+		/* é€£ç¶šã™ã‚‹æ‹¡å¼µã‚¤ãƒ™ãƒ³ãƒˆã¯ã€æ¼¢å­—ã‚³ãƒ¼ãƒ‰ãŒæ³£ãåˆ¥ã‚Œã—ã¦
+		   åˆ†å‰²ã•ã‚Œã‚‹ã‚ˆã†ã ã€‚é€£ç¶šã‹ã©ã†ã‹ã¯ã€item_description_lengthãŒ
+		   è¨­å®šã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã§åˆ¤æ–­ã§ãã‚‹ã‚ˆã†ã ã€‚ */
 		memset(&save_eevtitem, 0, sizeof(EEVTDitem));
 
 		len = parseEITbody(ptr, &eitb);
@@ -468,7 +488,7 @@ void dumpEIT(unsigned char *ptr, int serv_id, int original_network_id, int trans
 								fprintf(out, "EEVT,%d,%d,%d,%s,%s\n", 
 										eith.service_id,
 										eitb.event_id,
-										eevtitem.descriptor_number, /* ÂàÈò¹àÌÜ */
+										eevtitem.descriptor_number, /* é€€é¿é …ç›® */
 										eevtitem.item_description,
 										eevtitem.item);
 							}
@@ -490,7 +510,7 @@ void dumpEIT(unsigned char *ptr, int serv_id, int original_network_id, int trans
 					ContentDesc contentDesc;
 					len = parseContentDesc(ptr, &contentDesc);
 					if (len > 0) {
-						int header_printed = 0;
+//						int header_printed = 0;
 						for (int i = 0; i < contentDesc.descriptor_length - 1; i+=2) {
 							/*
 							if (0xff == (unsigned char)contentDesc.content[i])
@@ -551,7 +571,7 @@ void dumpEIT(unsigned char *ptr, int serv_id, int original_network_id, int trans
 			ptr += len;
 			loop_blen -= len;
 		}
-		/* ºÇ¸å¤Î¥Ö¥ì¡¼¥¯¥Á¥§¥Ã¥¯ */
+		/* æœ€å¾Œã®ãƒ–ãƒ¬ãƒ¼ã‚¯ãƒã‚§ãƒƒã‚¯ */
     
 		if(checkEEVTDitem(&save_eevtitem, NULL, 0)) {
 #if 0

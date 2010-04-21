@@ -118,7 +118,7 @@ void dumpSDT(unsigned char *ptr, SVT_CONTROL *top)
 	/* SDT */
 	len = parseSDThead(ptr, &sdth); 
 	ptr += len;
-	loop_len = sdth.section_length - (len - 3 + 4); // 3�϶��̥إå�Ĺ 4��CRC
+	loop_len = sdth.section_length - (len - 3 + 4); // 3は共通ヘッダ長 4はCRC
 	while(loop_len > 0) {
 		len = parseSDTbody(ptr, &sdtb);
 		ptr += len;
@@ -141,9 +141,9 @@ void dumpSDT(unsigned char *ptr, SVT_CONTROL *top)
 				sdtb.running_status, sdtb.free_CA_mode, sdtb.descriptors_loop_length);
 /*
 #else
-0x01:�f�W�^��TV�T�[�r�X
-0xA5:�v�����[�V�����f���T�[�r�X
-0x0C:�f�[�^�T�[�r�X
+0x01:デジタルTVサービス
+0xA5:プロモーション映像サービス
+0x0C:データサービス
  */
 			printf("SDT=(%x:%x)%s,%d,%d,%d,%d,%d(%d,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x)\n",
 					sdth.table_id, desc.service_type, 
