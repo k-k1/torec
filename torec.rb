@@ -340,6 +340,7 @@ class Reservation < Sequel::Model(:reservations)
     integer :category_id
     string :keyword, :size => 512
     string :folder, :size => 128
+    string :sid, :size => 128
   end
   one_to_many :records
   many_to_one :channel
@@ -360,7 +361,7 @@ class Reservation < Sequel::Model(:reservations)
   
   def self.create(opt)
     self.new({:channel_id => opt[:channel_id], :category_id => opt[:category_id],
-        :keyword => opt[:keyword], :folder => opt[:folder]}, true)
+        :keyword => opt[:keyword], :folder => opt[:folder], :sid => opt[:sid]}, true)
   end
   
   def self.update_reserve
@@ -403,6 +404,7 @@ class Record < Sequel::Model(:records)
     integer :recording_pid
     datetime :start_time
     datetime :done_time
+    string :sid, :size => 128
   end
   many_to_one :program
   many_to_one :reservation
@@ -532,18 +534,32 @@ class Record < Sequel::Model(:records)
     rc[Record.table_name]
   end
   
+  def get_sid
+    sid = nil
+    if reservation == nil
+      #direct
+      sid = self[:sid]
+    else
+      sid = reservation[:sid]
+    end
+    sid = SETTINGS[:default_sid] if sid == nil
+    if sid == 'hd' and SETTINGS[:sid_replace_channels].index(program.channel[:channel]) != nil
+      sid = program.channel[:channel]
+    end
+    sid
+  end
+  
   def start
     return if not waiting?
     
-    sid = 'hd'
-    if SETTINGS[:sid_replace_channels].index(program.channel[:channel]) != nil
-      sid = program.channel[:channel]
-    end
-
+    sid = get_sid
+    
     args = []
     args << "--b25"
     args << "--strip"
-    args << "--sid" << sid
+    if sid != nil
+      args << "--sid" << sid
+    end
     #args << "--device" << "/dev/pt1video2"
     args << program.channel[:channel]
     args << (program.remaining_second + 5).to_s
@@ -564,6 +580,7 @@ class Record < Sequel::Model(:records)
     self[:start_time] = Time.now
     self[:state] = RECORDING
     self[:recording_pid] = pid
+    self[:sid] = sid
     save
     th = Process.detach(pid)
     th.value
@@ -725,7 +742,7 @@ if __FILE__ == $0
       Reservation.update_reserve
     when 'search'
       opt = {:channel_id => nil, :category_id => nil, :channel_type => nil, :keyword => nil,
-        :verbose => false, :reserve => false, :folder => nil, :now => false, :all => false}
+        :verbose => false, :reserve => false, :folder => nil, :sid => nil, :now => false, :all => false}
       opts.program_name = $0 + ' search'
       opts.on("-n", "--now", "display now on-air programs"){opt[:now] = true }
       opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
@@ -735,6 +752,7 @@ if __FILE__ == $0
       opts.on("-v", "--verbose", "display program description"){opt[:verbose] = true }
       opts.on("-r", "--reserve", "add auto-recording reserve"){opt[:reserve] = true }
       opts.on("-d", "--dir DIRNAME", "auto-recording save directory"){|d| opt[:folder] = d }
+      opts.on("-s", "--sid SID", "SID number(all,hd,sd1,sd2,sd3,1seg,..)"){|d| opt[:sid] = d }
       opts.permute!(ARGV)
       if opt[:now]
         Program.now_onair.each do |r|

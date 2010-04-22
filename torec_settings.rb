@@ -56,6 +56,8 @@ SETTINGS = {
     '3014.ontvjapan.com' => 'BS222',
     #TODO CS
   },
+  #:default_sid => nil, # all,hd,sd1,sd2,sd3,1seg
+  :default_sid => 'hd',
   :sid_replace_channels => ['101','102','191','192','193'],
   :application_path => '/home/k1/torec',
   :output_path => '/data/record/video',
@@ -63,7 +65,7 @@ SETTINGS = {
 }
 
 #DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})
-DB = Sequel.connect("sqlite://#{SETTINGS[:application_path]}/torec.sqlite3", {:encoding=>"utf8"})
+DB = Sequel.connect("sqlite://#{SETTINGS[:application_path]}/torec.sqlite3", {:encoding=>"utf8", :timeout=>5000})
 
 Sequel.default_timezone = :local
 
