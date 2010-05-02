@@ -456,6 +456,10 @@ class Record < Sequel::Model(:records)
     FileUtils.mkdir_p(output_dir)
   end
   
+  def output_filename
+    File.join(output_dir, program.create_filename)
+  end
+  
   def delete_job
     return if self[:job] == nil
     return if not waiting?
@@ -506,7 +510,7 @@ class Record < Sequel::Model(:records)
       end
     end
     
-    self[:filename] = File.join(output_dir, program.create_filename)
+    self[:filename] = output_filename
     self[:job] = jobid
     self[:state] = WAITING
     save
@@ -553,7 +557,7 @@ class Record < Sequel::Model(:records)
     return if not waiting?
     
     sid = get_sid
-    filename = File.join(output_dir, program.create_filename)
+    filename = output_filename
     
     args = []
     args << "--b25"
@@ -592,6 +596,11 @@ class Record < Sequel::Model(:records)
     return if not recording?
     self[:done_time] = Time.now
     self[:state] = DONE
+    save
+  end
+  
+  def update_filename
+    self[:filename] = output_filename
     save
   end
 
@@ -811,7 +820,7 @@ if __FILE__ == $0
         puts "#{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
     when 'record'
-      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false, :state => nil}
+      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false, :state => nil, :update_filename => false}
       opts.program_name = $0 + ' record'
       opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("-g", "--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
@@ -820,6 +829,7 @@ if __FILE__ == $0
       opts.on("--schedule [PROGRAM_ID]", "schedule records."){|pid| opt[:state] = :schedule; opt[:program_id] = pid }
       opts.on("--start PROGRAM_ID"){|pid| opt[:state] = :start; opt[:program_id] = pid }
       opts.on("--add PROGRAM_ID", Integer, "simple recording"){|pid| opt[:state] = :add; opt[:program_id] = pid }
+      opts.on("--update-filename", Integer, "update output filename"){ opt[:update_filename] = true }
       opts.parse!(ARGV)
       if opt[:program_id] != nil
         pg = Program[opt[:program_id]]
@@ -836,7 +846,12 @@ if __FILE__ == $0
         opt[:state] = :reserve
         Reservation.update_reserve
         Record.search(opt).all.each do |rc|
-          rc.schedule
+          rc.schedule 
+        end
+        exit
+      elsif opt[:update_filename]
+        Record.search(opt).all.each do |rc|
+          rc.update_filename 
         end
         exit
       end
