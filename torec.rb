@@ -231,7 +231,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def create_filename
-    self[:start_time].format + '_' + channel[:type] + channel[:channel] + '.ts'
+    channel[:type] + channel[:channel] + '_' + self[:start_time].format + '.ts'
   end
   
   def find_empty_tunner
