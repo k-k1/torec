@@ -34,7 +34,7 @@ SETTINGS = {
     { :type => 'BS', :channel => '191', :name => 'WOWOW' },
     { :type => 'BS', :channel => '192', :name => 'WOWOW2' },
     { :type => 'BS', :channel => '193', :name => 'WOWOW3' },
-    { :type => 'BS', :channel => '200', :name => 'スター・チャンネルBS' },
+    #{ :type => 'BS', :channel => '200', :name => 'スター・チャンネルBS' },
     { :type => 'BS', :channel => '211', :name => 'BS11' },
     { :type => 'BS', :channel => '222', :name => 'TwellV' },
   ],
