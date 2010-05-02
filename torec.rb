@@ -553,6 +553,7 @@ class Record < Sequel::Model(:records)
     return if not waiting?
     
     sid = get_sid
+    filename = File.join(output_dir, program.create_filename)
     
     args = []
     args << "--b25"
@@ -563,7 +564,7 @@ class Record < Sequel::Model(:records)
     #args << "--device" << "/dev/pt1video2"
     args << program.channel[:channel]
     args << (program.remaining_second + 5).to_s
-    args << File.join(output_dir, program.create_filename)
+    args << filename
     
     make_output_dir
     
@@ -580,6 +581,7 @@ class Record < Sequel::Model(:records)
     self[:start_time] = Time.now
     self[:state] = RECORDING
     self[:recording_pid] = pid
+    self[:filename] = filename
     self[:sid] = sid
     save
     th = Process.detach(pid)
