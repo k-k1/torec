@@ -834,6 +834,7 @@ if __FILE__ == $0
         exit
       elsif opt[:state] == :schedule
         opt[:state] = :reserve
+        Reservation.update_reserve
         Record.search(opt).all.each do |rc|
           rc.schedule
         end
