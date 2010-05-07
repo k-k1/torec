@@ -56,6 +56,10 @@ class Tunner < Sequel::Model(:tunners)
     string :type, :size => 20, :null => false
     string :device_name, :size => 20, :null => false
   end
+  
+  def self.names
+    Tunner.all.collect{|r| r[:name]}
+  end
 end
 
 class ChannelType < Sequel::Model(:channel_types)
@@ -424,11 +428,11 @@ class Record < Sequel::Model(:records)
   end
   
   def self.search(opts)
-    #{:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil}
+    #{:program_id => nil, :channel_id => nil, :category_id => nil, channel_type => nil, :tunner_name => nil}
     ds = Record.dataset
     ds = ds.eager_graph(:program)
-    if opts[:tunner_type] != nil
-      ds = ds.eager_graph(:tunner).filter(:tunner__type => opts[:tunner_type])
+    if opts[:tunner_name] != nil
+      ds = ds.eager_graph(:tunner).filter(:tunner__name => opts[:tunner_name])
     end
     if opts[:channel_id] != nil
       ds = ds.filter(:program__channel_id => opts[:channel_id])
@@ -590,11 +594,13 @@ class Record < Sequel::Model(:records)
     save
     th = Process.detach(pid)
     th.value
-    done
+    donetime = Time.now
+    sleep(5)
+    done(donetime)
   end
-  def done
+  def done(t = Time.now)
     return if not recording?
-    self[:done_time] = Time.now
+    self[:done_time] = t
     self[:state] = DONE
     save
   end
@@ -820,11 +826,13 @@ if __FILE__ == $0
         puts "#{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
     when 'record'
-      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false, :state => nil, :update_filename => false}
+      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :channel_type => nil, :tunner_name => nil,
+             :all => false, :state => nil, :update_filename => false}
       opts.program_name = $0 + ' record'
       opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("-g", "--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
-      opts.on("-t", "--tunner TUNNER_TYPE"){|type| opt[:tunner_type] = type }
+      opts.on("-t", "--type CHANNEL_TYPE", ChannelType.types){|cid| opt[:channel_type] = cid }
+      opts.on("-u", "--tunner TUNNER", Tunner.names){|tunner| opt[:tunner_name] = tunner }
       opts.on("-a", "--all", "display all records."){opt[:all] = true }
       opts.on("--schedule [PROGRAM_ID]", "schedule records."){|pid| opt[:state] = :schedule; opt[:program_id] = pid }
       opts.on("--start PROGRAM_ID"){|pid| opt[:state] = :start; opt[:program_id] = pid }
