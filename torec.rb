@@ -203,7 +203,8 @@ class Program < Sequel::Model(:programs)
   end
   
   def create_hash
-    str = self[:category_id].to_s + self[:title] + self[:description]
+    str = self[:category_id].to_s + self[:title] + self[:description] if not self[:description].nil?
+    str = self[:category_id].to_s + self[:title] if self[:description].nil?
     Digest::MD5.hexdigest(str)
   end
   
