@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'xml/libxml'
+require 'rexml/document'
 require 'sequel'
 require 'date'
 require 'digest/md5'
@@ -33,6 +34,15 @@ class Time
       break if self <= Time.now
       sleep(INTERVAL) 
     end
+  end
+end
+
+class REXML::Element
+  def content
+    text
+  end
+  def find_first(xp)
+    get_elements(xp)[0]
   end
 end
 
@@ -157,8 +167,8 @@ class Program < Sequel::Model(:programs)
   one_to_one :record
   
   def set_element(e)
-    chname = SETTINGS[:epgdump_channel_id][e.attributes[:channel]]
-    chname = e.attributes[:channel] if chname == nil
+    chname = SETTINGS[:epgdump_channel_id][e.attributes['channel']]
+    chname = e.attributes['channel'] if chname == nil
     ch = Channel.find(chname)
     if ch != nil
       self[:channel_id] = ch[:id]
@@ -176,8 +186,8 @@ class Program < Sequel::Model(:programs)
     
     self[:title] = e.find_first('title[@lang="ja_JP"]').content
     self[:description] = e.find_first('desc[@lang="ja_JP"]').content
-    self[:start_time]= e.attributes[:start].parse_date_time
-    self[:end_time] = e.attributes[:stop].parse_date_time
+    self[:start_time]= e.attributes['start'].parse_date_time
+    self[:end_time] = e.attributes['stop'].parse_date_time
     self
   end
   
@@ -642,19 +652,23 @@ class Torec
   
   def self.import_from_file(filename)
     doc = XML::Document.file(filename)
+    #doc = REXML::Document.new(File.new(filename))
     progress = import(doc)
     progress[:file] = filename
     progress
   end
   def self.import_from_io(io)
     doc = XML::Document.io(io)
+    #doc = REXML::Document.new(io)
     progress = import(doc)
     progress[:file] = 'io'
     progress
   end
 
   def self.import(doc)
-    pgElems = doc.root.find('//tv/programme')
+    return if doc.nil?
+    #pgElems = doc.root.get_elements('programme') if doc.kind_of? REXML::Document
+    pgElems = doc.root.find('//tv/programme') if doc.kind_of? XML::Document
     maxprog = pgElems.length
     progress = {
       :file => nil, :all => pgElems.length,
