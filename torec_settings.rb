@@ -56,6 +56,12 @@ SETTINGS = {
     '3014.ontvjapan.com' => 'BS222',
     #TODO CS
   },
+  :mediatomb => {
+    :update => true,
+    #:database_url => "sqlite:///var/lib/mediatomb/sqlite3.db",
+    :database_url => "mysql://epgrec:epgrec@192.168.100.45/epgrec",
+    :database_options => {:encoding=>"utf8"}
+  },
   #:default_sid => nil, # all,hd,sd1,sd2,sd3,1seg
   :default_sid => 'hd',
   :sid_replace_channels => ['101','102','191','192','193'],

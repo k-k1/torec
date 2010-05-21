@@ -756,6 +756,16 @@ class Torec
       p Torec.update_epg_bs
     end
   end
+
+  def self.update_mediatomb
+    return if not SETTINGS[:mediatomb][:update]
+    mdb = Sequel.connect(SETTINGS[:mediatomb][:database_url], SETTINGS[:mediatomb][:database_options])
+    Record.filter(:state => Record::DONE).all.each do |r|
+      ds = mdb[:mt_cds_object].filter(:location.like('%' + r.program.create_filename))
+      ds.update(:dc_title => "#{r.program.channel.name} #{r.program.start_time.format_display} #{r.program.title}")
+      ds.update(:metadata => "dc:description=#{r.program.description}&torec:id=#{r.program.id}")
+    end
+  end
 end
 
 if __FILE__ == $0
@@ -772,6 +782,7 @@ if __FILE__ == $0
       opts.parse!(ARGV)
       Torec.update_epg(opt[:channel_id]) if opt[:file] == nil
       Reservation.update_reserve
+      Torec.update_mediatomb
     when 'search'
       opt = {:channel_id => nil, :category_id => nil, :channel_type => nil, :keyword => nil,
         :verbose => false, :reserve => false, :folder => nil, :sid => nil, :now => false, :all => false}
