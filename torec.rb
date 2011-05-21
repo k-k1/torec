@@ -1,8 +1,8 @@
 #!/usr/bin/ruby
+# -*- encoding: utf-8 -*-
 
-require 'rubygems'
+#require 'rubygems'
 require 'xml/libxml'
-require 'rexml/document'
 require 'sequel'
 require 'date'
 require 'digest/md5'
@@ -10,7 +10,8 @@ require 'nkf'
 require 'optparse'
 require 'fileutils'
 
-require File.join(File.dirname($0), 'torec_settings.rb')
+APP_DIR=File.expand_path(File.dirname($0))
+require File.join(APP_DIR, 'torec_settings.rb')
 
 class String
   def to_han()
@@ -37,15 +38,6 @@ class Time
   end
 end
 
-class REXML::Element
-  def content
-    text
-  end
-  def find_first(xp)
-    get_elements(xp)[0]
-  end
-end
-
 Sequel::Model.plugin(:schema)
 Sequel::Model.plugin(:hook_class_methods )
 
@@ -65,10 +57,6 @@ class Tunner < Sequel::Model(:tunners)
     string :name, :size => 128, :null => false, :unique => true
     string :type, :size => 20, :null => false
     string :device_name, :size => 20, :null => false
-  end
-  
-  def self.names
-    Tunner.all.collect{|r| r[:name]}
   end
 end
 
@@ -122,8 +110,8 @@ class Channel < Sequel::Model(:channels)
     ChannelType.filter(:type => self[:type]).first
   end
   
-  def self.find(chname)
-    self.filter('type || channel = ?', chname).first
+  def self.find(type, channel)
+    self.filter('type = ? and channel = ?', type, channel).first
   end
 
   def self.channel_hash
@@ -131,7 +119,7 @@ class Channel < Sequel::Model(:channels)
   end
   
   def channel_key
-    self[:type]+self[:channel]
+    self[:type]+self[:channel].to_s
   end
   
   def update_program
@@ -143,7 +131,7 @@ class Channel < Sequel::Model(:channels)
     channel_type.tunners.each do |t|
       r = Record.exclude(:program_id => nil).
         eager_graph(:tunner).filter(:tunner__id => t.id).
-        eager_graph(:program).filter((:program__start_time < start_time) & (:program__end_time > end_time))
+        eager_graph(:program).filter{(:program__start_time < start_time) & (:program__end_time > end_time)}
       return t if r.count == 0
     end
     nil
@@ -166,10 +154,8 @@ class Program < Sequel::Model(:programs)
   many_to_one :category
   one_to_one :record
   
-  def set_element(e)
-    chname = SETTINGS[:epgdump_channel_id][e.attributes['channel']]
-    chname = e.attributes['channel'] if chname == nil
-    ch = Channel.find(chname)
+  def set_element(type, e)
+    ch = Channel.find(type, e.attributes[:channel])
     if ch != nil
       self[:channel_id] = ch[:id]
     end
@@ -186,8 +172,8 @@ class Program < Sequel::Model(:programs)
     
     self[:title] = e.find_first('title[@lang="ja_JP"]').content
     self[:description] = e.find_first('desc[@lang="ja_JP"]').content
-    self[:start_time]= e.attributes['start'].parse_date_time
-    self[:end_time] = e.attributes['stop'].parse_date_time
+    self[:start_time]= e.attributes[:start].parse_date_time
+    self[:end_time] = e.attributes[:stop].parse_date_time
     self
   end
   
@@ -203,8 +189,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def create_hash
-    str = self[:category_id].to_s + self[:title] + self[:description] if not self[:description].nil?
-    str = self[:category_id].to_s + self[:title] if self[:description].nil?
+    str = self[:category_id].to_s + self[:title] + self[:description]
     Digest::MD5.hexdigest(str)
   end
   
@@ -246,7 +231,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def create_filename
-    channel[:type] + channel[:channel] + '_' + self[:start_time].format + '.ts'
+    self[:start_time].format + '_' + channel[:type].to_s + channel[:channel].to_s + '.ts'
   end
   
   def find_empty_tunner
@@ -302,6 +287,10 @@ class Program < Sequel::Model(:programs)
     Program.filter((:start_time <= now) & (:end_time >= now)).order(:channel_id).all
   end
 
+  def next
+    Program.filter(:start_time > Time.now ).filter(:channel_id => self[:channel_id]).order(:start_time).first
+  end
+
   def self.search(opt)
     ds = Program.dataset
     if opt[:channel_id] != nil
@@ -355,7 +344,6 @@ class Reservation < Sequel::Model(:reservations)
     integer :category_id
     string :keyword, :size => 512
     string :folder, :size => 128
-    string :sid, :size => 128
   end
   one_to_many :records
   many_to_one :channel
@@ -376,14 +364,14 @@ class Reservation < Sequel::Model(:reservations)
   
   def self.create(opt)
     self.new({:channel_id => opt[:channel_id], :category_id => opt[:category_id],
-        :keyword => opt[:keyword], :folder => opt[:folder], :sid => opt[:sid]}, true)
+        :keyword => opt[:keyword], :folder => opt[:folder]}, true)
   end
   
   def self.update_reserve
     order(:id).each do |rs|
       rs.search.all.each do |pg|
         next if pg.record != nil
-        #p 'update record reserve. pg:'+ pg.pk.to_s + ' rs' + rs.pk.to_s
+        p 'update record reserve. pg:'+ pg.pk.to_s + ' rs' + rs.pk.to_s if $DEBUG
         pg.reserve(rs.pk)
       end
     end
@@ -419,7 +407,6 @@ class Record < Sequel::Model(:records)
     integer :recording_pid
     datetime :start_time
     datetime :done_time
-    string :sid, :size => 128
   end
   many_to_one :program
   many_to_one :reservation
@@ -439,11 +426,11 @@ class Record < Sequel::Model(:records)
   end
   
   def self.search(opts)
-    #{:program_id => nil, :channel_id => nil, :category_id => nil, channel_type => nil, :tunner_name => nil}
+    #{:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil}
     ds = Record.dataset
     ds = ds.eager_graph(:program)
-    if opts[:tunner_name] != nil
-      ds = ds.eager_graph(:tunner).filter(:tunner__name => opts[:tunner_name])
+    if opts[:tunner_type] != nil
+      ds = ds.eager_graph(:tunner).filter(:tunner__type => opts[:tunner_type])
     end
     if opts[:channel_id] != nil
       ds = ds.filter(:program__channel_id => opts[:channel_id])
@@ -469,10 +456,6 @@ class Record < Sequel::Model(:records)
   
   def make_output_dir
     FileUtils.mkdir_p(output_dir)
-  end
-  
-  def output_filename
-    File.join(output_dir, program.create_filename)
   end
   
   def delete_job
@@ -515,7 +498,7 @@ class Record < Sequel::Model(:records)
 
     jobid = nil
     IO.popen("at #{at_start_str} 2>&1", 'r+') do |io|
-      io << File.join(SETTINGS[:application_path],'torec.rb') << " record --start " << program.pk << "\n"
+      io << File.join(APP_DIR,'torec.rb') << " record --start " << program.pk << "\n"
       
       io.close_write
       io.each do |l|
@@ -525,7 +508,7 @@ class Record < Sequel::Model(:records)
       end
     end
     
-    self[:filename] = output_filename
+    self[:filename] = File.join(output_dir, program.create_filename)
     self[:job] = jobid
     self[:state] = WAITING
     save
@@ -553,37 +536,22 @@ class Record < Sequel::Model(:records)
     rc[Record.table_name]
   end
   
-  def get_sid
-    sid = nil
-    if reservation == nil
-      #direct
-      sid = self[:sid]
-    else
-      sid = reservation[:sid]
-    end
-    sid = SETTINGS[:default_sid] if sid == nil
-    if sid == 'hd' and SETTINGS[:sid_replace_channels].index(program.channel[:channel]) != nil
-      sid = program.channel[:channel]
-    end
-    sid
-  end
-  
   def start
     return if not waiting?
     
-    sid = get_sid
-    filename = output_filename
-    
+    sid = 'hd'
+    if SETTINGS[:sid_replace_channels].index(program.channel[:channel]) != nil
+      sid = program.channel[:channel].to_s
+    end
+
     args = []
     args << "--b25"
     args << "--strip"
-    if sid != nil
-      args << "--sid" << sid
-    end
+    args << "--sid" << sid
     #args << "--device" << "/dev/pt1video2"
-    args << program.channel[:channel]
+    args << program.channel[:channel].to_s
     args << (program.remaining_second + 5).to_s
-    args << filename
+    args << File.join(output_dir, program.create_filename)
     
     make_output_dir
     
@@ -600,24 +568,15 @@ class Record < Sequel::Model(:records)
     self[:start_time] = Time.now
     self[:state] = RECORDING
     self[:recording_pid] = pid
-    self[:filename] = filename
-    self[:sid] = sid
     save
     th = Process.detach(pid)
     th.value
-    donetime = Time.now
-    sleep(5)
-    done(donetime)
+    done
   end
-  def done(t = Time.now)
+  def done
     return if not recording?
-    self[:done_time] = t
+    self[:done_time] = Time.now
     self[:state] = DONE
-    save
-  end
-  
-  def update_filename
-    self[:filename] = output_filename
     save
   end
 
@@ -653,23 +612,19 @@ class Torec
   
   def self.import_from_file(filename)
     doc = XML::Document.file(filename)
-    #doc = REXML::Document.new(File.new(filename))
     progress = import(doc)
     progress[:file] = filename
     progress
   end
   def self.import_from_io(io)
     doc = XML::Document.io(io)
-    #doc = REXML::Document.new(io)
     progress = import(doc)
     progress[:file] = 'io'
     progress
   end
 
   def self.import(doc)
-    return if doc.nil?
-    #pgElems = doc.root.get_elements('programme') if doc.kind_of? REXML::Document
-    pgElems = doc.root.find('//tv/programme') if doc.kind_of? XML::Document
+    pgElems = doc.root.find('//tv/programme')
     maxprog = pgElems.length
     progress = {
       :file => nil, :all => pgElems.length,
@@ -678,6 +633,7 @@ class Torec
     pgElems.each do |e|
       pg = Program.populate(e)
       if pg.unknown_channel?
+        p "unknown channel #{pg[:channel]} #{e.attributes[:channel]}" if $DEBUG
         progress[:unknown_channel] = progress[:unknown_channel] + 1 
         next
       end
@@ -708,7 +664,7 @@ class Torec
     progress
   end
   
-  EPGDUMP = File.join(SETTINGS[:application_path], 'do-epgget.sh')
+  EPGDUMP = File.join(APP_DIR, 'do-epgdump.sh')
   
   def self.update_epg_bs
     result = nil
@@ -728,8 +684,9 @@ class Torec
   
   def self.update_epg_gr(channel = nil)
     result = nil
-    next if channel.find_empty_tunner(Time.now, Time.now + 70) == nil
-    IO.popen("#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60") do |io|
+    return if channel.find_empty_tunner(Time.now, Time.now + 70) == nil
+    p "#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null"
+    IO.popen("#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null") do |io|
       result = import_from_io(io)
     end
     channel.update_program
@@ -741,29 +698,20 @@ class Torec
     if chid != nil
       ch = Channel[:id => chid]
       if ch[:type] == 'BS'
-        puts ch[:type]
+        puts "update " + ch[:type]
         p Torec.update_epg_bs
       elsif ch[:type] == 'GR'
-        puts ch.channel_key
+        puts "update " + ch.channel_key
         p Torec.update_epg_gr(ch)
       end
     else
       #all
       Channel.filter(:type => 'GR').order(:channel).all.each do |ch|
-        puts ch.channel_key
+        puts "update " + ch.channel_key
         p Torec.update_epg_gr(ch)
       end
+      puts "update BS"
       p Torec.update_epg_bs
-    end
-  end
-
-  def self.update_mediatomb
-    return if not SETTINGS[:mediatomb][:update]
-    mdb = Sequel.connect(SETTINGS[:mediatomb][:database_url], SETTINGS[:mediatomb][:database_options])
-    Record.filter(:state => Record::DONE).all.each do |r|
-      ds = mdb[:mt_cds_object].filter(:location.like('%' + r.program.create_filename))
-      ds.update(:dc_title => "#{r.program.channel.name} #{r.program.start_time.format_display} #{r.program.title}")
-      ds.update(:metadata => "dc:description=#{r.program.description}&torec:id=#{r.program.id}")
     end
   end
 end
@@ -782,25 +730,31 @@ if __FILE__ == $0
       opts.parse!(ARGV)
       Torec.update_epg(opt[:channel_id]) if opt[:file] == nil
       Reservation.update_reserve
-      Torec.update_mediatomb
     when 'search'
       opt = {:channel_id => nil, :category_id => nil, :channel_type => nil, :keyword => nil,
-        :verbose => false, :reserve => false, :folder => nil, :sid => nil, :now => false, :all => false}
+        :verbose => false, :reserve => false, :folder => nil, :now => false, :next=> false, :all => false}
       opts.program_name = $0 + ' search'
       opts.on("-n", "--now", "display now on-air programs"){opt[:now] = true }
+      opts.on("-N", "--next", "display next on-air programs"){opt[:next] = true }
       opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("-g", "--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
       opts.on("-t", "--type CHANNEL_TYPE", ChannelType.types){|cid| opt[:channel_type] = cid }
       opts.on("-a", "--all", "display all records."){opt[:all] = true }
       opts.on("-v", "--verbose", "display program description"){opt[:verbose] = true }
-      opts.on("-r", "--reserve", "add auto-recording reserve"){opt[:reserve] = true }
+      opts.on("-r", "--reserve", "add condition to auto-recording"){opt[:reserve] = true }
       opts.on("-d", "--dir DIRNAME", "auto-recording save directory"){|d| opt[:folder] = d }
-      opts.on("-s", "--sid SID", "SID number(all,hd,sd1,sd2,sd3,1seg,..)"){|d| opt[:sid] = d }
       opts.permute!(ARGV)
       if opt[:now]
         Program.now_onair.each do |r|
           next if opt[:channel_type] != nil and opt[:channel_type] != r.channel[:type]
           r.print_line(opt[:verbose])
+        end
+        exit
+      end
+      if opt[:next]
+        Program.now_onair.each do |r|
+          next if opt[:channel_type] != nil and opt[:channel_type] != r.channel[:type]
+          r.next.print_line(opt[:verbose])
         end
         exit
       end
@@ -831,7 +785,7 @@ if __FILE__ == $0
     when 'reserve'
       opt = {:reserve_id => nil, :mkdir => false}
       opts.program_name = $0 + ' reserve'
-      opts.on("--delete RESERVE_ID", Integer, "simple recording"){|rid| opt[:reserve_id] = rid }
+      opts.on("--delete RESERVE_ID", Integer, "delete auto-recording condition"){|rid| opt[:reserve_id] = rid }
       opts.on("--mkdir", "make reserve directories"){ opt[:mkdir] = true }
       opts.permute!(ARGV)
       if opt[:mkdir]
@@ -852,18 +806,15 @@ if __FILE__ == $0
         puts "#{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
     when 'record'
-      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :channel_type => nil, :tunner_name => nil,
-             :all => false, :state => nil, :update_filename => false}
+      opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false, :state => nil}
       opts.program_name = $0 + ' record'
       opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.on("-g", "--category CATEGORY", Category.types_hash){|cid| opt[:category_id] = cid }
-      opts.on("-t", "--type CHANNEL_TYPE", ChannelType.types){|cid| opt[:channel_type] = cid }
-      opts.on("-u", "--tunner TUNNER", Tunner.names){|tunner| opt[:tunner_name] = tunner }
+      opts.on("-t", "--tunner TUNNER_TYPE"){|type| opt[:tunner_type] = type }
       opts.on("-a", "--all", "display all records."){opt[:all] = true }
       opts.on("--schedule [PROGRAM_ID]", "schedule records."){|pid| opt[:state] = :schedule; opt[:program_id] = pid }
       opts.on("--start PROGRAM_ID"){|pid| opt[:state] = :start; opt[:program_id] = pid }
       opts.on("--add PROGRAM_ID", Integer, "simple recording"){|pid| opt[:state] = :add; opt[:program_id] = pid }
-      opts.on("--update-filename", Integer, "update output filename"){ opt[:update_filename] = true }
       opts.parse!(ARGV)
       if opt[:program_id] != nil
         pg = Program[opt[:program_id]]
@@ -878,14 +829,8 @@ if __FILE__ == $0
         exit
       elsif opt[:state] == :schedule
         opt[:state] = :reserve
-        Reservation.update_reserve
         Record.search(opt).all.each do |rc|
-          rc.schedule 
-        end
-        exit
-      elsif opt[:update_filename]
-        Record.search(opt).all.each do |rc|
-          rc.update_filename 
+          rc.schedule
         end
         exit
       end
@@ -896,7 +841,7 @@ if __FILE__ == $0
         print "#{r[:title]}\n"
         rid = rc[:reservation_id]
         state = rc[:state].upcase
-        state = state + ' ' + rc[:job] if rc.waiting?
+        state = state + ' ' + rc[:job].to_s if rc.waiting?
         puts "   #{(rid==nil)?' ':'A'} #{state.ljust(20)} #{rc[:filename]}"
         if not rc.reserve? and not rc.waiting?
           jid = rc[:job]

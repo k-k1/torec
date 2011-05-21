@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 
 SETTINGS = {
   :tunners => [
@@ -9,7 +10,7 @@ SETTINGS = {
   :channel_types => [
     {:type => "GR", :name => "地上波", :tunner_type => "GR"},
     {:type => "BS", :name => "BS", :tunner_type => "BS/CS"},
-#    {:type => "CS", :name => "CS", :tunner_type => "BS/CS"},
+   #{:type => "CS", :name => "CS", :tunner_type => "BS/CS"},
   ],
   :channels => [
     #GR
@@ -34,44 +35,15 @@ SETTINGS = {
     { :type => 'BS', :channel => '191', :name => 'WOWOW' },
     { :type => 'BS', :channel => '192', :name => 'WOWOW2' },
     { :type => 'BS', :channel => '193', :name => 'WOWOW3' },
-    #{ :type => 'BS', :channel => '200', :name => 'スター・チャンネルBS' },
     { :type => 'BS', :channel => '211', :name => 'BS11' },
     { :type => 'BS', :channel => '222', :name => 'TwellV' },
   ],
-  :epgdump_channel_id => {
-    #BS
-    '3001.ontvjapan.com' => 'BS101',
-    '3002.ontvjapan.com' => 'BS102',
-    '3003.ontvjapan.com' => 'BS103',
-    '3004.ontvjapan.com' => 'BS141',
-    '3005.ontvjapan.com' => 'BS151',
-    '3006.ontvjapan.com' => 'BS161',
-    '3007.ontvjapan.com' => 'BS171',
-    '3008.ontvjapan.com' => 'BS181',
-    '3009.ontvjapan.com' => 'BS191',
-    '3010.ontvjapan.com' => 'BS192',
-    '3011.ontvjapan.com' => 'BS193',
-    '3012.ontvjapan.com' => 'BS200',
-    '3013.ontvjapan.com' => 'BS211',
-    '3014.ontvjapan.com' => 'BS222',
-    #TODO CS
-  },
-  :mediatomb => {
-    :update => true,
-    #:database_url => "sqlite:///var/lib/mediatomb/sqlite3.db",
-    :database_url => "mysql://epgrec:epgrec@192.168.100.45/epgrec",
-    :database_options => {:encoding=>"utf8"}
-  },
-  #:default_sid => nil, # all,hd,sd1,sd2,sd3,1seg
-  :default_sid => 'hd',
   :sid_replace_channels => ['101','102','191','192','193'],
-  :application_path => '/home/k1/torec',
-  :output_path => '/data/record/video',
+  :output_path => '/home/k1/video',
   :recorder_program_path => '/usr/local/bin/recpt1',
 }
 
-#DB = Sequel.connect("sqlite://test.db", {:encoding=>"utf8"})
-DB = Sequel.connect("sqlite://#{SETTINGS[:application_path]}/torec.sqlite3", {:encoding=>"utf8", :timeout=>5000})
+DB = Sequel.connect("sqlite://" + File.join(APP_DIR, "torec.sqlite3"), {:encoding=>"utf8"})
 
 Sequel.default_timezone = :local
 
