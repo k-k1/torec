@@ -1,0 +1,211 @@
+= torec rev.20110515
+
+epgrecというすばらしいツールがすでにありますが、httpのインターフェースは特に不要だと感じたので、
+rubyのみで動作するCUI録画スクリプトを勢いで作成してみました。
+
+シンプルを目指していたはずなのに、いつの間にかゴテゴテして来ちゃっていますが。。
+
+
+== epgrecとの違い
+
+ * MySQLの代わりにsqlite3を使用
+ * apache/phpは不要、すべてコマンドラインで操作、rubyが必要
+ * 一般ユーザ権限で全て完結するため、煩わしいパーミッションを考慮する必要なし
+
+== 動作環境
+
+以下の環境で動作を確認しています。
+ * Ubuntu 11.04
+ * Linux 2.6.38-8-server SMP x86_64 
+
+=== 前提条件
+ * recpt1、epgdumpr2-utf8が普通に動作すること
+ * at/cronが動作すること
+
+=== 追加で必要なもの
+ruby及びライブラリをいくつかインストールします。
+ubuntu 11.04の場合は、
+$ sudo apt-get install ruby libsequel-ruby libsqlite3-ruby libxml-ruby
+
+以下のversionで動作確認済み
+ * ruby1.8                         1.8.7.302-2
+ * libxml-ruby1.8                  1.1.3-2
+ * libsqlite3-ruby1.8              1.3.1-2
+ * libsequel-ruby1.8               3.13.0-1
+
+
+== 設置
+
+適当にディレクトリを作成し、ファイルを設置します。
+
+「/home/k1/torec/」にインストールする場合は以下の通り
+
+$ tar vfxz torec-20110515.tar.gz
+$ cd torec-20110515
+$ mkdir /home/k1/torec
+$ cp torec.rb /home/k1/torec
+$ cp torec_settings.rb /home/k1/torec
+$ cp do-epgget.sh /home/k1/torec
+$ chmod +x /home/k1/torec/torec.rb
+$ chmod +x /home/k1/torec/do-epgget.sh
+
+$ cd /home/k1/torec/
+$ ls -l
+-rwxr-xr-x  1 k1 k1     292 2011-05-15 23:40 do-epgdump.sh
+-rwxr-xr-x  1 k1 k1   23156 2011-05-15 23:50 torec.rb
+-rw-r--r--  1 k1 k1    2296 2011-05-15 23:42 torec_settings.rb
+
+インストール先のディレクトリにsqlite3のdbが作成されます。
+-rw-r--r--  1 k1 k1 2392064 2011-05-15 23:49 torec.sqlite3
+
+
+== 設定
+
+torec_settings.rb、及びdo-epgdump.shを修正します
+
+$ vi torec_settings.rb
+録画ファイルを出力するディレクトリを指定します。
+>  :output_path => '/home/k1/video',
+recpt1のパスを指定します。
+>  :recorder_program_path => '/usr/local/bin/recpt1',
+
+チャンネル情報はお住まいの地域に合わせて修正してください。
+
+$ vi do-epgdump.sh
+recpt1のパスを指定します。
+RECPT1=/usr/local/bin/recpt1
+epgdumpのパスを指定します。
+EPGDUMP=/usr/local/bin/epgdump
+
+== 使い方
+
+$ ./torec.rb
+Usage: ./torec.rb COMMAND [options]
+  update
+  search
+  reserve
+  record
+
+cronに登録以下の内容を登録しておきます。
+# epg update
+0 5 * * * /home/k1/torec/torec.rb update >/dev/null 2>&1
+# at scheduling
+0 * * * * /home/k1/torec/torec.rb record --schedule >/dev/null 2>&1
+
+=== update epg情報更新
+
+epgを取得し、データベースを更新します。
+$ ./torec.rb update --help
+Usage: ./torec.rb update [options]
+    -f, --file XMLFILE
+    -c, --channel CHANNEL
+
+引数無しで実行することで、全てのチャンネル情報を更新します。
+$ ./torec.rb update
+
+GR21チャンネルだけ更新
+$ ./torec.rb update -c GR21
+
+=== search 番組検索
+
+$ ./torec.rb search --help
+Usage: ./torec.rb search [options]
+    -n, --now                        display now on-air programs
+    -N, --next                       display next on-air programs
+    -c, --channel CHANNEL
+    -g, --category CATEGORY
+    -t, --type CHANNEL_TYPE
+    -a, --all                        display all records.
+    -v, --verbose                    display program description
+    -r, --reserve                    add condition to auto-recording
+    -d, --dir DIRNAME                auto-recording save directory
+
+現在放送中の番組を全て表示
+$ ./torec/torec.rb search -n
+    2006 GR27  etc          2011/05/16 00:10:00 (20m)    ドキュメント２０ｍｉｎ．
+    1457 GR26  etc          2011/05/16 00:00:00 (45m)    地球ドラマチック▽ギャレス先生ユース・オペラに
+    2607 BS101 sports       2011/05/16 00:00:00 (1h50m)  ２０１１トライアスロン世界選手権シリーズ
+    2949 BS103 etc          2011/05/16 00:00:00 (45m)    世界ふれあい街歩き
+
+次に放送する番組を全て表示
+$ ./torec/torec.rb search -N
+    2007 GR27  variety      2011/05/16 00:30:00 (30m)    サラリーマンＮＥＯ　＜新＞
+    1458 GR26  news         2011/05/16 00:45:00 (4h15m)  放送休止
+    2608 BS101 news         2011/05/16 01:50:00 (10m)    ＢＳニュース
+    2950 BS103 information  2011/05/16 00:45:00 (2m)     ＢＳプレマップ
+
+細かい条件を指定して検索
+（NHK,バラエティ、NEOを含む番組を検索）
+$ ./torec/torec.rb search -c GR27 -g variety ＮＥＯ
+    2007 GR27  variety      2011/05/16 00:30:00 (30m)    サラリーマンＮＥＯ　＜新＞
+    2103 GR27  variety      2011/05/17 22:55:00 (30m)    サラリーマンＮＥＯ
+
+検索条件を自動録画予約として登録
+$ ./torec/torec.rb search -c GR27 -g variety -r ＮＥＯ
+
+検索結果の最初の数字は一意な番組識別番号です。この数字を使用して、
+record --addで録画予約を追加することも可能です。
+
+=== reserve 番組検索
+
+$ ./torec.rb reserve --help
+Usage: ./torec.rb reserve [options]
+        --delete RESERVE_ID          delete auto-recording condition
+        --mkdir                      make reserve directories
+
+自動録画予約を一覧表示する
+$ ./torec/torec.rb reserve
+1      GR27   variety      ＮＥＯ
+
+自動録画予約を削除する
+$ ./torec/torec.rb reserve --delete 1
+
+== record 録画状態
+
+$ ./torec.rb record --help
+Usage: ./torec.rb record [options]
+    -c, --channel CHANNEL
+    -g, --category CATEGORY
+    -t, --tunner TUNNER_TYPE
+    -a, --all                        display all records.
+        --schedule [PROGRAM_ID]      schedule records.
+        --start PROGRAM_ID
+        --add PROGRAM_ID             simple recording
+
+全ての録画をatへ登録する
+（atからrecord --startが実行されます。）
+$ ./torec.rb record --schedle
+
+番組番号2949を録画予約する
+$ ./torec.rb record -a 2949
+$ ./torec.rb record --schedle
+
+現在の録画状態を表示する
+$ ./torec.rb record
+  2007 GR27  variety      2011/05/16 00:30:00 (30m)   サラリーマンＮＥＯ　＜新＞
+   A RECORDING            /home/k1/video/20110516003000_GR27.ts
+                          2011/05/16 00:49:43 -
+  2103 GR27  variety      2011/05/17 22:55:00 (30m)   サラリーマンＮＥＯ
+   A WAITING 4            /home/k1/video/20110517225500_GR27.ts
+
+状態の種類は以下の通りです
+  RESERVE   予約済み、at登録前
+  WAITING   予約済み、at実行待ち。状態の後ろの数字はatのjobid
+  RECORDING 録画中
+  DONE      録画完了
+  CANCEL    録画キャンセル
+
+
+== 今後の課題
+
+ * 半角でも検索出来るようにしたい
+ * 出力ファイル名をなんとかしたい
+ * 録画予約後の操作CUIがいけてないから何とかしたい。
+
+ * CSの録画はよくわかりません
+ * PT2の2枚差もtorec_settings.rbをいじるだけで多分動くでしょう
+ * PT2以外もちょっといじれば対応できるでしょう
+
+k1
+ * twitter@k_k1
+
