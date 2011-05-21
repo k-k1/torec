@@ -110,8 +110,8 @@ class Channel < Sequel::Model(:channels)
     ChannelType.filter(:type => self[:type]).first
   end
   
-  def self.find(type, channel)
-    self.filter('type = ? and channel = ?', type, channel).first
+  def self.find(channel)
+    self.filter('type || channel = ?', channel).first
   end
 
   def self.channel_hash
@@ -154,8 +154,12 @@ class Program < Sequel::Model(:programs)
   many_to_one :category
   one_to_one :record
   
-  def set_element(type, e)
-    ch = Channel.find(type, e.attributes[:channel])
+  def set_element(e)
+    chname = SETTINGS[:epgdump_channel_id][e.attributes[:channel]]
+    if chname == nil
+      chname = e.attributes[:channel]
+    end
+    ch = Channel.find(chname)
     if ch != nil
       self[:channel_id] = ch[:id]
     end
