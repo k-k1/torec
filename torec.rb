@@ -522,9 +522,9 @@ class Record < Sequel::Model(:records)
     return if not recording?
     begin
       Process.kill(:INT,self[:recording_pid])
-      p "process killed. #{self[:recording_pid]}"
+      puts "process killed. #{self[:recording_pid]}"
     rescue
-      p "process not found. #{self[:recording_pid]}"
+      puts "process not found. #{self[:recording_pid]}"
     end
   end
   
@@ -646,7 +646,7 @@ class Torec
         dupPrograms = pg.find_duplicate
         if dupPrograms.count > 0
           # remove duplicate programs
-          p 'remove ' + dupPrograms.count.to_s + ' program(s).'
+          p 'remove ' + dupPrograms.count.to_s + ' program(s).' if $DEBUG
           dupPrograms.all do |r|
             r.delete_reservation_record
             r.delete
@@ -656,7 +656,7 @@ class Torec
         progress[:insert] = progress[:insert] + 1 
       else
         # update program
-        #p 'update ' + pg.create_hash
+        p 'update ' + pg.create_hash if $DEBUG
         if pg.update != pg
           progress[:modify] = progress[:modify] + 1 
         else
@@ -689,7 +689,7 @@ class Torec
   def self.update_epg_gr(channel = nil)
     result = nil
     return if channel.find_empty_tunner(Time.now, Time.now + 70) == nil
-    p "#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null"
+    p "#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null" if $DEBUG
     IO.popen("#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null") do |io|
       result = import_from_io(io)
     end
@@ -703,19 +703,19 @@ class Torec
       ch = Channel[:id => chid]
       if ch[:type] == 'BS'
         puts "update " + ch[:type]
-        p Torec.update_epg_bs
+        p Torec.update_epg_bs if $DEBUG
       elsif ch[:type] == 'GR'
         puts "update " + ch.channel_key
-        p Torec.update_epg_gr(ch)
+        p Torec.update_epg_gr(ch) if $DEBUG
       end
     else
       #all
       Channel.filter(:type => 'GR').order(:channel).all.each do |ch|
         puts "update " + ch.channel_key
-        p Torec.update_epg_gr(ch)
+        p Torec.update_epg_gr(ch) if $DEBUG
       end
       puts "update BS"
-      p Torec.update_epg_bs
+      p Torec.update_epg_bs if $DEBUG
     end
   end
 end
