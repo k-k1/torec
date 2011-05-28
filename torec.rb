@@ -672,12 +672,18 @@ class Torec
   
   EPGDUMP = File.join(APP_DIR, 'do-epgdump.sh')
   
+  def self.epgdump_commandline(type, channel, duration)
+    cmdline = "#{EPGDUMP} #{type} #{channel} #{duration} 2>/dev/null"
+    p cmdline if $DEBUG
+    cmdline
+  end
+  
   def self.update_epg_bs
     result = nil
     bs =  Channel.filter(:type => 'BS')
     if bs.count != 0
       if bs.first.find_empty_tunner(Time.now, Time.now + 190) != nil
-        IO.popen("#{EPGDUMP} BS 211 180 2>/dev/null") do |io|
+        IO.popen(epgdump_commandline('BS', 211, 180)) do |io|
           result = import_from_io(io)
           p result if $DEBUG
         end
@@ -692,8 +698,7 @@ class Torec
   def self.update_epg_gr(channel = nil)
     result = nil
     return if channel.find_empty_tunner(Time.now, Time.now + 70) == nil
-    p "#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null" if $DEBUG
-    IO.popen("#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null") do |io|
+    IO.popen(epgdump_commandline(channel[:type], channel[:channel], 60)) do |io|
       result = import_from_io(io)
       p result if $DEBUG
     end
