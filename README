@@ -1,7 +1,8 @@
-= torec rev.20110515
+= torec
 
 epgrecというすばらしいツールがすでにありますが、httpのインターフェースは特に不要だと感じたので、
 rubyのみで動作するCUI録画スクリプトを勢いで作成してみました。
+epgrecを大いに参考にさせていただきました。
 
 シンプルを目指していたはずなのに、いつの間にかゴテゴテして来ちゃっていますが。。
 
@@ -17,14 +18,20 @@ rubyのみで動作するCUI録画スクリプトを勢いで作成してみま�
 以下の環境で動作を確認しています。
  * Ubuntu 11.04
  * Linux 2.6.38-8-server SMP x86_64 
+ * LANG=ja_JP.utf8
+
+ubuntu 11.04ではdvb版のドライバが有効になっていたり、libpcsclite1が
+うまく動かなかったり問題があるので、おすすめはしません。
 
 === 前提条件
+
  * recpt1、epgdumpr2-utf8が普通に動作すること
  * at/cronが動作すること
 
 === 追加で必要なもの
+
 ruby及びライブラリをいくつかインストールします。
-ubuntu 11.04の場合は、
+ubuntuの場合は、
 $ sudo apt-get install ruby libsequel-ruby libsqlite3-ruby libxml-ruby
 
 以下のversionで動作確認済み
@@ -33,15 +40,16 @@ $ sudo apt-get install ruby libsequel-ruby libsqlite3-ruby libxml-ruby
  * libsqlite3-ruby1.8              1.3.1-2
  * libsequel-ruby1.8               3.13.0-1
 
+多分、ruby1.8, sqlite3なら動くでしょう
 
-== 設置
+== インストール
 
 適当にディレクトリを作成し、ファイルを設置します。
 
 「/home/k1/torec/」にインストールする場合は以下の通り
 
-$ tar vfxz torec-20110515.tar.gz
-$ cd torec-20110515
+$ tar vfxz k-k1-torec-c5760a5.tar.gz
+$ cd k-k1-torec-c5760a5
 $ mkdir /home/k1/torec
 $ cp torec.rb /home/k1/torec
 $ cp torec_settings.rb /home/k1/torec
@@ -55,7 +63,8 @@ $ ls -l
 -rwxr-xr-x  1 k1 k1   23156 2011-05-15 23:50 torec.rb
 -rw-r--r--  1 k1 k1    2296 2011-05-15 23:42 torec_settings.rb
 
-インストール先のディレクトリにsqlite3のdbが作成されます。
+
+初回実行後、インストール先のディレクトリにsqlite3のdbが作成されます。
 -rw-r--r--  1 k1 k1 2392064 2011-05-15 23:49 torec.sqlite3
 
 
@@ -146,7 +155,7 @@ $ ./torec/torec.rb search -c GR27 -g variety -r ＮＥＯ
 検索結果の最初の数字は一意な番組識別番号です。この数字を使用して、
 record --addで録画予約を追加することも可能です。
 
-=== reserve 番組検索
+=== reserve 予約確認
 
 $ ./torec.rb reserve --help
 Usage: ./torec.rb reserve [options]
@@ -206,6 +215,15 @@ $ ./torec.rb record
  * PT2の2枚差もtorec_settings.rbをいじるだけで多分動くでしょう
  * PT2以外もちょっといじれば対応できるでしょう
 
+== ライセンス
+
+GPL Ver.2
+
+== 連絡先など
+
+https://github.com/k-k1/torec
+
 k1
+ * k1.kami@gmail.com
  * twitter@k_k1
 
