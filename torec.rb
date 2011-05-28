@@ -703,19 +703,23 @@ class Torec
       ch = Channel[:id => chid]
       if ch[:type] == 'BS'
         puts "update " + ch[:type]
-        p Torec.update_epg_bs if $DEBUG
+        result = Torec.update_epg_bs
+        p result if $DEBUG
       elsif ch[:type] == 'GR'
         puts "update " + ch.channel_key
-        p Torec.update_epg_gr(ch) if $DEBUG
+        result = Torec.update_epg_gr(ch)
+        p result if $DEBUG
       end
     else
       #all
       Channel.filter(:type => 'GR').order(:channel).all.each do |ch|
         puts "update " + ch.channel_key
-        p Torec.update_epg_gr(ch) if $DEBUG
+        result = Torec.update_epg_gr(ch)
+        p result if $DEBUG
       end
       puts "update BS"
-      p Torec.update_epg_bs if $DEBUG
+      result = Torec.update_epg_bs
+      p result if $DEBUG
     end
   end
 end
