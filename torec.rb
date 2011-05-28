@@ -652,14 +652,16 @@ class Torec
             r.delete
           end
         end
+        p 'insert ' + pg.create_hash if $DEBUG
         pg.save
         progress[:insert] = progress[:insert] + 1 
       else
         # update program
-        p 'update ' + pg.create_hash if $DEBUG
         if pg.update != pg
+          p 'update ' + pg.create_hash if $DEBUG
           progress[:modify] = progress[:modify] + 1 
         else
+          p 'not update ' + pg.create_hash if $DEBUG
           progress[:not_modified] = progress[:not_modified] + 1 
         end
       end
@@ -677,6 +679,7 @@ class Torec
       if bs.first.find_empty_tunner(Time.now, Time.now + 190) != nil
         IO.popen("#{EPGDUMP} BS 211 180 2>/dev/null") do |io|
           result = import_from_io(io)
+          p result if $DEBUG
         end
         bs.all.each do |r|
           r.update_program
@@ -692,6 +695,7 @@ class Torec
     p "#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null" if $DEBUG
     IO.popen("#{EPGDUMP} #{channel[:type]} #{channel[:channel]} 60 2>/dev/null") do |io|
       result = import_from_io(io)
+      p result if $DEBUG
     end
     channel.update_program
     result
@@ -703,23 +707,19 @@ class Torec
       ch = Channel[:id => chid]
       if ch[:type] == 'BS'
         puts "update " + ch[:type]
-        result = Torec.update_epg_bs
-        p result if $DEBUG
+        Torec.update_epg_bs
       elsif ch[:type] == 'GR'
         puts "update " + ch.channel_key
-        result = Torec.update_epg_gr(ch)
-        p result if $DEBUG
+        Torec.update_epg_gr(ch)
       end
     else
       #all
       Channel.filter(:type => 'GR').order(:channel).all.each do |ch|
         puts "update " + ch.channel_key
-        result = Torec.update_epg_gr(ch)
-        p result if $DEBUG
+        Torec.update_epg_gr(ch)
       end
       puts "update BS"
-      result = Torec.update_epg_bs
-      p result if $DEBUG
+      Torec.update_epg_bs
     end
   end
 end
