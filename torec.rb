@@ -634,39 +634,40 @@ class Torec
       :file => nil, :all => pgElems.length,
       :unknown_channel => 0, :insert => 0, :modify => 0, :not_modified => 0
     }
-    pgElems.each do |e|
-      pg = Program.populate(e)
-      if pg.unknown_channel?
-        p "unknown channel #{pg[:channel]} #{e.attributes[:channel]}" if $DEBUG
-        progress[:unknown_channel] = progress[:unknown_channel] + 1 
-        next
-      end
-      
-      if pg.find.count == 0
-        dupPrograms = pg.find_duplicate
-        if dupPrograms.count > 0
-          # remove duplicate programs
-          p 'remove ' + dupPrograms.count.to_s + ' program(s).' if $DEBUG
-          dupPrograms.all do |r|
-            r.delete_reservation_record
-            r.delete
-          end
+    DB.transaction do
+      pgElems.each do |e|
+        pg = Program.populate(e)
+        if pg.unknown_channel?
+          p "unknown channel #{pg[:channel]} #{e.attributes[:channel]}" if $DEBUG
+          progress[:unknown_channel] = progress[:unknown_channel] + 1 
+          next
         end
-        p 'insert ' + pg.create_hash if $DEBUG
-        pg.save
-        progress[:insert] = progress[:insert] + 1 
-      else
-        # update program
-        if pg.update != pg
-          p 'update ' + pg.create_hash if $DEBUG
-          progress[:modify] = progress[:modify] + 1 
+        
+        if pg.find.count == 0
+          dupPrograms = pg.find_duplicate
+          if dupPrograms.count > 0
+            # remove duplicate programs
+            p 'remove ' + dupPrograms.count.to_s + ' program(s).' if $DEBUG
+            dupPrograms.all do |r|
+              r.delete_reservation_record
+              r.delete
+            end
+          end
+          p 'insert ' + pg.create_hash if $DEBUG
+          pg.save
+          progress[:insert] = progress[:insert] + 1 
         else
-          p 'not update ' + pg.create_hash if $DEBUG
-          progress[:not_modified] = progress[:not_modified] + 1 
+          # update program
+          if pg.update != pg
+            p 'update ' + pg.create_hash if $DEBUG
+            progress[:modify] = progress[:modify] + 1 
+          else
+            p 'not update ' + pg.create_hash if $DEBUG
+            progress[:not_modified] = progress[:not_modified] + 1 
+          end
         end
       end
     end
-    
     progress
   end
   
