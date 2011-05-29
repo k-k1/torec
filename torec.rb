@@ -544,7 +544,8 @@ class Record < Sequel::Model(:records)
   def record_sid
     sid = SETTINGS[:default_record_sid]
     sid = 'all' if sid.nil?
-    if SETTINGS[:sid_replace_channels][program.channel.channel_name]) != nil
+    
+    if SETTINGS[:sid_replace_channels][program.channel.channel_name] != nil
       sid = SETTINGS[:sid_replace_channels][program.channel.channel_name].to_s
     end
     sid
