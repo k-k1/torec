@@ -61,6 +61,7 @@ SETTINGS = {
   # recording SID setting (all,hd,sd1,sd2,sd3,1seg,..)
   :default_record_sid => 'hd',
   :sid_replace_channels => {
+    #'GR21' => '1seg',
     'BS101' => '101',
     'BS102' => '102',
     'BS191' => '191',
