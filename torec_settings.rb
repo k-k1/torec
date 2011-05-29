@@ -61,9 +61,16 @@ SETTINGS = {
   :sid_replace_channels => ['101','102','191','192','193'],
   :output_path => '/home/k1/video',
   :recorder_program_path => '/usr/local/bin/recpt1',
+  :log_output_path => File.join(APP_DIR, "log")
 }
 
+FileUtils.mkdir_p(SETTINGS[:log_output_path]) unless File.exist?(SETTINGS[:log_output_path])
+log = Logger.new(File.join(SETTINGS[:log_output_path], "torec.log"), 7, 10 * 1024 * 1024)
+log.level = Logger::DEBUG
+log.progname='init'
+
 DB = Sequel.connect("sqlite://" + File.join(APP_DIR, "torec.sqlite3"), {:encoding=>"utf8"})
+DB.logger = log
 
 Sequel.default_timezone = :local
 

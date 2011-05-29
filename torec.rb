@@ -9,6 +9,7 @@ require 'digest/md5'
 require 'nkf'
 require 'optparse'
 require 'fileutils'
+require 'logger'
 
 APP_DIR=File.expand_path(File.dirname($0))
 require File.join(APP_DIR, 'torec_settings.rb')
