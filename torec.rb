@@ -323,7 +323,6 @@ class Program < Sequel::Model(:programs)
     if !opt[:all]
       ds = ds.filter(:end_time > Time.now)
     end
-    p ds.sql if $DEBUG
     ds
   end
   
@@ -376,7 +375,7 @@ class Reservation < Sequel::Model(:reservations)
     order(:id).each do |rs|
       rs.search.all.each do |pg|
         next if pg.record != nil
-        p 'update record reserve. pg:'+ pg.pk.to_s + ' rs' + rs.pk.to_s if $DEBUG
+        LOG.info 'update record reserve. pg:'+ pg.pk.to_s + ' rs' + rs.pk.to_s
         pg.reserve(rs.pk)
       end
     end
@@ -450,7 +449,6 @@ class Record < Sequel::Model(:records)
       ds = ds.filter(:program__end_time > Time.now)
     end
     ds = ds.order(:program__start_time)
-    p ds.sql if $DEBUG
     ds
   end
   
@@ -644,7 +642,7 @@ class Torec
       pgElems.each do |e|
         pg = Program.populate(e)
         if pg.unknown_channel?
-          p "unknown channel #{pg[:channel]} #{e.attributes[:channel]}" if $DEBUG
+          LOG.warn "unknown channel #{pg[:channel]} #{e.attributes[:channel]}"
           progress[:unknown_channel] = progress[:unknown_channel] + 1 
           next
         end
@@ -653,22 +651,22 @@ class Torec
           dupPrograms = pg.find_duplicate
           if dupPrograms.count > 0
             # remove duplicate programs
-            p 'remove ' + dupPrograms.count.to_s + ' program(s).' if $DEBUG
+            LOG.info 'remove ' + dupPrograms.count.to_s + ' program(s).'
             dupPrograms.all do |r|
               r.delete_reservation_record
               r.delete
             end
           end
-          p 'insert ' + pg.create_hash if $DEBUG
+          LOG.debug 'insert ' + pg.create_hash
           pg.save
           progress[:insert] = progress[:insert] + 1 
         else
           # update program
           if pg.update != pg
-            p 'update ' + pg.create_hash if $DEBUG
+            LOG.info 'update ' + pg.create_hash
             progress[:modify] = progress[:modify] + 1 
           else
-            p 'not update ' + pg.create_hash if $DEBUG
+            LOG.debug 'not update ' + pg.create_hash
             progress[:not_modified] = progress[:not_modified] + 1 
           end
         end
@@ -681,7 +679,7 @@ class Torec
   
   def self.epgdump_commandline(type, channel, duration)
     cmdline = "#{EPGDUMP} #{type} #{channel} #{duration} 2>/dev/null"
-    p cmdline if $DEBUG
+    LOG.debug cmdline
     cmdline
   end
   
@@ -692,7 +690,7 @@ class Torec
       if bs.first.find_empty_tunner(Time.now, Time.now + 190) != nil
         IO.popen(epgdump_commandline('BS', 211, 180)) do |io|
           result = import_from_io(io)
-          p result if $DEBUG
+          LOG.info result
         end
         bs.all.each do |r|
           r.update_program
@@ -707,7 +705,7 @@ class Torec
     return if channel.find_empty_tunner(Time.now, Time.now + 70) == nil
     IO.popen(epgdump_commandline(channel[:type], channel[:channel], 60)) do |io|
       result = import_from_io(io)
-      p result if $DEBUG
+      LOG.info result
     end
     channel.update_program
     result
@@ -745,7 +743,7 @@ if __FILE__ == $0
     when 'update'
       opt = {:file => nil, :channel_id => nil}
       opts.program_name = $0 + ' update'
-      opts.on("-f", "--file XMLFILE"){|f| opt[:file] = f; p Torec.import_from_file(f) }
+      opts.on("-f", "--file XMLFILE"){|f| opt[:file] = f; Torec.import_from_file(f) }
       opts.on("-c", "--channel CHANNEL", Channel.channel_hash){|cid| opt[:channel_id] = cid }
       opts.parse!(ARGV)
       Torec.update_epg(opt[:channel_id]) if opt[:file] == nil

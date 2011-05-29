@@ -74,12 +74,12 @@ SETTINGS = {
 }
 
 FileUtils.mkdir_p(SETTINGS[:log_output_path]) unless File.exist?(SETTINGS[:log_output_path])
-log = Logger.new(File.join(SETTINGS[:log_output_path], "torec.log"), 7, 10 * 1024 * 1024)
-log.level = Logger::DEBUG
-log.progname='init'
+LOG = Logger.new(File.join(SETTINGS[:log_output_path], "torec.log"), 7, 10 * 1024 * 1024)
+LOG.level = Logger::DEBUG
+LOG.progname='init'
 
 DB = Sequel.connect("sqlite://" + File.join(APP_DIR, "torec.sqlite3"), {:encoding=>"utf8"})
-DB.logger = log
+DB.logger = LOG
 
 Sequel.default_timezone = :local
 
