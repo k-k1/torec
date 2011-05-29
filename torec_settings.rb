@@ -58,7 +58,16 @@ SETTINGS = {
     '3014.ontvjapan.com' => 'BS222',
     #TODO CS
   },
-  :sid_replace_channels => ['101','102','191','192','193'],
+  # recording SID setting (all,hd,sd1,sd2,sd3,1seg,..)
+  :default_record_sid => 'hd',
+  :sid_replace_channels => {
+    'BS101' => '101',
+    'BS102' => '102',
+    'BS191' => '191',
+    'BS192' => '192',
+    'BS193' => '193',
+  },
+  # dir setting
   :output_path => '/home/k1/video',
   :recorder_program_path => '/usr/local/bin/recpt1',
   :log_output_path => File.join(APP_DIR, "log")

@@ -541,18 +541,22 @@ class Record < Sequel::Model(:records)
     rc[Record.table_name]
   end
   
+  def record_sid
+    sid = SETTINGS[:default_record_sid]
+    sid = 'all' if sid.nil?
+    if SETTINGS[:sid_replace_channels][program.channel.channel_name]) != nil
+      sid = SETTINGS[:sid_replace_channels][program.channel.channel_name].to_s
+    end
+    sid
+  end
+  
   def start
     return if not waiting?
     
-    sid = 'hd'
-    if SETTINGS[:sid_replace_channels].index(program.channel[:channel]) != nil
-      sid = program.channel[:channel].to_s
-    end
-
     args = []
     args << "--b25"
     args << "--strip"
-    args << "--sid" << sid
+    args << "--sid" << record_sid
     #args << "--device" << "/dev/pt1video2"
     args << program.channel[:channel].to_s
     args << (program.remaining_second + 5).to_s
