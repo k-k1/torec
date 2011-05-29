@@ -116,10 +116,10 @@ class Channel < Sequel::Model(:channels)
   end
 
   def self.channel_hash
-    Hash[*Channel.all.collect{|r| [r.channel_key, r[:id] ]}.flatten]
+    Hash[*Channel.all.collect{|r| [r.channel_name, r[:id] ]}.flatten]
   end
   
-  def channel_key
+  def channel_name
     self[:type]+self[:channel].to_s
   end
   
@@ -278,7 +278,7 @@ class Program < Sequel::Model(:programs)
   
   def print_line(verbose=false)
     print "#{(record==nil)?'  ':'* '}"
-    print "#{self[:id].to_s.rjust(6)} #{channel.channel_key.ljust(5)} "
+    print "#{self[:id].to_s.rjust(6)} #{channel.channel_name.ljust(5)} "
     print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+format_duration+')').ljust(8)} "
     print "#{self[:title]}\n"
     if verbose
@@ -716,13 +716,13 @@ class Torec
         puts "update " + ch[:type]
         Torec.update_epg_bs
       elsif ch[:type] == 'GR'
-        puts "update " + ch.channel_key
+        puts "update " + ch.channel_name
         Torec.update_epg_gr(ch)
       end
     else
       #all
       Channel.filter(:type => 'GR').order(:channel).all.each do |ch|
-        puts "update " + ch.channel_key
+        puts "update " + ch.channel_name
         Torec.update_epg_gr(ch)
       end
       puts "update BS"
@@ -779,7 +779,7 @@ if __FILE__ == $0
         puts opts.help
         puts "Channels;"
         Channel.order(:type,:channel).each do |r|
-          puts "   #{r.channel_key.ljust(15)} #{r[:name]}"
+          puts "   #{r.channel_name.ljust(15)} #{r[:name]}"
         end
         puts "Categories;"
         Category.order(:type).each do |r|
@@ -818,7 +818,7 @@ if __FILE__ == $0
       Reservation.order(:id).each do |r|
         ch = r.channel
         cate = r.category
-        puts "#{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_key).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
+        puts "#{r[:id].to_s.ljust(6)} #{((ch==nil)?'':ch.channel_name).ljust(6)} #{((cate==nil)?'':cate[:type]).ljust(12)} #{r.keyword}"
       end
     when 'record'
       opt = {:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil, :all => false, :state => nil}
@@ -851,7 +851,7 @@ if __FILE__ == $0
       end
       Record.search(opt).all.each do |rc|
         r = rc.program
-        print "#{r[:id].to_s.rjust(6)} #{r.channel.channel_key.ljust(5)} "
+        print "#{r[:id].to_s.rjust(6)} #{r.channel.channel_name.ljust(5)} "
         print "#{r.category[:type].ljust(12)} #{r[:start_time].format_display} #{('('+r.format_duration+')').ljust(7)} "
         print "#{r[:title]}\n"
         rid = rc[:reservation_id]
