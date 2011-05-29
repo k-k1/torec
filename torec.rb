@@ -16,7 +16,7 @@ require File.join(APP_DIR, 'torec_settings.rb')
 
 class String
   def to_han()
-    NKF.nkf('-Z1wW', self).tr('　', ' ')
+    NKF.nkf('-Z1wW', self)
   end
   def parse_date_time
     DateTime.strptime(self, "%Y%m%d%H%M%S %z")
