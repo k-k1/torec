@@ -277,7 +277,19 @@ class Program < Sequel::Model(:programs)
   end
   
   def print_line(verbose=false)
-    print "#{(record==nil)?'  ':'* '}"
+    mark = (record==nil)?' ':'*'
+    id = self[:id].to_s
+    start_time = self[:start_time].format_display
+    end_time = self[:end_time].format_display
+    duration = '('+format_duration+')'
+    print <<-EOF.gsub(/^\s*/, '')
+      #{mark} #{id.rjust(6)} #{channel.channel_name.ljust(5)} #{category[:type].ljust(12)} #{start_time} #{duration.ljust(8)} #{self[:title]}
+    EOF
+    print <<-EOF.gsub(/^\s*/, '') if verbose
+      #{channel[:name].rjust(20)} - #{end_time} 
+      #{self[:description]}
+    EOF
+    print "#{(record==nil)?' ':'*'} "
     print "#{self[:id].to_s.rjust(6)} #{channel.channel_name.ljust(5)} "
     print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+format_duration+')').ljust(8)} "
     print "#{self[:title]}\n"
