@@ -21,6 +21,9 @@ class String
   def parse_date_time
     DateTime.strptime(self, "%Y%m%d%H%M%S %z")
   end
+  def nopadding
+    self.gsub(/^\s*/, '')
+  end
 end
 
 class Time
@@ -282,21 +285,13 @@ class Program < Sequel::Model(:programs)
     start_time = self[:start_time].format_display
     end_time = self[:end_time].format_display
     duration = '('+format_duration+')'
-    print <<-EOF.gsub(/^\s*/, '')
+    print <<-EOF.nopadding
       #{mark} #{id.rjust(6)} #{channel.channel_name.ljust(5)} #{category[:type].ljust(12)} #{start_time} #{duration.ljust(8)} #{self[:title]}
     EOF
-    print <<-EOF.gsub(/^\s*/, '') if verbose
+    print <<-EOF.nopadding if verbose
       #{channel[:name].rjust(20)} - #{end_time} 
       #{self[:description]}
     EOF
-    print "#{(record==nil)?' ':'*'} "
-    print "#{self[:id].to_s.rjust(6)} #{channel.channel_name.ljust(5)} "
-    print "#{category[:type].ljust(12)} #{self[:start_time].format_display} #{('('+format_duration+')').ljust(8)} "
-    print "#{self[:title]}\n"
-    if verbose
-      puts "#{' '.rjust(9)}#{channel[:name].ljust(20)} - #{self[:end_time].format_display}"
-      puts '         ' + self[:description]
-    end
   end
   
   def self.now_onair
