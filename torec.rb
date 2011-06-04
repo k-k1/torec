@@ -548,7 +548,7 @@ class Record < Sequel::Model(:records)
   
   def record_sid
     sid = SETTINGS[:default_record_sid]
-    sid = 'all' if sid.nil?
+    return nil if sid.nil?
     
     if SETTINGS[:sid_replace_channels][program.channel.channel_name] != nil
       sid = SETTINGS[:sid_replace_channels][program.channel.channel_name].to_s
@@ -559,10 +559,14 @@ class Record < Sequel::Model(:records)
   def start
     return if not waiting?
     
+    sid = record_sid
+    
     args = []
     args << "--b25"
     args << "--strip"
-    args << "--sid" << record_sid
+    if not sid.nil?
+      args << "--sid" << sid
+    end
     #args << "--device" << "/dev/pt1video2"
     args << program.channel[:channel].to_s
     args << (program.remaining_second + 5).to_s
