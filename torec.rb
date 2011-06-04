@@ -487,6 +487,7 @@ class Record < Sequel::Model(:records)
   end
 
   def schedule
+    LOG.info "program_id:#{self[:program_id]} schedule start"
     return if not reserve? and not waiting?
     if program.closed?
       cancel
@@ -507,9 +508,11 @@ class Record < Sequel::Model(:records)
     end
 
     jobid = nil
+    start_progs = File.join(APP_DIR,'torec.rb') << " record --start " << program.pk
+    LOG.info "program_id:#{self[:program_id]} schedule at internal commandline : #{start_progs}"
+    
     IO.popen("at #{at_start_str} 2>&1", 'r+') do |io|
-      io << File.join(APP_DIR,'torec.rb') << " record --start " << program.pk << "\n"
-      
+      io << start_progs << "\n"
       io.close_write
       io.each do |l|
         next if l.match(/^warning:/)
@@ -522,15 +525,16 @@ class Record < Sequel::Model(:records)
     self[:job] = jobid
     self[:state] = WAITING
     save
+    LOG.info "program_id:#{self[:program_id]} scheduled. at jobid=#{self[:job]}"
   end
 
   def stop_recording
     return if not recording?
     begin
       Process.kill(:INT,self[:recording_pid])
-      puts "process killed. #{self[:recording_pid]}"
+      LOG.warn "process killed. #{self[:recording_pid]}"
     rescue
-      puts "process not found. #{self[:recording_pid]}"
+      LOG.warn "process not found. #{self[:recording_pid]}"
     end
   end
   
@@ -558,6 +562,7 @@ class Record < Sequel::Model(:records)
   
   def start
     return if not waiting?
+    LOG.info "program_id:#{self[:program_id]} start."
     
     sid = record_sid
     
@@ -573,6 +578,7 @@ class Record < Sequel::Model(:records)
     args << File.join(output_dir, program.create_filename)
     
     make_output_dir
+    LOG.debug "program_id:#{self[:program_id]} recorder args:#{args.join(',')}"
     
     #waiting..
     (program[:start_time] - 1).wait
@@ -582,16 +588,20 @@ class Record < Sequel::Model(:records)
     #recording
     pid = Process.fork do
       #child process
+      LOG.info "program_id:#{self[:program_id]} start recording process.. pid:#{pid}"
       exec(SETTINGS[:recorder_program_path], *args)
     end
     self[:start_time] = Time.now
     self[:state] = RECORDING
     self[:recording_pid] = pid
     save
+    LOG.info "wait recording process.."
     th = Process.detach(pid)
     th.value
     done
+    LOG.info "recording done."
   end
+  
   def done
     return if not recording?
     self[:done_time] = Time.now
