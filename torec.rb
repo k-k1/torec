@@ -80,6 +80,16 @@ class ChannelType < Sequel::Model(:channel_types)
   def self.types
     ChannelType.all.collect{|r| r[:type]}
   end
+  
+  def find_empty_tunner(start_time, end_time)
+    tunners.each do |t|
+      r = Record.exclude(:program_id => nil).
+        eager_graph(:tunner).filter(:tunner__id => t.id).
+        eager_graph(:program).filter{(:program__start_time < start_time) & (:program__end_time > end_time)}
+      return t if r.count == 0
+    end
+    nil
+  end
 end
 
 class Category < Sequel::Model(:categories)
@@ -129,16 +139,6 @@ class Channel < Sequel::Model(:channels)
   def update_program
     self[:update_time] = Time.now
     save
-  end
-  
-  def find_empty_tunner(start_time, end_time)
-    channel_type.tunners.each do |t|
-      r = Record.exclude(:program_id => nil).
-        eager_graph(:tunner).filter(:tunner__id => t.id).
-        eager_graph(:program).filter{(:program__start_time < start_time) & (:program__end_time > end_time)}
-      return t if r.count == 0
-    end
-    nil
   end
 end
 
@@ -243,7 +243,7 @@ class Program < Sequel::Model(:programs)
   end
   
   def find_empty_tunner
-    channel.find_empty_tunner(self[:end_time], self[:start_time])
+    channel.channel_type.find_empty_tunner(self[:end_time], self[:start_time])
   end
   
   def reserve(reservation_id=nil)
@@ -706,7 +706,7 @@ class Torec
     result = nil
     bs =  Channel.filter(:type => 'BS')
     if bs.count != 0
-      if bs.first.find_empty_tunner(Time.now, Time.now + 190) != nil
+      if bs.channel_type.find_empty_tunner(Time.now, Time.now + 190) != nil
         IO.popen(epgdump_commandline('BS', 211, 180)) do |io|
           result = import_from_io(io)
           LOG.info result
@@ -721,7 +721,7 @@ class Torec
   
   def self.update_epg_gr(channel = nil)
     result = nil
-    return if channel.find_empty_tunner(Time.now, Time.now + 70) == nil
+    return if channel.channel_type.find_empty_tunner(Time.now, Time.now + 70) == nil
     IO.popen(epgdump_commandline(channel[:type], channel[:channel], 60)) do |io|
       result = import_from_io(io)
       LOG.info result
