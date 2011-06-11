@@ -204,7 +204,7 @@ class Channel < Sequel::Model(:channels)
         pg = Program.populate(e)
         if pg.unknown_channel?
           LOG.warn "unknown channel #{pg[:channel]} #{e.attributes[:channel]}"
-          progress[:unknown_channel] = progress[:unknown_channel] + 1 
+          progress[:unknown_channel] += 1 
           next
         end
         
@@ -220,15 +220,15 @@ class Channel < Sequel::Model(:channels)
           end
           LOG.debug 'insert ' + pg.create_hash
           pg.save
-          progress[:insert] = progress[:insert] + 1 
+          progress[:insert] += 1 
         else
           # update program
           if pg.update != pg
             LOG.info 'update ' + pg.create_hash
-            progress[:modify] = progress[:modify] + 1 
+            progress[:modify] += 1 
           else
             LOG.debug 'not update ' + pg.create_hash
-            progress[:not_modified] = progress[:not_modified] + 1 
+            progress[:not_modified] += 1 
           end
         end
       end
@@ -750,7 +750,7 @@ class Torec
       rs = nil
       rt = 0
       begin
-        rt = rt + 1
+        rt += 1
         rs = ch.update_epg
       rescue => e
         LOG.error e.message
