@@ -40,6 +40,11 @@ SETTINGS = {
     { :type => 'BS', :channel => '222', :name => 'TwellV' },
     #TODO CS
   ],
+  :epgdump_script => File.join(APP_DIR, 'do-epgdump.sh'), 
+  :epgdump_setting => {
+    'GR' => {:duration => 60, :channel => nil},
+    'BS' => {:duration => 180, :channel => '211'},
+  },
   :epgdump_channel_id => {
     #BS
     '3001.ontvjapan.com' => 'BS101',
@@ -71,7 +76,6 @@ SETTINGS = {
   # dir setting
   :output_path => '/home/k1/video',
   :recorder_program_path => '/usr/local/bin/recpt1',
-  :epgdump_script => File.join(APP_DIR, 'do-epgdump.sh'), 
   :log_output_path => File.join(APP_DIR, 'log')
 }
 
