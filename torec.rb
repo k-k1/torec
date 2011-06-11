@@ -162,11 +162,10 @@ class Channel < Sequel::Model(:channels)
   
   def update_epg
     if not update_target?
-      LOG.debug "ignore channel " + channel_name
+      LOG.debug "ignore"
       return
     end
     result = nil
-    LOG.debug "update " + channel_name
     duration = SETTINGS[:epgdump_setting][self[:type]][:duration]
     if channel_type.find_empty_tunner(Time.now, Time.now + duration + 10) == nil
       LOG.warn "empty tinner not found."
@@ -737,7 +736,6 @@ class Torec
   end
   
   def self.update_epg(chid = nil)
-    #TODO rescue
     LOG.progname='update_epg'
     target_channels = []
     if chid != nil
@@ -748,7 +746,18 @@ class Torec
     target_channels.each do |ch|
       next unless ch.update_target?
       puts "update " + ch.channel_name
-      rs = ch.update_epg
+      LOG.progname="update-" + ch.channel_name
+      rs = nil
+      rt = 0
+      begin
+        rt = rt + 1
+        rs = ch.update_epg
+      rescue => e
+        LOG.error e.message
+        LOG.debug e.backtrace
+        retry if rt < 3
+        LOG.error "update failed"
+      end
     end
   end
 end
