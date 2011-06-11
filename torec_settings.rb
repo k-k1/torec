@@ -71,7 +71,8 @@ SETTINGS = {
   # dir setting
   :output_path => '/home/k1/video',
   :recorder_program_path => '/usr/local/bin/recpt1',
-  :log_output_path => File.join(APP_DIR, "log")
+  :epgdump_script => File.join(APP_DIR, 'do-epgdump.sh'), 
+  :log_output_path => File.join(APP_DIR, 'log')
 }
 
 FileUtils.mkdir_p(SETTINGS[:log_output_path]) unless File.exist?(SETTINGS[:log_output_path])

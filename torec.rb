@@ -696,10 +696,8 @@ class Torec
     progress
   end
   
-  EPGDUMP = File.join(APP_DIR, 'do-epgdump.sh')
-  
   def self.epgdump_commandline(type, channel, duration)
-    cmdline = "#{EPGDUMP} #{type} #{channel} #{duration} 2>/dev/null"
+    cmdline = "#{SETTINGS[:epgdump_script]} #{type} #{channel} #{duration} 2>/dev/null"
     LOG.debug cmdline
     cmdline
   end
