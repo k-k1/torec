@@ -604,7 +604,7 @@ class Record < Sequel::Model(:records)
     end
 
     jobid = nil
-    start_progs = File.join(APP_DIR,'torec.rb') << " record --start " << program.pk
+    start_progs = File.join(APP_DIR,'torec.rb') << " record --start " << program.pk.to_s
     LOG.info "program_id:#{self[:program_id]} schedule at internal commandline : #{start_progs}"
     
     IO.popen("at #{at_start_str} 2>&1", 'r+') do |io|
