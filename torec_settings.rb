@@ -92,3 +92,13 @@ DB.logger = LOG
 
 Sequel.default_timezone = :local
 
+# sequelのログをdebugにするため無理矢理ハック
+module Sequel
+  class Database
+    def log_duration(duration, message)
+      log_each((lwd = log_warn_duration and duration >= lwd) ? :warn : :debug, "(#{sprintf('%0.6fs', duration)}) #{message}")
+    end
+  end
+end
+# sequel3.17以上ならこれだけでいい
+#DB.sql_log_level = :debug
