@@ -84,7 +84,10 @@ LOG = Logger.new(File.join(SETTINGS[:log_output_path], "torec.log"), 7, 10 * 102
 LOG.level = Logger::DEBUG
 LOG.progname='init'
 
-DB = Sequel.connect("sqlite://" + File.join(APP_DIR, "torec.sqlite3"), {:encoding=>"utf8"})
+DB = Sequel.connect("sqlite://" + File.join(APP_DIR, "torec.sqlite3"), {
+  :encoding=>"utf8",
+  :timeout => 10000,
+})
 DB.logger = LOG
 
 Sequel.default_timezone = :local
