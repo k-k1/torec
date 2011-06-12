@@ -9,6 +9,7 @@ require 'digest/md5'
 require 'nkf'
 require 'optparse'
 require 'fileutils'
+require 'thread'
 require 'logger'
 
 APP_DIR=File.expand_path(File.dirname($0))
@@ -160,82 +161,54 @@ class Channel < Sequel::Model(:channels)
     tch == self[:channel].to_s
   end
   
-  def update_epg
-    if not update_target?
-      LOG.debug "ignore"
-      return
+  def dump_epg_to(queue)
+    puts channel_name + " dump start."
+    dump_epg.each do |pg|
+      queue << pg
     end
-    result = nil
-    duration = SETTINGS[:epgdump_setting][self[:type]][:duration]
-    if channel_type.find_empty_tunner(Time.now, Time.now + duration + 10) == nil
-      LOG.warn "empty tinner not found."
-      return
+    puts channel_name + " dump done."
+  end
+  def dump_epg
+    result = []
+    rt = 0
+    begin
+      LOG.info "dump start. " + channel_name
+      rt += 1
+      duration = SETTINGS[:epgdump_setting][self[:type]][:duration]
+      if channel_type.find_empty_tunner(Time.now, Time.now + duration + 10) == nil
+        LOG.warn "empty tinner not found."
+        return
+      end
+      IO.popen(epgdump_commandline(duration)) do |io|
+        result = import_from_io(io)
+        LOG.info "dump done. " + result.size.to_s + " programs found."
+      end
+    rescue => e
+      LOG.error e.message
+      LOG.debug e
+      retry if rt < 3
+      LOG.error "dump failed."
     end
-    IO.popen(epgdump_commandline(duration)) do |io|
-      result = import_from_io(io)
-      LOG.info result
-    end
-    update_program
     result
   end
   
   def import_from_file(filename)
     doc = XML::Document.file(filename)
-    progress = import(doc)
-    progress[:file] = filename
-    progress
+    import(doc)
   end
   def import_from_io(io)
     doc = XML::Document.io(io)
-    progress = import(doc)
-    progress[:file] = 'io'
-    progress
+    import(doc)
+  end
+  def import(doc)
+    pg_elems = doc.root.find('//tv/programme')
+    result = []
+    pg_elems.each do |e|
+      result << Program.populate(e)
+    end
+    result
   end
 
-  def import(doc)
-    pgElems = doc.root.find('//tv/programme')
-    maxprog = pgElems.length
-    progress = {
-      :file => nil, :all => pgElems.length,
-      :unknown_channel => 0, :insert => 0, :modify => 0, :not_modified => 0
-    }
-    DB.transaction do
-      pgElems.each do |e|
-        pg = Program.populate(e)
-        if pg.unknown_channel?
-          LOG.warn "unknown channel #{pg[:channel]} #{e.attributes[:channel]}"
-          progress[:unknown_channel] += 1 
-          next
-        end
-        
-        if pg.find.count == 0
-          dupPrograms = pg.find_duplicate
-          if dupPrograms.count > 0
-            # remove duplicate programs
-            LOG.info 'remove ' + dupPrograms.count.to_s + ' program(s).'
-            dupPrograms.all do |r|
-              r.delete_reservation_record
-              r.delete
-            end
-          end
-          LOG.debug 'insert ' + pg.create_hash
-          pg.save
-          progress[:insert] += 1 
-        else
-          # update program
-          if pg.update != pg
-            LOG.info 'update ' + pg.create_hash
-            progress[:modify] += 1 
-          else
-            LOG.debug 'not update ' + pg.create_hash
-            progress[:not_modified] += 1 
-          end
-        end
-      end
-    end
-    progress
-  end
-  
 end
 
 class Program < Sequel::Model(:programs)
@@ -327,6 +300,33 @@ class Program < Sequel::Model(:programs)
       oldpg
     else
       self
+    end
+  end
+  
+  def import
+    if unknown_channel?
+      LOG.warn "unknown channel #{self[:channel]}"
+      return
+    end
+    if find.count == 0
+      dupPrograms = find_duplicate
+      if dupPrograms.count > 0
+        # remove duplicate programs
+        LOG.info 'remove ' + dupPrograms.count.to_s + ' program(s).'
+        dupPrograms.all do |r|
+          r.delete_reservation_record
+          r.delete
+        end
+      end
+      LOG.debug 'insert ' + create_hash
+      save
+    else
+      # update program
+      if update != self
+        LOG.info 'update ' + create_hash
+      else
+        #LOG.debug 'not update ' + create_hash
+      end
     end
   end
   
@@ -737,28 +737,46 @@ class Torec
   
   def self.update_epg(chid = nil)
     LOG.progname='update_epg'
+    LOG.info "update start."
     target_channels = []
     if chid != nil
       target_channels << Channel[:id => chid]
     else
       target_channels = Channel.order(:channel).all
     end
-    target_channels.each do |ch|
-      next unless ch.update_target?
-      puts "update " + ch.channel_name
-      LOG.progname="update-" + ch.channel_name
-      rs = nil
-      rt = 0
-      begin
-        rt += 1
-        rs = ch.update_epg
-      rescue => e
-        LOG.error e.message
-        LOG.debug e.backtrace
-        retry if rt < 3
-        LOG.error "update failed"
+    
+    queue = Queue.new
+    import_thread = Thread.start do
+      LOG.info "import thread start."
+      while pg = queue.pop
+        pg.import
       end
+      LOG.info "import thread done."
     end
+    
+    # BS
+    target_channels.select{|ch| ch[:type] == 'BS'}.each do |ch|
+      next unless ch.update_target?
+      ch.dump_epg_to(queue)
+      Thread.pass
+    end
+    # GR
+    target_channels.select{|ch| ch[:type] == 'GR'}.each do |ch|
+      next unless ch.update_target?
+      ch.dump_epg_to(queue)
+      Thread.pass
+    end
+    begin
+      queue << nil
+      import_thread.join
+    rescue => e
+      LOG.error e.message
+      LOG.debug e
+    end
+    target_channels.each do |ch|
+      ch.update_program
+    end
+    LOG.info "update done."
   end
 end
 
