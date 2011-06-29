@@ -9,36 +9,36 @@ epgrecを大いに参考にさせていただきました。
 
 == epgrecとの違い
 
- * MySQLの代わりにsqlite3を使用
- * apache/phpは不要、すべてコマンドラインで操作、rubyが必要
- * 一般ユーザ権限で全て完結するため、煩わしいパーミッションを考慮する必要なし
+* MySQLの代わりにsqlite3を使用
+* apache/phpは不要、すべてコマンドラインで操作、rubyが必要
+* 一般ユーザ権限で全て完結するため、煩わしいパーミッションを考慮する必要なし
 
 == 動作環境
 
 以下の環境で動作を確認しています。
- * Ubuntu 11.04
- * Linux 2.6.38-8-server SMP x86_64 
- * LANG=ja_JP.utf8
+* Ubuntu 11.04
+* Linux 2.6.38-8-server SMP x86_64 
+* LANG=ja_JP.utf8
 
 ubuntu 11.04ではdvb版のドライバが有効になっていたり、libpcsclite1が
 うまく動かなかったり問題があるので、おすすめはしません。
 
 === 前提条件
 
- * recpt1、epgdumpr2-utf8が普通に動作すること
- * at/cronが動作すること
+* recpt1、epgdumpr2-utf8が普通に動作すること
+* at/cronが動作すること
 
 === 追加で必要なもの
 
 ruby及びライブラリをいくつかインストールします。
 ubuntuの場合は、
-$ sudo apt-get install ruby libsequel-ruby libsqlite3-ruby libxml-ruby
+  $ sudo apt-get install ruby libsequel-ruby libsqlite3-ruby libxml-ruby
 
 以下のversionで動作確認済み
- * ruby1.8                         1.8.7.302-2
- * libxml-ruby1.8                  1.1.3-2
- * libsqlite3-ruby1.8              1.3.1-2
- * libsequel-ruby1.8               3.13.0-1
+* ruby1.8                         1.8.7.302-2
+* libxml-ruby1.8                  1.1.3-2
+* libsqlite3-ruby1.8              1.3.1-2
+* libsequel-ruby1.8               3.13.0-1
 
 多分、ruby1.8, sqlite3なら動くでしょう
 
@@ -103,9 +103,9 @@ epgdumpのパスを指定します。
 
 cronに登録以下の内容を登録しておきます。
 # epg update
-0 5 * * * /home/k1/torec/torec.rb update >/dev/null 2>&1
+0 5* ** /home/k1/torec/torec.rb update >/dev/null 2>&1
 # at scheduling
-28,58 * * * * /home/k1/torec/torec.rb record --schedule >/dev/null 2>&1
+28,58* ** * /home/k1/torec/torec.rb record --schedule >/dev/null 2>&1
 
 === update epg情報更新
 
@@ -216,13 +216,13 @@ record --addで録画予約を追加することも可能です。
 
 == 今後の課題
 
- * 半角でも検索出来るようにしたい
- * 出力ファイル名をなんとかしたい
- * 録画予約後の操作CUIがいけてないから何とかしたい。
+* 半角でも検索出来るようにしたい
+* 出力ファイル名をなんとかしたい
+* 録画予約後の操作CUIがいけてないから何とかしたい。
 
- * CSの録画はよくわかりません
- * PT2の2枚差もtorec_settings.rbをいじるだけで多分動くでしょう
- * PT2以外もちょっといじれば対応できるでしょう
+* CSの録画はよくわかりません
+* PT2の2枚差もtorec_settings.rbをいじるだけで多分動くでしょう
+* PT2以外もちょっといじれば対応できるでしょう
 
 == ライセンス
 
@@ -233,6 +233,6 @@ GPL Ver.2
 https://github.com/k-k1/torec
 
 k1
- * k1.kami@gmail.com
- * twitter@k_k1
+* k1.kami@gmail.com
+* twitter@k_k1
 
