@@ -187,14 +187,14 @@ class Channel < Sequel::Model(:channels)
   def epgdump_commandline(duration)
     ch = SETTINGS[:epgdump_setting][self[:type]][:channel]
     ch = self[:channel] if ch.nil?
-    cmdline = ""
+    cmdline = []
     cmdline << SETTINGS[:epgdump_script]
-    cmdline << " " << self[:type]
-    cmdline << " " << ch.to_s
-    cmdline << " " << duration.to_s
-    cmdline << ' 2>/dev/null'
-    LOG.debug cmdline
-    cmdline
+    cmdline << self[:type]
+    cmdline << ch.to_s
+    cmdline << duration.to_s
+    cmdline << '2>/dev/null'
+    LOG.debug cmdline.join(' ')
+    cmdline.join(' ')
   end
   
   def update_target?
