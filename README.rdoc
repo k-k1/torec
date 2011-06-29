@@ -178,7 +178,7 @@ record --addで録画予約を追加することも可能です。
 自動録画予約を削除する
   $ ./torec/torec.rb reserve --delete 1
 
-== record 録画状態
+=== record 録画状態
 
   $ ./torec.rb record --help
   Usage: ./torec.rb record [options]
