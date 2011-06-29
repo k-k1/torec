@@ -48,409 +48,410 @@ class Time
   end
 end
 
-class Formatter
-  def initialize(settings)
-    @settings = settings
-    @columns = ENV['COLUMNS']
-    if @columns.nil?
-      @columns = `stty size`.scan(/\d+/).map { |s| s.to_i }[1] - 2
+module Torec
+  class Formatter
+    def initialize(settings)
+      @settings = settings
+      @columns = ENV['COLUMNS']
+      if @columns.nil?
+        @columns = `stty size`.scan(/\d+/).map { |s| s.to_i }[1] - 2
+      end
     end
-  end
-  def format(values, order)
-    result = []
-    width = 0
-    order.each do |k|
-      value = values[k].to_s
-      st = @settings[k]
-      if st.nil? or st[:length].nil?
+    def format(values, order)
+      result = []
+      width = 0
+      order.each do |k|
+        value = values[k].to_s
+        st = @settings[k]
+        if st.nil? or st[:length].nil?
+          width += value.size + 1
+          result << value
+          next
+        end
+        if st[:length] == :adjust
+          value = value.substring(@columns - width)
+          width += value.size + 1
+          result << value
+          next
+        end
+        if value.size > st[:length]
+          value = value.substring(st[:length])
+        end
+        st[:padding]=:ljust if st[:padding].nil?
+        value = value.send(st[:padding], st[:length])
         width += value.size + 1
         result << value
-        next
       end
-      if st[:length] == :adjust
-        value = value.substring(@columns - width)
-        width += value.size + 1
-        result << value
-        next
+      result.join(' ')
+    end
+  end
+  
+  Sequel::Model.plugin(:schema)
+  Sequel::Model.plugin(:hook_class_methods)
+  
+  module InitData
+    def create_init_data()
+      return if SETTINGS[table_name] == nil
+      SETTINGS[table_name].each do |h|
+        create(h)
       end
-      if value.size > st[:length]
-        value = value.substring(st[:length])
-      end
-      st[:padding]=:ljust if st[:padding].nil?
-      value = value.send(st[:padding], st[:length])
-      width += value.size + 1
-      result << value
-    end
-    result.join(' ')
-  end
-end
-
-Sequel::Model.plugin(:schema)
-Sequel::Model.plugin(:hook_class_methods)
-
-module InitData
-  def create_init_data()
-    return if SETTINGS[table_name] == nil
-    SETTINGS[table_name].each do |h|
-      create(h)
     end
   end
-end
-
-class Tunner < Sequel::Model(:tunners)
-  extend InitData
-  set_schema do
-    primary_key :id
-    string :name, :size => 128, :null => false, :unique => true
-    string :type, :size => 20, :null => false
-    string :device_name, :size => 20, :null => false
-  end
-end
-
-class ChannelType < Sequel::Model(:channel_types)
-  extend InitData
-  set_schema do
-    primary_key :id
-    string :type, :size => 20, :null => false, :unique => true
-    string :name, :size => 128, :null => false
-    string :tunner_type, :null => false
-  end
-  #one_to_many
-  def tunners
-    Tunner.filter(:type => self[:tunner_type]).order(:id).all
-  end
   
-  def self.types
-    ChannelType.all.collect{|r| r[:type]}
-  end
-  
-  def find_empty_tunner(start_time, end_time)
-    tunners.each do |t|
-      r = Record.exclude(:program_id => nil).
-      eager_graph(:tunner).filter(:tunner__id => t.id).
-      eager_graph(:program).filter{(:program__start_time < start_time) & (:program__end_time > end_time)}
-      return t if r.count == 0
+  class Tunner < Sequel::Model(:tunners)
+    extend InitData
+    set_schema do
+      primary_key :id
+      string :name, :size => 128, :null => false, :unique => true
+      string :type, :size => 20, :null => false
+      string :device_name, :size => 20, :null => false
     end
-    nil
-  end
-end
-
-class Category < Sequel::Model(:categories)
-  set_schema do
-    primary_key :id
-    string :type, :size => 20, :null => false
-    string :name, :size => 128, :null => false
-    index :type
   end
   
-  def self.find(type)
-    self.filter(:type => type).first
-  end
-  
-  def self.types_hash
-    Hash[*Category.all.collect{|r| [r[:type], r[:id] ]}.flatten]
-  end
-end
-
-class Channel < Sequel::Model(:channels)
-  extend InitData
-  set_schema do
-    primary_key :id
-    string :type, :size => 20, :null => false
-    string :channel, :size => 10, :null => false
-    string :name, :size => 128
-    datetime :update_time
-    unique [:type, :channel]
-  end
-  #many_to_one
-  def channel_type
-    ChannelType.filter(:type => self[:type]).first
-  end
-  
-  def self.find(channel)
-    self.filter('type || channel = ?', channel).first
-  end
-  
-  def self.channel_hash
-    Hash[*Channel.all.collect{|r| [r.channel_name, r[:id] ]}.flatten]
-  end
-  
-  def channel_name
-    self[:type]+self[:channel].to_s
-  end
-  
-  def update_program
-    self[:update_time] = Time.now
-    save
-  end
-  
-  def epgdump_commandline(duration)
-    ch = SETTINGS[:epgdump_setting][self[:type]][:channel]
-    ch = self[:channel] if ch.nil?
-    cmdline = []
-    cmdline << SETTINGS[:epgdump_script]
-    cmdline << self[:type]
-    cmdline << ch.to_s
-    cmdline << duration.to_s
-    cmdline << '2>/dev/null'
-    LOG.debug cmdline.join(' ')
-    cmdline.join(' ')
-  end
-  
-  def update_target?
-    tch = SETTINGS[:epgdump_setting][self[:type]][:channel]
-    return true if tch.nil?
-    tch == self[:channel].to_s
-  end
-  
-  def dump_epg_to(queue)
-    puts channel_name + " dump start."
-    dump_epg.each do |pg|
-      queue << pg
+  class ChannelType < Sequel::Model(:channel_types)
+    extend InitData
+    set_schema do
+      primary_key :id
+      string :type, :size => 20, :null => false, :unique => true
+      string :name, :size => 128, :null => false
+      string :tunner_type, :null => false
     end
-    puts channel_name + " dump done."
-  end
-  def dump_epg
-    result = []
-    rt = 0
-    begin
-      LOG.info "dump start. " + channel_name
-      rt += 1
-      duration = SETTINGS[:epgdump_setting][self[:type]][:duration]
-      if channel_type.find_empty_tunner(Time.now, Time.now + duration + 10) == nil
-        LOG.warn "empty tinner not found."
-        return
-      end
-      IO.popen(epgdump_commandline(duration)) do |io|
-        result = import_from_io(io)
-        LOG.info "dump done. " + result.size.to_s + " programs found."
-      end
-    rescue => e
-      LOG.error e.message
-      LOG.debug e
-      retry if rt < 3
-      LOG.error "dump failed."
-    end
-    result
-  end
-  
-  def import_from_file(filename)
-    doc = XML::Document.file(filename)
-    import(doc)
-  end
-  def import_from_io(io)
-    doc = XML::Document.io(io)
-    import(doc)
-  end
-  def import(doc)
-    pg_elems = doc.root.find('//tv/programme')
-    result = []
-    pg_elems.each do |e|
-      result << Program.populate(e)
-    end
-    result
-  end
-  
-end
-
-class Program < Sequel::Model(:programs)
-  set_schema do
-    primary_key :id
-    integer :channel_id, :null => false
-    integer :category_id, :null => false
-    datetime :start_time, :null => false
-    datetime :end_time, :null => false
-    string :hash, :size => 32, :fixed => true, :null => false
-    string :title, :size => 512
-    string :description, :size => 512
-    index [:channel_id, :start_time, :end_time]
-  end
-  many_to_one :channel
-  many_to_one :category
-  one_to_one :record
-  
-  def set_element(e)
-    chname = SETTINGS[:epgdump_channel_id][e.attributes[:channel]]
-    if chname == nil
-      chname = e.attributes[:channel]
-    end
-    ch = Channel.find(chname)
-    if ch != nil
-      self[:channel_id] = ch[:id]
+    #one_to_many
+    def tunners
+      Tunner.filter(:type => self[:tunner_type]).order(:id).all
     end
     
-    cate = Category.find(e.find_first('category[@lang="en"]').content)
-    if cate == nil
-      Category << {
+    def self.types
+      ChannelType.all.collect{|r| r[:type]}
+    end
+    
+    def find_empty_tunner(start_time, end_time)
+      tunners.each do |t|
+        r = Record.exclude(:program_id => nil).
+        eager_graph(:tunner).filter(:tunner__id => t.id).
+        eager_graph(:program).filter{(:program__start_time < start_time) & (:program__end_time > end_time)}
+        return t if r.count == 0
+      end
+      nil
+    end
+  end
+  
+  class Category < Sequel::Model(:categories)
+    set_schema do
+      primary_key :id
+      string :type, :size => 20, :null => false
+      string :name, :size => 128, :null => false
+      index :type
+    end
+    
+    def self.find(type)
+      self.filter(:type => type).first
+    end
+    
+    def self.types_hash
+      Hash[*Category.all.collect{|r| [r[:type], r[:id] ]}.flatten]
+    end
+  end
+  
+  class Channel < Sequel::Model(:channels)
+    extend InitData
+    set_schema do
+      primary_key :id
+      string :type, :size => 20, :null => false
+      string :channel, :size => 10, :null => false
+      string :name, :size => 128
+      datetime :update_time
+      unique [:type, :channel]
+    end
+    #many_to_one
+    def channel_type
+      ChannelType.filter(:type => self[:type]).first
+    end
+    
+    def self.find(channel)
+      self.filter('type || channel = ?', channel).first
+    end
+    
+    def self.channel_hash
+      Hash[*Channel.all.collect{|r| [r.channel_name, r[:id] ]}.flatten]
+    end
+    
+    def channel_name
+      self[:type]+self[:channel].to_s
+    end
+    
+    def update_program
+      self[:update_time] = Time.now
+      save
+    end
+    
+    def epgdump_commandline(duration)
+      ch = SETTINGS[:epgdump_setting][self[:type]][:channel]
+      ch = self[:channel] if ch.nil?
+      cmdline = []
+      cmdline << SETTINGS[:epgdump_script]
+      cmdline << self[:type]
+      cmdline << ch.to_s
+      cmdline << duration.to_s
+      cmdline << '2>/dev/null'
+      LOG.debug cmdline.join(' ')
+      cmdline.join(' ')
+    end
+    
+    def update_target?
+      tch = SETTINGS[:epgdump_setting][self[:type]][:channel]
+      return true if tch.nil?
+      tch == self[:channel].to_s
+    end
+    
+    def dump_epg_to(queue)
+      puts channel_name + " dump start."
+      dump_epg.each do |pg|
+        queue << pg
+      end
+      puts channel_name + " dump done."
+    end
+    def dump_epg
+      result = []
+      rt = 0
+      begin
+        LOG.info "dump start. " + channel_name
+        rt += 1
+        duration = SETTINGS[:epgdump_setting][self[:type]][:duration]
+        if channel_type.find_empty_tunner(Time.now, Time.now + duration + 10) == nil
+          LOG.warn "empty tinner not found."
+          return
+        end
+        IO.popen(epgdump_commandline(duration)) do |io|
+          result = import_from_io(io)
+          LOG.info "dump done. " + result.size.to_s + " programs found."
+        end
+      rescue => e
+        LOG.error e.message
+        LOG.debug e
+        retry if rt < 3
+        LOG.error "dump failed."
+      end
+      result
+    end
+    
+    def import_from_file(filename)
+      doc = XML::Document.file(filename)
+      import(doc)
+    end
+    def import_from_io(io)
+      doc = XML::Document.io(io)
+      import(doc)
+    end
+    def import(doc)
+      pg_elems = doc.root.find('//tv/programme')
+      result = []
+      pg_elems.each do |e|
+        result << Program.populate(e)
+      end
+      result
+    end
+    
+  end
+  
+  class Program < Sequel::Model(:programs)
+    set_schema do
+      primary_key :id
+      integer :channel_id, :null => false
+      integer :category_id, :null => false
+      datetime :start_time, :null => false
+      datetime :end_time, :null => false
+      string :hash, :size => 32, :fixed => true, :null => false
+      string :title, :size => 512
+      string :description, :size => 512
+      index [:channel_id, :start_time, :end_time]
+    end
+    many_to_one :channel
+    many_to_one :category
+    one_to_one :record
+    
+    def set_element(e)
+      chname = SETTINGS[:epgdump_channel_id][e.attributes[:channel]]
+      if chname == nil
+        chname = e.attributes[:channel]
+      end
+      ch = Channel.find(chname)
+      if ch != nil
+        self[:channel_id] = ch[:id]
+      end
+      
+      cate = Category.find(e.find_first('category[@lang="en"]').content)
+      if cate == nil
+        Category << {
         :type => e.find_first('category[@lang="en"]').content,
         :name => e.find_first('category[@lang="ja_JP"]').content
-      }
-      cate = Category.find(e.find_first('category[@lang="en"]').content)
-    end
-    self[:category_id] = cate[:id]
-    
-    self[:title] = e.find_first('title[@lang="ja_JP"]').content
-    self[:description] = e.find_first('desc[@lang="ja_JP"]').content
-    self[:start_time]= e.attributes[:start].parse_date_time
-    self[:end_time] = e.attributes[:stop].parse_date_time
-    self
-  end
-  
-  def overwrite(pg)
-    [:channel_id, :title, :description, :start_time, :end_time].each do |s|
-      self[s] = pg[s]
-    end
-  end
-  
-  def self.populate(e)
-    pg = Program.new
-    pg.set_element(e)
-  end
-  
-  def create_hash
-    str = self[:category_id].to_s + self[:title] + self[:description]
-    Digest::MD5.hexdigest(str)
-  end
-  
-  before_save do
-    self[:hash] = self.create_hash
-  end
-  
-  def unknown_channel?
-    self[:channel_id] == nil
-  end
-  
-  def find_duplicate()
-    Program.filter((:channel_id == self[:channel_id]) & (:start_time < self[:start_time]) & (:end_time > self[:end_time]))
-  end
-  
-  def find
-    Program.filter(:channel_id => self[:channel_id], :start_time => self[:start_time], :end_time => self[:end_time])
-  end
-  
-  def detail_modified?
-    oldpg = find.first
-    raise "update program not found." if oldpg == nil
-    create_hash != oldpg[:hash]
-  end
-  
-  def update
-    if detail_modified?
-      oldpg = find.first
-      oldpg.overwrite(self)
-      oldpg.save
-      oldpg
-    else
+        }
+        cate = Category.find(e.find_first('category[@lang="en"]').content)
+      end
+      self[:category_id] = cate[:id]
+      
+      self[:title] = e.find_first('title[@lang="ja_JP"]').content
+      self[:description] = e.find_first('desc[@lang="ja_JP"]').content
+      self[:start_time]= e.attributes[:start].parse_date_time
+      self[:end_time] = e.attributes[:stop].parse_date_time
       self
     end
-  end
-  
-  def import
-    if unknown_channel?
-      LOG.warn "unknown channel #{self[:channel]}"
-      return
+    
+    def overwrite(pg)
+      [:channel_id, :title, :description, :start_time, :end_time].each do |s|
+        self[s] = pg[s]
+      end
     end
-    if find.count == 0
-      dupPrograms = find_duplicate
-      if dupPrograms.count > 0
-        # remove duplicate programs
-        LOG.info 'remove ' + dupPrograms.count.to_s + ' program(s).'
-        dupPrograms.all do |r|
-          r.delete_reservation_record
-          r.delete
+    
+    def self.populate(e)
+      pg = Program.new
+      pg.set_element(e)
+    end
+    
+    def create_hash
+      str = self[:category_id].to_s + self[:title] + self[:description]
+      Digest::MD5.hexdigest(str)
+    end
+    
+    before_save do
+      self[:hash] = self.create_hash
+    end
+    
+    def unknown_channel?
+      self[:channel_id] == nil
+    end
+    
+    def find_duplicate()
+      Program.filter((:channel_id == self[:channel_id]) & (:start_time < self[:start_time]) & (:end_time > self[:end_time]))
+    end
+    
+    def find
+      Program.filter(:channel_id => self[:channel_id], :start_time => self[:start_time], :end_time => self[:end_time])
+    end
+    
+    def detail_modified?
+      oldpg = find.first
+      raise "update program not found." if oldpg == nil
+      create_hash != oldpg[:hash]
+    end
+    
+    def update
+      if detail_modified?
+        oldpg = find.first
+        oldpg.overwrite(self)
+        oldpg.save
+        oldpg
+      else
+        self
+      end
+    end
+    
+    def import
+      if unknown_channel?
+        LOG.warn "unknown channel #{self[:channel]}"
+        return
+      end
+      if find.count == 0
+        dupPrograms = find_duplicate
+        if dupPrograms.count > 0
+          # remove duplicate programs
+          LOG.info 'remove ' + dupPrograms.count.to_s + ' program(s).'
+          dupPrograms.all do |r|
+            r.delete_reservation_record
+            r.delete
+          end
+        end
+        LOG.debug 'insert ' + create_hash
+        save
+      else
+        # update program
+        if update != self
+          LOG.info 'update ' + create_hash
+        else
+          #LOG.debug 'not update ' + create_hash
         end
       end
-      LOG.debug 'insert ' + create_hash
-      save
-    else
-      # update program
-      if update != self
-        LOG.info 'update ' + create_hash
-      else
-        #LOG.debug 'not update ' + create_hash
-      end
     end
-  end
-  
-  def delete_reservation_record
-    cancel_reserve
-  end
-  
-  def create_filename
-    self[:start_time].format + '_' + channel[:type].to_s + channel[:channel].to_s + '.ts'
-  end
-  
-  def find_empty_tunner
-    channel.channel_type.find_empty_tunner(self[:end_time], self[:start_time])
-  end
-  
-  def reserve(reservation_id=nil)
-    raise "already reserved." if record != nil
-    t = find_empty_tunner
-    raise "no empty #{channel.channel_type[:type]} tunner." if t == nil
-    if record == nil
-      Record << {
+    
+    def delete_reservation_record
+      cancel_reserve
+    end
+    
+    def create_filename
+      self[:start_time].format + '_' + channel[:type].to_s + channel[:channel].to_s + '.ts'
+    end
+    
+    def find_empty_tunner
+      channel.channel_type.find_empty_tunner(self[:end_time], self[:start_time])
+    end
+    
+    def reserve(reservation_id=nil)
+      raise "already reserved." if record != nil
+      t = find_empty_tunner
+      raise "no empty #{channel.channel_type[:type]} tunner." if t == nil
+      if record == nil
+        Record << {
         :program_id => pk,
         :reservation_id => reservation_id,
         :tunner_id => t.id,
         :filename => create_filename
-      }
+        }
+      end
     end
-  end
-  
-  def cancel_reserve
-    return if record == nil
-    if record.reserve? or record.waiting?
-      record.delete_job
-      record.delete
+    
+    def cancel_reserve
+      return if record == nil
+      if record.reserve? or record.waiting?
+        record.delete_job
+        record.delete
+      end
     end
-  end
-  
-  def duration
-   (self[:end_time] - self[:start_time]).to_i
-  end
-  
-  def format_duration
-    h = (duration / 3600).to_i
-    m = ((duration % 3600) / 60).to_i
-    s = ((duration % 3600) % 60).to_i
-     (h==0?'':h.to_s+'h') + (m==0?'':m.to_s+'m') + (s==0?'':s.to_s+'s')
-  end
-  
-  @@format = Formatter.new({
+    
+    def duration
+     (self[:end_time] - self[:start_time]).to_i
+    end
+    
+    def format_duration
+      h = (duration / 3600).to_i
+      m = ((duration % 3600) / 60).to_i
+      s = ((duration % 3600) % 60).to_i
+       (h==0?'':h.to_s+'h') + (m==0?'':m.to_s+'m') + (s==0?'':s.to_s+'s')
+    end
+    
+    @@format = Formatter.new({
       :mark => {
-    },
+      },
       :id => {
         :padding => :rjust,
         :length => 6,
-    },
+      },
       :channel => {
         :padding => :ljust,
         :length => 5,
-    },
+      },
       :category => {
         :padding => :ljust,
         :length => 12,
-    },
+      },
       :start_time => {
-    },
+      },
       :duration => {
         :padding => :ljust,
         :length => 8,
-    },
+      },
       :title => {
         :padding => :ljust,
         :length => :adjust,
-    },
-  })
-  
-  def print_line(verbose=false)
-    mark = (record==nil)?' ':'*'
-    id = self[:id].to_s
-    start_time = self[:start_time].format_display
-    end_time = self[:end_time].format_display
-    duration = '('+format_duration+')'
-    values = {
+      },
+    })
+    
+    def print_line(verbose=false)
+      mark = (record==nil)?' ':'*'
+      id = self[:id].to_s
+      start_time = self[:start_time].format_display
+      end_time = self[:end_time].format_display
+      duration = '('+format_duration+')'
+      values = {
       :mark => (record==nil)?' ':'*',
       :id => self[:id].to_s,
       :channel => channel.channel_name,
@@ -459,337 +460,336 @@ class Program < Sequel::Model(:programs)
       :duration => '('+format_duration+')',
       :title => self[:title],
       :end_time => self[:end_time].format_display,
-    }
-    order = [:mark, :id, :channel, :category, :start_time, :duration, :title]
-    puts @@format.format(values, order)
-    #    print <<-EOF.nopadding
-    #      #{mark} #{id.rjust(6)} #{channel.channel_name.ljust(5)} #{category[:type].ljust(12)}
-    #       #{start_time} #{duration.ljust(8)} #{self[:title]}
-    #    EOF
-    #    print <<-EOF.nopadding if verbose
-    #      #{channel[:name].rjust(20)} - #{end_time} 
-    #      #{self[:description]}
-    #    EOF
-  end
-  
-  def self.now_onair
-    now = Time.now
-    Program.filter((:start_time <= now) & (:end_time >= now)).order(:channel_id).all
-  end
-  
-  def next
-    Program.filter(:start_time > Time.now ).filter(:channel_id => self[:channel_id]).order(:start_time).first
-  end
-  
-  def self.search(opt)
-    ds = Program.dataset
-    if opt[:channel_id] != nil
-      ds = ds.filter(:channel_id => opt[:channel_id])
-    end
-    if opt[:category_id] != nil
-      ds = ds.filter(:category_id => opt[:category_id])
-    end
-    if opt[:channel_type] != nil
-      ds = ds.eager_graph(:channel).filter(:channel__type => opt[:channel_type])
+      }
+      order = [:mark, :id, :channel, :category, :start_time, :duration, :title]
+      puts @@format.format(values, order)
+      #    print <<-EOF.nopadding
+      #      #{mark} #{id.rjust(6)} #{channel.channel_name.ljust(5)} #{category[:type].ljust(12)}
+      #       #{start_time} #{duration.ljust(8)} #{self[:title]}
+      #    EOF
+      #    print <<-EOF.nopadding if verbose
+      #      #{channel[:name].rjust(20)} - #{end_time} 
+      #      #{self[:description]}
+      #    EOF
     end
     
-    if opt[:keyword] != nil
-      kw = opt[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
-      kw.each do |s|
-        if s[0..0] == '-'
-          sl = '%' + s[1..-1] + '%'
-          ds = ds.exclude((:title.like(sl)) | (:description.like(sl)) )
-        else
-          sl = '%' + s + '%'
-          ds = ds.filter((:title.like(sl)) | (:description.like(sl)) )
+    def self.now_onair
+      now = Time.now
+      Program.filter((:start_time <= now) & (:end_time >= now)).order(:channel_id).all
+    end
+    
+    def next
+      Program.filter(:start_time > Time.now ).filter(:channel_id => self[:channel_id]).order(:start_time).first
+    end
+    
+    def self.search(opt)
+      ds = Program.dataset
+      if opt[:channel_id] != nil
+        ds = ds.filter(:channel_id => opt[:channel_id])
+      end
+      if opt[:category_id] != nil
+        ds = ds.filter(:category_id => opt[:category_id])
+      end
+      if opt[:channel_type] != nil
+        ds = ds.eager_graph(:channel).filter(:channel__type => opt[:channel_type])
+      end
+      
+      if opt[:keyword] != nil
+        kw = opt[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
+        kw.each do |s|
+          if s[0..0] == '-'
+            sl = '%' + s[1..-1] + '%'
+            ds = ds.exclude((:title.like(sl)) | (:description.like(sl)) )
+          else
+            sl = '%' + s + '%'
+            ds = ds.filter((:title.like(sl)) | (:description.like(sl)) )
+          end
+        end
+      end
+      if !opt[:all]
+        ds = ds.filter(:end_time > Time.now)
+      end
+      ds
+    end
+    
+    def closed?
+     ((self[:end_time] - 60) < Time.now)
+    end
+    
+    def remaining_second
+      return 0 if closed?
+      now = Time.now
+      if self[:start_time] < now
+        duration - (self[:start_time] - now).to_i
+      else
+        duration        
+      end
+    end
+  end
+  
+  class Reservation < Sequel::Model(:reservations)
+    set_schema do
+      primary_key :id
+      integer :channel_id
+      integer :category_id
+      string :keyword, :size => 512
+      string :folder, :size => 128
+    end
+    one_to_many :records
+    many_to_one :channel
+    many_to_one :category
+    
+    def keywords
+      return [] if self[:keyword] == nil
+      self[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
+    end
+    
+    def search
+      Program.search(values)
+    end
+    
+    def condition?
+      !(self[:channel_id] == nil and self[:category_id] == nil and keywords.length == 0)
+    end
+    
+    def self.create(opt)
+      self.new({:channel_id => opt[:channel_id], :category_id => opt[:category_id],
+        :keyword => opt[:keyword], :folder => opt[:folder]}, true)
+    end
+    
+    def self.update_reserve
+      order(:id).each do |rs|
+        rs.search.all.each do |pg|
+          next if pg.record != nil
+          LOG.info 'update record reserve. pg:'+ pg.pk.to_s + ' rs' + rs.pk.to_s
+          pg.reserve(rs.pk)
         end
       end
     end
-    if !opt[:all]
-      ds = ds.filter(:end_time > Time.now)
+    
+    def output_dir
+      dir = SETTINGS[:output_path]
+      dir = File.join(dir, self[:folder]) if self[:folder] != nil
+      dir
     end
-    ds
-  end
-  
-  def closed?
-   ((self[:end_time] - 60) < Time.now)
-  end
-  
-  def remaining_second
-    return 0 if closed?
-    now = Time.now
-    if self[:start_time] < now
-      duration - (self[:start_time] - now).to_i
-    else
-      duration        
+    
+    def make_output_dir
+      FileUtils.mkdir_p(output_dir)
     end
   end
-end
-
-class Reservation < Sequel::Model(:reservations)
-  set_schema do
-    primary_key :id
-    integer :channel_id
-    integer :category_id
-    string :keyword, :size => 512
-    string :folder, :size => 128
-  end
-  one_to_many :records
-  many_to_one :channel
-  many_to_one :category
   
-  def keywords
-    return [] if self[:keyword] == nil
-    self[:keyword].split(' ').collect{|s| s.strip}.select{|s| s != ''}
-  end
-  
-  def search
-    Program.search(values)
-  end
-  
-  def condition?
-    !(self[:channel_id] == nil and self[:category_id] == nil and keywords.length == 0)
-  end
-  
-  def self.create(opt)
-    self.new({:channel_id => opt[:channel_id], :category_id => opt[:category_id],
-        :keyword => opt[:keyword], :folder => opt[:folder]}, true)
-  end
-  
-  def self.update_reserve
-    order(:id).each do |rs|
-      rs.search.all.each do |pg|
-        next if pg.record != nil
-        LOG.info 'update record reserve. pg:'+ pg.pk.to_s + ' rs' + rs.pk.to_s
-        pg.reserve(rs.pk)
+  class Record < Sequel::Model(:records)
+    RESERVE = 'reserve'
+    WAITING = 'waiting'
+    RECORDING = 'recording'
+    DONE = 'done'
+    CANCEL = 'cancel'
+    
+    set_schema do
+      primary_key :id
+      integer :program_id, :unique => true, :null => false
+      integer :reservation_id
+      integer :tunner_id, :null => false
+      string :filename, :unique => true, :null => false
+      #enum :state, :elements => ['reserve', 'waiting', 'recording', 'done', 'cancel']
+      string :state, :size => 20, :null => false, :default => RESERVE
+      string :job, :size => 30
+      integer :recording_pid
+      datetime :start_time
+      datetime :done_time
+    end
+    many_to_one :program
+    many_to_one :reservation
+    many_to_one :tunner
+    
+    def reserve?
+      state == RESERVE
+    end
+    def waiting?
+      state == WAITING
+    end
+    def recording?
+      state == RECORDING
+    end
+    def done?
+      state == DONE
+    end
+    
+    def self.search(opts)
+      #{:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil}
+      ds = Record.dataset
+      ds = ds.eager_graph(:program)
+      if opts[:tunner_type] != nil
+        ds = ds.eager_graph(:tunner).filter(:tunner__type => opts[:tunner_type])
       end
+      if opts[:channel_id] != nil
+        ds = ds.filter(:program__channel_id => opts[:channel_id])
+      end
+      if opts[:category_id] != nil
+        ds = ds.filter(:program__category_id => opts[:category_id])
+      end
+      if opts[:state] != nil
+        ds = ds.filter(:state => opts[:state].to_s)
+      end
+      if !opts[:all]
+        ds = ds.filter(:program__end_time > Time.now)
+      end
+      ds = ds.order(:program__start_time)
+      ds
     end
-  end
-  
-  def output_dir
-    dir = SETTINGS[:output_path]
-    dir = File.join(dir, self[:folder]) if self[:folder] != nil
-    dir
-  end
-  
-  def make_output_dir
-    FileUtils.mkdir_p(output_dir)
-  end
-end
-
-class Record < Sequel::Model(:records)
-  RESERVE = 'reserve'
-  WAITING = 'waiting'
-  RECORDING = 'recording'
-  DONE = 'done'
-  CANCEL = 'cancel'
-  
-  set_schema do
-    primary_key :id
-    integer :program_id, :unique => true, :null => false
-    integer :reservation_id
-    integer :tunner_id, :null => false
-    string :filename, :unique => true, :null => false
-    #enum :state, :elements => ['reserve', 'waiting', 'recording', 'done', 'cancel']
-    string :state, :size => 20, :null => false, :default => RESERVE
-    string :job, :size => 30
-    integer :recording_pid
-    datetime :start_time
-    datetime :done_time
-  end
-  many_to_one :program
-  many_to_one :reservation
-  many_to_one :tunner
-  
-  def reserve?
-    state == RESERVE
-  end
-  def waiting?
-    state == WAITING
-  end
-  def recording?
-    state == RECORDING
-  end
-  def done?
-    state == DONE
-  end
-  
-  def self.search(opts)
-    #{:program_id => nil, :channel_id => nil, :category_id => nil, :tunner_type => nil}
-    ds = Record.dataset
-    ds = ds.eager_graph(:program)
-    if opts[:tunner_type] != nil
-      ds = ds.eager_graph(:tunner).filter(:tunner__type => opts[:tunner_type])
+    
+    def output_dir
+      return reservation.output_dir if reservation != nil
+      SETTINGS[:output_path]
     end
-    if opts[:channel_id] != nil
-      ds = ds.filter(:program__channel_id => opts[:channel_id])
+    
+    def make_output_dir
+      FileUtils.mkdir_p(output_dir)
     end
-    if opts[:category_id] != nil
-      ds = ds.filter(:program__category_id => opts[:category_id])
-    end
-    if opts[:state] != nil
-      ds = ds.filter(:state => opts[:state].to_s)
-    end
-    if !opts[:all]
-      ds = ds.filter(:program__end_time > Time.now)
-    end
-    ds = ds.order(:program__start_time)
-    ds
-  end
-  
-  def output_dir
-    return reservation.output_dir if reservation != nil
-    SETTINGS[:output_path]
-  end
-  
-  def make_output_dir
-    FileUtils.mkdir_p(output_dir)
-  end
-  
-  def delete_job
-    return if self[:job] == nil
-    return if not waiting?
-    #FIXME error handling
-    system("atrm #{self[:job]} 2>&1")
-    self[:job] = nil
-    self[:state] = RESERVE
-    save
-  end
-  
-  def cancel
-    if reserve?
+    
+    def delete_job
+      return if self[:job] == nil
+      return if not waiting?
+      #FIXME error handling
+      system("atrm #{self[:job]} 2>&1")
       self[:job] = nil
-      self[:state] = CANCEL
+      self[:state] = RESERVE
       save
     end
-  end
-  
-  def schedule
-    LOG.info "program_id:#{self[:program_id]} schedule start"
-    return if not reserve? and not waiting?
-    if program.closed?
-      cancel
-      return
-    end
     
-    if waiting?
-      #reschedule
-      delete_job
-    end
-    
-    #before 1 minute
-    at_start = (program[:start_time] - 60)
-    at_start_str = at_start.strftime('%H:%M %m/%d/%Y')
-    
-    if at_start < Time.now
-      at_start_str = 'now'
-    end
-    
-    jobid = nil
-    start_progs = File.join(APP_DIR,'torec.rb') << " record --start " << program.pk.to_s
-    LOG.info "program_id:#{self[:program_id]} schedule at internal commandline : #{start_progs}"
-    
-    IO.popen("at #{at_start_str} 2>&1", 'r+') do |io|
-      io << start_progs << "\n"
-      io.close_write
-      io.each do |l|
-        next if l.match(/^warning:/)
-        jobid = l.split(' ')[1]
-        break
+    def cancel
+      if reserve?
+        self[:job] = nil
+        self[:state] = CANCEL
+        save
       end
     end
     
-    self[:filename] = File.join(output_dir, program.create_filename)
-    self[:job] = jobid
-    self[:state] = WAITING
-    save
-    LOG.info "program_id:#{self[:program_id]} scheduled. at jobid=#{self[:job]}"
-  end
-  
-  def stop_recording
-    return if not recording?
-    begin
-      Process.kill(:INT,self[:recording_pid])
-      LOG.warn "process killed. #{self[:recording_pid]}"
-    rescue
-      LOG.warn "process not found. #{self[:recording_pid]}"
+    def schedule
+      LOG.info "program_id:#{self[:program_id]} schedule start"
+      return if not reserve? and not waiting?
+      if program.closed?
+        cancel
+        return
+      end
+      
+      if waiting?
+        #reschedule
+        delete_job
+      end
+      
+      #before 1 minute
+      at_start = (program[:start_time] - 60)
+      at_start_str = at_start.strftime('%H:%M %m/%d/%Y')
+      
+      if at_start < Time.now
+        at_start_str = 'now'
+      end
+      
+      jobid = nil
+      start_progs = File.join(APP_DIR,'torec.rb') << " record --start " << program.pk.to_s
+      LOG.info "program_id:#{self[:program_id]} schedule at internal commandline : #{start_progs}"
+      
+      IO.popen("at #{at_start_str} 2>&1", 'r+') do |io|
+        io << start_progs << "\n"
+        io.close_write
+        io.each do |l|
+          next if l.match(/^warning:/)
+          jobid = l.split(' ')[1]
+          break
+        end
+      end
+      
+      self[:filename] = File.join(output_dir, program.create_filename)
+      self[:job] = jobid
+      self[:state] = WAITING
+      save
+      LOG.info "program_id:#{self[:program_id]} scheduled. at jobid=#{self[:job]}"
     end
-  end
-  
-  def find_prev_record
-    ds = Record.dataset
-    ds = ds.eager_graph(:program)
-    ds = ds.filter(:tunner_id => self[:tunner_id])
-    ds = ds.filter(:state => RECORDING) 
-    ds = ds.filter(:program__end_time >= program[:start_time])
-    ds = ds.order(:program__end_time.desc)
-    rc = ds.first
-    return nil if rc == nil
-    rc[Record.table_name]
-  end
-  
-  def record_sid
-    sid = SETTINGS[:default_record_sid]
-    return nil if sid.nil?
     
-    if SETTINGS[:sid_replace_channels][program.channel.channel_name] != nil
-      sid = SETTINGS[:sid_replace_channels][program.channel.channel_name].to_s
+    def stop_recording
+      return if not recording?
+      begin
+        Process.kill(:INT,self[:recording_pid])
+        LOG.warn "process killed. #{self[:recording_pid]}"
+      rescue
+        LOG.warn "process not found. #{self[:recording_pid]}"
+      end
     end
-    sid
-  end
-  
-  def start
-    return if not waiting?
-    LOG.info "program_id:#{self[:program_id]} start."
     
-    sid = record_sid
-    
-    args = []
-    args << "--b25"
-    args << "--strip"
-    if not sid.nil?
-      args << "--sid" << sid
+    def find_prev_record
+      ds = Record.dataset
+      ds = ds.eager_graph(:program)
+      ds = ds.filter(:tunner_id => self[:tunner_id])
+      ds = ds.filter(:state => RECORDING) 
+      ds = ds.filter(:program__end_time >= program[:start_time])
+      ds = ds.order(:program__end_time.desc)
+      rc = ds.first
+      return nil if rc == nil
+      rc[Record.table_name]
     end
-    #args << "--device" << "/dev/pt1video2"
-    args << program.channel[:channel].to_s
-    args << (program.remaining_second + 5).to_s
-    args << File.join(output_dir, program.create_filename)
     
-    make_output_dir
-    LOG.debug "program_id:#{self[:program_id]} recorder args:#{args.join(',')}"
-    
-    #waiting..
-     (program[:start_time] - 1).wait
-    rc = find_prev_record
-    rc.stop_recording if rc != nil
-    
-    #recording
-    pid = Process.fork do
-      #child process
-      LOG.info "program_id:#{self[:program_id]} start recording process.. pid:#{pid}"
-      exec(SETTINGS[:recorder_program_path], *args)
+    def record_sid
+      sid = SETTINGS[:default_record_sid]
+      return nil if sid.nil?
+      
+      if SETTINGS[:sid_replace_channels][program.channel.channel_name] != nil
+        sid = SETTINGS[:sid_replace_channels][program.channel.channel_name].to_s
+      end
+      sid
     end
-    self[:start_time] = Time.now
-    self[:state] = RECORDING
-    self[:recording_pid] = pid
-    save
-    LOG.info "wait recording process.."
-    th = Process.detach(pid)
-    th.value
-    done
-    LOG.info "recording done."
+    
+    def start
+      return if not waiting?
+      LOG.info "program_id:#{self[:program_id]} start."
+      
+      sid = record_sid
+      
+      args = []
+      args << "--b25"
+      args << "--strip"
+      if not sid.nil?
+        args << "--sid" << sid
+      end
+      #args << "--device" << "/dev/pt1video2"
+      args << program.channel[:channel].to_s
+      args << (program.remaining_second + 5).to_s
+      args << File.join(output_dir, program.create_filename)
+      
+      make_output_dir
+      LOG.debug "program_id:#{self[:program_id]} recorder args:#{args.join(',')}"
+      
+      #waiting..
+       (program[:start_time] - 1).wait
+      rc = find_prev_record
+      rc.stop_recording if rc != nil
+      
+      #recording
+      pid = Process.fork do
+        #child process
+        LOG.info "program_id:#{self[:program_id]} start recording process.. pid:#{pid}"
+        exec(SETTINGS[:recorder_program_path], *args)
+      end
+      self[:start_time] = Time.now
+      self[:state] = RECORDING
+      self[:recording_pid] = pid
+      save
+      LOG.info "wait recording process.."
+      th = Process.detach(pid)
+      th.value
+      done
+      LOG.info "recording done."
+    end
+    
+    def done
+      return if not recording?
+      self[:done_time] = Time.now
+      self[:state] = DONE
+      save
+    end
+    
   end
   
-  def done
-    return if not recording?
-    self[:done_time] = Time.now
-    self[:state] = DONE
-    save
-  end
-  
-end
-
-class Torec
   def self.create_table()
     if !Tunner.table_exists?
       Tunner.create_table
@@ -860,10 +860,14 @@ class Torec
     end
     LOG.info "update done."
   end
+  
 end
 
+
 if __FILE__ == $0
-  # TODO Generated stub
+  
+  include Torec
+  
   Torec.create_table()
   
   opts = OptionParser.new
