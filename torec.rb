@@ -17,7 +17,12 @@ require File.join(APP_DIR, 'torec_settings.rb')
 
 class String
   def to_han()
-    NKF.nkf('-Z1 -w -W8', self)
+    NKF.nkf('-Z1 -w -W', self)
+  end
+  def substring(n=60)
+    lines = NKF.nkf('-w -W -f'+n.to_s, self).each_line.collect{|s| s.chomp}
+    return "" if lines[0].nil?
+    return lines[0]
   end
   def parse_date_time
     DateTime.strptime(self, "%Y%m%d%H%M%S %z")
@@ -43,8 +48,45 @@ class Time
   end
 end
 
+class Formatter
+  def initialize(settings)
+    @settings = settings
+    @columns = ENV['COLUMNS']
+    if @columns.nil?
+      @columns = `stty size`.scan(/\d+/).map { |s| s.to_i }[1] - 2
+    end
+  end
+  def format(values, order)
+    result = []
+    width = 0
+    order.each do |k|
+      value = values[k].to_s
+      st = @settings[k]
+      if st.nil? or st[:length].nil?
+        width += value.size + 1
+        result << value
+        next
+      end
+      if st[:length] == :adjust
+        value = value.substring(@columns - width)
+        width += value.size + 1
+        result << value
+        next
+      end
+      if value.size > st[:length]
+        value = value.substring(st[:length])
+      end
+      st[:padding]=:ljust if st[:padding].nil?
+      value = value.send(st[:padding], st[:length])
+      width += value.size + 1
+      result << value
+    end
+    result.join(' ')
+  end
+end
+
 Sequel::Model.plugin(:schema)
-Sequel::Model.plugin(:hook_class_methods )
+Sequel::Model.plugin(:hook_class_methods)
 
 module InitData
   def create_init_data()
@@ -375,19 +417,59 @@ class Program < Sequel::Model(:programs)
     (h==0?'':h.to_s+'h') + (m==0?'':m.to_s+'m') + (s==0?'':s.to_s+'s')
   end
   
+  @@format = Formatter.new({
+      :mark => {
+      },
+      :id => {
+        :padding => :rjust,
+        :length => 6,
+      },
+      :channel => {
+        :padding => :ljust,
+        :length => 5,
+      },
+      :category => {
+        :padding => :ljust,
+        :length => 12,
+      },
+      :start_time => {
+      },
+      :duration => {
+        :padding => :ljust,
+        :length => 8,
+      },
+      :title => {
+        :padding => :ljust,
+        :length => :adjust,
+      },
+    })
+  
   def print_line(verbose=false)
     mark = (record==nil)?' ':'*'
     id = self[:id].to_s
     start_time = self[:start_time].format_display
     end_time = self[:end_time].format_display
     duration = '('+format_duration+')'
-    print <<-EOF.nopadding
-      #{mark} #{id.rjust(6)} #{channel.channel_name.ljust(5)} #{category[:type].ljust(12)} #{start_time} #{duration.ljust(8)} #{self[:title]}
-    EOF
-    print <<-EOF.nopadding if verbose
-      #{channel[:name].rjust(20)} - #{end_time} 
-      #{self[:description]}
-    EOF
+    values = {
+      :mark => (record==nil)?' ':'*',
+      :id => self[:id].to_s,
+      :channel => channel.channel_name,
+      :category => category[:type],
+      :start_time => self[:start_time].format_display,
+      :duration => '('+format_duration+')',
+      :title => self[:title],
+      :end_time => self[:end_time].format_display,
+    }
+    order = [:mark, :id, :channel, :category, :start_time, :duration, :title]
+    puts @@format.format(values, order)
+#    print <<-EOF.nopadding
+#      #{mark} #{id.rjust(6)} #{channel.channel_name.ljust(5)} #{category[:type].ljust(12)}
+#       #{start_time} #{duration.ljust(8)} #{self[:title]}
+#    EOF
+#    print <<-EOF.nopadding if verbose
+#      #{channel[:name].rjust(20)} - #{end_time} 
+#      #{self[:description]}
+#    EOF
   end
   
   def self.now_onair
