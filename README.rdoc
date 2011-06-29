@@ -103,9 +103,9 @@ epgdumpのパスを指定します。
 
 cronに登録以下の内容を登録しておきます。
   # epg update
-  0 5* ** /home/k1/torec/torec.rb update >/dev/null 2>&1
+  0 5 * * * /home/k1/torec/torec.rb update >/dev/null 2>&1
   # at scheduling
-  28,58* ** * /home/k1/torec/torec.rb record --schedule >/dev/null 2>&1
+  28,58 * * * * /home/k1/torec/torec.rb record --schedule >/dev/null 2>&1
 
 === update epg情報更新
 
