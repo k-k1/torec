@@ -106,6 +106,63 @@ module Torec
       string :type, :size => 20, :null => false
       string :device_name, :size => 20, :null => false
     end
+    
+    def detect_recorder
+      if ['pt1', 'pt2'].include?(device_name.downcase)
+        return Pt1
+      elsif ['fsusb2'].include?(device_name.downcase)
+        # TODO
+      elsif ['friio'].include?(device_name.downcase)
+        # TODO
+      end
+    end
+    
+    class Recorder
+      def settings
+        SETTINGS[:recorders][recorder_name.to_sym]
+      end
+      def program_path
+        settings[:recorder_program_path]
+      end
+      def start
+        exec(program_path, *create_args)
+      end
+    end
+    
+    class Pt1 < Recorder
+      def initialize(opts)
+        @channel = opts[:channel]
+        @duration = opts[:duration]
+        @output = opts[:output]
+      end
+      def recorder_name
+        # class.name.to_sym
+        'Pt1'
+      end
+      def record_sid(channel)
+        sid = settings[:default_record_sid]
+        return nil if sid.nil?
+        
+        if settings[:sid_replace_channels][channel] != nil
+          sid = settings[:sid_replace_channels][channel].to_s
+        end
+        sid
+      end
+      def create_args
+        sid = record_sid(@channel)
+        args = []
+        args << "--b25"
+        args << "--strip"
+        args << "--sid" << sid if not sid.nil?
+        #TODO device handring
+        #args << "--device" << "/dev/pt1video2"
+        args << @channel.to_s
+        args << @duration.to_s
+        args << @output
+        args
+      end
+    end
+    
   end
   
   class ChannelType < Sequel::Model(:channel_types)
@@ -739,37 +796,37 @@ module Torec
       sid
     end
     
+    def recorder
+      recorder_class = tunner.detect_recorder
+      recorder = recorder_class.new({
+        :channel => program.channel[:channel],
+        :duration => (program.remaining_second + 5),
+        :output => File.join(output_dir, program.create_filename),
+      })
+      LOG.debug "recorder program:#{recorder.program_path}"
+      LOG.debug "recorder args:#{recorder.args.join(' ')}"
+      recorder
+    end
+    
     def start
       return if not waiting?
       LOG.info "program_id:#{self[:program_id]} start."
       
-      sid = record_sid
-      
-      args = []
-      args << "--b25"
-      args << "--strip"
-      if not sid.nil?
-        args << "--sid" << sid
-      end
-      #args << "--device" << "/dev/pt1video2"
-      args << program.channel[:channel].to_s
-      args << (program.remaining_second + 5).to_s
-      args << File.join(output_dir, program.create_filename)
-      
       make_output_dir
-      LOG.debug "program_id:#{self[:program_id]} recorder args:#{args.join(',')}"
       
       #waiting..
        (program[:start_time] - 1).wait
       rc = find_prev_record
       rc.stop_recording if rc != nil
       
+      LOG.info "wait done"
       #recording
       pid = Process.fork do
         #child process
-        LOG.info "program_id:#{self[:program_id]} start recording process.. pid:#{pid}"
-        exec(SETTINGS[:recorder_program_path], *args)
+        LOG.info "child start"
+        recorder.start
       end
+      LOG.info "program_id:#{self[:program_id]} start recording process.. pid:#{pid}"
       self[:start_time] = Time.now
       self[:state] = RECORDING
       self[:recording_pid] = pid

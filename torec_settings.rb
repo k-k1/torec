@@ -6,6 +6,8 @@ SETTINGS = {
     {:name => "GR1", :type => "GR", :device_name => "PT2"},
     {:name => "BS0", :type => "BS/CS", :device_name => "PT2"},
     {:name => "BS1", :type => "BS/CS", :device_name => "PT2"},
+    #{:name => "GR2", :type => "GR", :device_name => "friio"},
+    #{:name => "GR3", :type => "GR", :device_name => "fsusb2"},
   ],
   :channel_types => [
     {:type => "GR", :name => "地上波", :tunner_type => "GR"},
@@ -63,19 +65,32 @@ SETTINGS = {
     '3014.ontvjapan.com' => 'BS222',
     #TODO CS
   },
-  # recording SID setting (all,hd,sd1,sd2,sd3,1seg,..)
-  :default_record_sid => 'hd',
-  :sid_replace_channels => {
-    #'GR21' => '1seg',
-    'BS101' => '101',
-    'BS102' => '102',
-    'BS191' => '191',
-    'BS192' => '192',
-    'BS193' => '193',
+  :recorders => {
+    :Pt1 => {
+      # PT1/PT2 settings
+      :recorder_program_path => '/usr/local/bin/recpt1',
+      # recording SID setting (all,hd,sd1,sd2,sd3,1seg,..)
+      :default_record_sid => 'hd',
+      :sid_replace_channels => {
+        #'GR21' => '1seg',
+        'BS101' => '101',
+        'BS102' => '102',
+        'BS191' => '191',
+        'BS192' => '192',
+        'BS193' => '193',
+      },
+    },
+    :Fsusb2 => {
+      # TODO FSUSB2 settings
+      :recorder_program_path => '/usr/local/bin/recfsusb2n',
+    },
+    :Friio => {
+      # TODO friio settings
+      :recorder_program_path => '/usr/local/bin/recfriio',
+    },
   },
   # dir setting
   :output_path => '/home/k1/video',
-  :recorder_program_path => '/usr/local/bin/recpt1',
   :log_output_path => File.join(APP_DIR, 'log')
 }
 
