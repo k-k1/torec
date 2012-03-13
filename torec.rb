@@ -54,7 +54,11 @@ module Torec
       @settings = settings
       @columns = ENV['COLUMNS']
       if @columns.nil?
-        @columns = `stty size`.scan(/\d+/).map { |s| s.to_i }[1] - 2
+        begin
+          @columns = `stty size 2> /dev/null`.scan(/\d+/).map { |s| s.to_i }[1] - 2
+        rescue
+          @columns = 500
+        end
       end
     end
     def format(values, order)
