@@ -729,6 +729,12 @@ module Torec
       end
     end
     
+    def refresh
+      return if not waiting?
+      delete_job
+      schedule
+    end
+    
     def schedule
       LOG.info "program_id:#{self[:program_id]} schedule start"
       return if not reserve? and not waiting?
@@ -1025,6 +1031,7 @@ if __FILE__ == $0
     opts.on("-t", "--tunner TUNNER_TYPE"){|type| opt[:tunner_type] = type }
     opts.on("-a", "--all", "display all records."){opt[:all] = true }
     opts.on("--schedule [PROGRAM_ID]", "schedule records."){|pid| opt[:state] = :schedule; opt[:program_id] = pid }
+    opts.on("--refresh [PROGRAM_ID]", "refresh atjobs."){|pid| opt[:state] = :refresh; opt[:program_id] = pid }
     opts.on("--start PROGRAM_ID"){|pid| opt[:state] = :start; opt[:program_id] = pid }
     opts.on("--add PROGRAM_ID", Integer, "simple recording"){|pid| opt[:state] = :add; opt[:program_id] = pid }
     opts.parse!(ARGV)
@@ -1043,6 +1050,12 @@ if __FILE__ == $0
       opt[:state] = :reserve
       Record.search(opt).all.each do |rc|
         rc.schedule
+      end
+      exit
+    elsif opt[:state] == :refresh
+      opt[:state] = :waiting
+      Record.search(opt).all.each do |rc|
+        rc.refresh
       end
       exit
     end
