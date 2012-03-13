@@ -129,7 +129,10 @@ module Torec
         settings[:recorder_program_path]
       end
       def start
+        args = create_args
         exec(program_path, *create_args)
+        LOG.debug "recorder program:#{program_path}"
+        LOG.debug "recorder args:#{args.join(' ')}"
       end
     end
     
@@ -807,8 +810,6 @@ module Torec
         :duration => (program.remaining_second + 5),
         :output => File.join(output_dir, program.create_filename),
       })
-      LOG.debug "recorder program:#{recorder.program_path}"
-      LOG.debug "recorder args:#{recorder.args.join(' ')}"
       recorder
     end
     
